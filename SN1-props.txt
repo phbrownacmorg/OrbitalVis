@@ -1,0 +1,23 @@
+# default is "SN1 Visualization"
+# title: SN1 Visualization
+
+# default is to mark the hydrogens
+markHydrogens: false
+
+# default is horizontal
+canvasLayout: vertical
+
+# default is 350 170
+#2DOffsets: 370 170
+2DOffsets: 240 350
+
+# default is 25 100 100
+2DScales: -35 100 100
+
+#fov: 26 Previous, for horizontal layout pre-ethyl group
+fov: 45
+# 40 isn't bad for vertical layout
+#fov: 30  A little too tight for horizontal layout
+
+# move eyepoint down some: default is 10 2.5 2.5
+#eye: 10 1.9 2.5

@@ -1,0 +1,2 @@
+Main-Class: Controller
+Class-Path: jogl.jar gluegen-rt.jar
