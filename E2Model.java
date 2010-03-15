@@ -44,7 +44,7 @@ public class E2Model extends Model {
     hydro3 = new Atom();
     
     chlor = new SP3Atom(new Point3D(0, 0, 2 * Atom.BOND_LENGTH + Math.max(0, getT() - 0.5))); 
-    chlor.setRot(0, 180, 0);
+    //chlor.setRot(0, 180, 0);
     
     
     meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
@@ -72,8 +72,18 @@ public class E2Model extends Model {
     Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
     Point3D hLoc1 = hLoc.transform(rotX);
     hLoc1 = new Point3D(hLoc1.x(), hLoc1.y(), hLoc1.z() - Atom.BOND_LENGTH);
-    
     hydro1.setLoc(hLoc1);
+    
+    Matrix rot180LessX = Matrix.makeRotationMatrix(-180.0 + rotation, Matrix.Axis.X);
+    final double BOND_LENGTH_FUZZ_FACTOR = 1.05; // Arbitrary
+    final double WITHDRAWAL_DISTANCE_FACTOR = 2; // Arbitrary
+    Point3D hLocClPreRot = new Point3D(0, 0, Atom.SP3_SP3_BOND_LENGTH * BOND_LENGTH_FUZZ_FACTOR 
+                                         + WITHDRAWAL_DISTANCE_FACTOR * Math.max(0, getT() - 0.4)
+                                         + 8 * Math.max(0, getT() - 0.6));
+    Point3D hLocCl = hLocClPreRot.transform(rot180LessX);
+    chlor.setLoc(hLocCl);
+    chlor.setRot(rotation, 0, 0);
+    chlor.setLoc(chlor.getX(), chlor.getY(), chlor.getZ() + Atom.BOND_LENGTH);
     
    // meth1.setLoc(hLoc1);
    // meth1.setRot(180 + rotation, 0, 0);
