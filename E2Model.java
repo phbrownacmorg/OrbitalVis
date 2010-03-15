@@ -3,6 +3,7 @@ import javax.media.opengl.*;
 
 /**
  * The Model class for the E2 reaction
+ * Madonna King
  */
 
 public class E2Model extends Model {
