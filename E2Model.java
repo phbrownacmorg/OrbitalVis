@@ -10,6 +10,8 @@ public class E2Model extends Model {
   public static final double MAX_WITHDRAWAL = 5.0 * Atom.SP3_SP3_BOND_LENGTH;
   
   private double carbonXRot = -109.5;
+  private double hydro1InitialZ = 0;
+  private double oHClosestZ = 0;
 
   // Atoms/groups
   private Hydroxide oh;
@@ -35,8 +37,8 @@ public class E2Model extends Model {
    // oh = new Hydroxide(new Point3D(0, 0, -(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
                      //    AtomOrGroup.Charge.MINUS);
     
-    oh = new Hydroxide(new Point3D(0, 0, -(2*Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL)), 
-                     AtomOrGroup.Charge.MINUS);
+     //-(2*Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL)), 
+    oh = new Hydroxide(new Point3D(0, 0, MAX_WITHDRAWAL), AtomOrGroup.Charge.MINUS);
     
         
     hydro1 = new Atom();
@@ -50,15 +52,24 @@ public class E2Model extends Model {
     meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     meth2 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     
+    double rotation = -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
+    Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
+    Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
+    Point3D hLoc1 = hLoc.transform(rotX);
+    hLoc1 = new Point3D(hLoc1.x(), hLoc1.y(), hLoc1.z() - Atom.BOND_LENGTH);
+    hydro1.setLoc(hLoc1);
+    hydro1InitialZ = hydro1.getZ();
+    oHClosestZ = hydro1InitialZ - (Atom.S_TO_SP3_BOND_LENGTH + SOrbitalView.RADIUS);
+
     setHydrogenLocations();
     
     // Create the Bonds
-    //hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
+    hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
     carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
    // carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
     carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
     carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
-    //carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
+    carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
     carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
     //carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
     
@@ -71,8 +82,8 @@ public class E2Model extends Model {
     Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
     Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
     Point3D hLoc1 = hLoc.transform(rotX);
-    hLoc1 = new Point3D(hLoc1.x(), hLoc1.y(), hLoc1.z() - Atom.BOND_LENGTH);
-    hydro1.setLoc(hLoc1);
+//    hLoc1 = new Point3D(hLoc1.x(), hLoc1.y(), hLoc1.z() - Atom.BOND_LENGTH);
+//    hydro1.setLoc(hLoc1);
     
     Matrix rot180LessX = Matrix.makeRotationMatrix(-180.0 + rotation, Matrix.Axis.X);
     final double BOND_LENGTH_FUZZ_FACTOR = 1.05; // Arbitrary
@@ -103,18 +114,18 @@ public class E2Model extends Model {
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
-      //result.add(new BondView(hydro2_oh));
+      result.add(new BondView(hydro2_oh));
       result.add(new BondView(carb1_carb2));
 //      result.add(new BondView(carb1_meth1));
-//      result.add(new BondView(carb1_hydro1));
+      result.add(new BondView(carb1_hydro1));
       result.add(new BondView(carb1_hydro2));
-//      result.add(new BondView(carb2_chlor));
+      result.add(new BondView(carb2_chlor));
 //      result.add(new BondView(carb2_hydro3));
 //      result.add(new BondView(carb2_meth2));
     }
  //   result.add(meth1.createView());
 //    result.add(meth2.createView());
-//    result.add(oh.createView(HydroxideView.TEXT_HO));
+    result.add(oh.createView(HydroxideView.TEXT_HO));
     result.add(carb1.createView("C", AtomView.C_BLACK));
     result.add(carb2.createView("C", AtomView.C_BLACK));
     result.add(hydro1.createView());
@@ -143,41 +154,51 @@ public class E2Model extends Model {
     carb1.setRot(carbonXRot, 0, 0);
     carb2.setRot(180 + carbonXRot, 0, 0);
     
-    // Set the corresponding locations of the hydrogens
+    // Set the corresponding locations of the substituents that rotate with the carbons as the carbons change shape
     setHydrogenLocations();
     
-    // The oh moves in
-    //oh.setLoc(0, 0,  (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
-    //oh.setLoc(0, 0,  (Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL));
+    // The oh moves in, hydro1 moves out
+    //oh.setLoc(0, 0, (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
+    
+    if (getT() < 0.4) {
+      oh.setLoc(0, hydro1.getY(), (1.0 - (getT()/0.4)) * -MAX_WITHDRAWAL + (getT()/0.4) * oHClosestZ);
+      hydro1.setLoc(hydro1.getX(), hydro1.getY(), hydro1InitialZ);
+    }
+    else {
+      oh.setLoc(0, hydro1.getY(), -(Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL));
+      hydro1.setLoc(hydro1.getX(), hydro1.getY(), hydro1InitialZ);
+    }
+    
+    
     
     // Update the Bonds
 //    if (getT() < 0.3) {
-//      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-//      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
+      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
+      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
 //      carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
-//      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
+      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
 //      carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
-//      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
+      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
 //      carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
 //      carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
 //    }
 //    else if (getT() > 0.5) {
-//      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-//      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
+      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
+      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
 //      carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
-//      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
+      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
 //      carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
-//      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
+      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
 //      carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
 //      carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
 //    }
 //    else {
-//      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-//      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
+      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
+      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
 //      carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
-//      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
+      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
 //      carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
-//      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
+      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
 //      carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
 //      carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
 //    }

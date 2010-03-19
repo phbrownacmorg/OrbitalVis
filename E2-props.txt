@@ -1,6 +1,10 @@
 # default is "SN2 Visualization"
 title: E2 Visualization
 
+# default is 30
+#fov: 15
+fov: 25
+
 # default is to mark the hydrogens
 markHydrogens: false
 

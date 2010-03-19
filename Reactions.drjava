@@ -3,141 +3,149 @@
   <project autorefresh="false" build="" main="Controller" manifest="Main-Class: Controller&#10;Class-Path: jogl.jar gluegen-rt.jar&#10;" root="" work="">
     <createjar file="SN2.jar" flags="25"/>
     <source>
-      <file active="true" name="E2Model.java" package="" timestamp="15-Mar-2010 12:21:17">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+      <file active="true" name="E2Model.java" package="" timestamp="19-Mar-2010 09:30:01">
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="View.java" package="" timestamp="10-Mar-2010 10:28:51">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="SN1Model.java" package="" timestamp="24-Feb-2010 11:16:10">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="POrbitalView.java" package="" timestamp="15-Jan-2010 15:51:24">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="View2D.java" package="" timestamp="15-Apr-2009 18:36:14">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="ShapeBuilder.java" package="" timestamp="13-Aug-2008 12:20:48">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="SP3Atom.java" package="" timestamp="30-Mar-2009 17:16:14">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="SN2Model.java" package="" timestamp="11-Apr-2009 18:58:34">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="RefFrame.java" package="" timestamp="11-Mar-2009 19:21:02">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Point3D.java" package="" timestamp="11-Mar-2009 18:21:42">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="POrbital.java" package="" timestamp="30-Mar-2009 17:45:12">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Model.java" package="" timestamp="24-Aug-2009 09:32:52">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="MethylView.java" package="" timestamp="16-Apr-2009 15:29:06">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Methyl.java" package="" timestamp="15-Apr-2009 16:32:36">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Matrix.java" package="" timestamp="09-Mar-2009 23:59:36">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="HydroxideView.java" package="" timestamp="11-Apr-2009 18:57:46">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Hydroxide.java" package="" timestamp="11-Apr-2009 18:58:04">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="HydrogenView.java" package="" timestamp="10-Mar-2009 22:29:56">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="EthylView.java" package="" timestamp="16-Apr-2009 15:29:10">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Ethyl.java" package="" timestamp="15-Apr-2009 17:08:04">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Drawable.java" package="" timestamp="19-Mar-2009 21:06:48">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="ConstantMgr.java" package="" timestamp="19-Jun-2008 08:49:30">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Canvas2D.java" package="" timestamp="17-Dec-2008 10:44:12">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="BondView.java" package="" timestamp="30-Mar-2009 15:41:46">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Bond.java" package="" timestamp="21-Mar-2009 00:43:56">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="AtomView.java" package="" timestamp="19-Mar-2009 21:01:14">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="AtomOrGroupView.java" package="" timestamp="20-Mar-2009 01:33:40">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="AtomOrGroup.java" package="" timestamp="19-Mar-2009 20:35:50">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="AcylModel.java" package="" timestamp="24-Aug-2009 09:33:40">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="E1Model.java" package="" timestamp="08-Oct-2009 15:50:50">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Controller.java" package="" timestamp="08-Oct-2009 15:56:50">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="SOrbitalView.java" package="" timestamp="24-Feb-2010 10:57:52">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
       <file name="Atom.java" package="" timestamp="24-Feb-2010 10:58:47">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
-      <file name="SP3AtomView.java" package="" timestamp="15-Mar-2010 11:48:27">
-        <select from="3291" to="3291"/>
-        <scroll column="847" row="0"/>
+      <file name="generic-props.txt" package="" timestamp="10-Mar-2010 09:22:31">
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
+      </file>
+      <file name="E2-props.txt" package="" timestamp="19-Mar-2010 08:46:38">
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
+      </file>
+      <file name="SP3AtomView.java" package="" timestamp="19-Mar-2010 08:47:31">
+        <select from="6013" to="6013"/>
+        <scroll column="1712" row="0"/>
       </file>
     </source>
     <included/>
