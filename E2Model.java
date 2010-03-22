@@ -38,16 +38,14 @@ public class E2Model extends Model {
                      //    AtomOrGroup.Charge.MINUS);
     
      //-(2*Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL)), 
-    oh = new Hydroxide(new Point3D(0, 0, MAX_WITHDRAWAL), AtomOrGroup.Charge.MINUS);
-    
-        
+    oh = new Hydroxide(new Point3D(0, 0, -2*MAX_WITHDRAWAL), AtomOrGroup.Charge.MINUS);
+            
     hydro1 = new Atom();
     hydro2 = new Atom();
     hydro3 = new Atom();
     
     chlor = new SP3Atom(new Point3D(0, 0, 2 * Atom.BOND_LENGTH + Math.max(0, getT() - 0.5))); 
     //chlor.setRot(0, 180, 0);
-    
     
     meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     meth2 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
@@ -59,21 +57,20 @@ public class E2Model extends Model {
     hLoc1 = new Point3D(hLoc1.x(), hLoc1.y(), hLoc1.z() - Atom.BOND_LENGTH);
     hydro1.setLoc(hLoc1);
     hydro1InitialZ = hydro1.getZ();
-    oHClosestZ = hydro1InitialZ - (Atom.S_TO_SP3_BOND_LENGTH + SOrbitalView.RADIUS);
+    oHClosestZ = hydro1InitialZ - 1.5*(Atom.S_TO_SP3_BOND_LENGTH);
 
     setHydrogenLocations();
     
     // Create the Bonds
     hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
     carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
-   // carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
+    carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
     carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
     carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
     carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
     carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
     //carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
     
-   
   }
   
   private void setHydrogenLocations() {
@@ -82,8 +79,8 @@ public class E2Model extends Model {
     Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
     Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
     Point3D hLoc1 = hLoc.transform(rotX);
-//    hLoc1 = new Point3D(hLoc1.x(), hLoc1.y(), hLoc1.z() - Atom.BOND_LENGTH);
-//    hydro1.setLoc(hLoc1);
+    meth1.setLoc(hLoc1);
+    meth1.setRot(180 + rotation, 0, 0);
     
     Matrix rot180LessX = Matrix.makeRotationMatrix(-180.0 + rotation, Matrix.Axis.X);
     final double BOND_LENGTH_FUZZ_FACTOR = 1.05; // Arbitrary
@@ -96,19 +93,13 @@ public class E2Model extends Model {
     chlor.setRot(rotation, 0, 0);
     chlor.setLoc(chlor.getX(), chlor.getY(), chlor.getZ() + Atom.BOND_LENGTH);
     
-   // meth1.setLoc(hLoc1);
-   // meth1.setRot(180 + rotation, 0, 0);
-
     Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
     Point3D hLoc2 = hLoc1.transform(rotZ);
-    //ch3.setLoc(hLoc2);
-    //ch3.setRot(0, 180 + rotation, -90 + 120); // (X up, Y right)
     
     rotZ =  Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
     Point3D hLoc3 = new Point3D(0, 0, Atom.BOND_LENGTH + SOrbitalView.RADIUS/2);
     hLoc3 = hLoc3.transform(rotX);
     hLoc3 = hLoc3.transform(rotZ);
-    //hydro.setLoc(hLoc3);   
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
@@ -116,14 +107,14 @@ public class E2Model extends Model {
     if (twoD) { // Add the bonds as well
       result.add(new BondView(hydro2_oh));
       result.add(new BondView(carb1_carb2));
-//      result.add(new BondView(carb1_meth1));
+      result.add(new BondView(carb1_meth1));
       result.add(new BondView(carb1_hydro1));
       result.add(new BondView(carb1_hydro2));
       result.add(new BondView(carb2_chlor));
 //      result.add(new BondView(carb2_hydro3));
 //      result.add(new BondView(carb2_meth2));
     }
- //   result.add(meth1.createView());
+    result.add(meth1.createView());
 //    result.add(meth2.createView());
     result.add(oh.createView(HydroxideView.TEXT_HO));
     result.add(carb1.createView("C", AtomView.C_BLACK));
@@ -161,12 +152,25 @@ public class E2Model extends Model {
     //oh.setLoc(0, 0, (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
     
     if (getT() < 0.4) {
-      oh.setLoc(0, hydro1.getY(), (1.0 - (getT()/0.4)) * -MAX_WITHDRAWAL + (getT()/0.4) * oHClosestZ);
+      oh.setLoc(0, hydro1.getY(), (1.0 - (getT()/0.4)) * -2*MAX_WITHDRAWAL + (getT()/0.4) * oHClosestZ);
       hydro1.setLoc(hydro1.getX(), hydro1.getY(), hydro1InitialZ);
     }
+    else if (getT() < 0.5) {
+      oh.setLoc(0, hydro1.getY(), oHClosestZ + ((getT() - 0.4)/0.1) * SOrbitalView.RADIUS);
+      hydro1.setLoc(hydro1.getX(), hydro1.getY(),
+                    (((0.6 - getT())/0.2) * hydro1InitialZ) 
+                      + ((getT() - 0.4)/0.2) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestZ));
+    }
+    else if (getT() < 0.6) {
+      oh.setLoc(0, hydro1.getY(), oHClosestZ + ((0.6 - getT())/0.1) * SOrbitalView.RADIUS);
+      hydro1.setLoc(hydro1.getX(), hydro1.getY(),
+                    (((0.6 - getT())/0.2) * hydro1InitialZ) 
+                      + ((getT() - 0.4)/0.2) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestZ));
+    }
     else {
-      oh.setLoc(0, hydro1.getY(), -(Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL));
-      hydro1.setLoc(hydro1.getX(), hydro1.getY(), hydro1InitialZ);
+      double hohZ = ((getT() - 0.6)/0.4) * -(MAX_WITHDRAWAL/2) + ((1.0 - getT())/0.4) * oHClosestZ;
+      oh.setLoc(0, hydro1.getY(), hohZ);
+      hydro1.setLoc(hydro1.getX(), hydro1.getY(), hohZ + Atom.S_TO_SP3_BOND_LENGTH);
     }
     
     

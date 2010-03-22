@@ -5,6 +5,9 @@ title: E2 Visualization
 #fov: 15
 fov: 25
 
+# default is 30
+near: 7
+  
 # default is to mark the hydrogens
 markHydrogens: false
 
