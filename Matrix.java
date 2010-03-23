@@ -1,3 +1,7 @@
+/**
+ * Class to represent a matrix.  Objects of this class are immutable.
+ */
+
 public class Matrix {
   public enum Axis { X, Y, Z };
   private double elt[][];
@@ -13,6 +17,13 @@ public class Matrix {
   public int cols() { return elt[0].length; }
   public double elt(int i, int j) { return elt[i][j]; }
   
+  /**
+   * Create and return a new Matrix that is the product of this Matrix 
+   * right-multiplied by the given Matrix. This method does not change
+   * either of the operand matrices.
+   * @param m Matrix to right-multiply this matrix by
+   * @return new Matrix set to this * m
+   */
   public Matrix mult(Matrix m) {
     Matrix result = new Matrix(this.rows(), m.cols());
     for (int i = 0; i < this.rows(); i++) {
@@ -22,6 +33,13 @@ public class Matrix {
         }
       }
     }
+    return result;
+  }
+  
+  public String toString() {
+    String result = "[\t" + elt[0][0] + "\t" + elt[0][1] + "\t" + elt[0][2] + "\t]";
+    result = result + "\n" + "[\t" + elt[1][0] + "\t" + elt[1][1] + "\t" + elt[1][2] + "\t]";
+    result = result + "\n" + "[\t" + elt[2][0] + "\t" + elt[2][1] + "\t" + elt[2][2] + "\t]";
     return result;
   }
   

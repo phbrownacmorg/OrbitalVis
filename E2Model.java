@@ -50,7 +50,8 @@ public class E2Model extends Model {
     meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     meth2 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     
-    double rotation = -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
+    double rotation = -carb1.getXRotation();
+      // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
     Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
     Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
     Point3D hLoc1 = hLoc.transform(rotX);
@@ -75,7 +76,8 @@ public class E2Model extends Model {
   
   private void setHydrogenLocations() {
     // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double rotation = -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
+    double rotation = -carb1.getXRotation();
+      // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
     
     // Set the chlorine
     Matrix rot180LessX = Matrix.makeRotationMatrix(-180.0 + rotation, Matrix.Axis.X);
@@ -119,7 +121,7 @@ public class E2Model extends Model {
 //      result.add(new BondView(carb2_hydro3));
 //      result.add(new BondView(carb2_meth2));
     }
-    result.add(meth1.createView());
+//    result.add(meth1.createView());
 //    result.add(meth2.createView());
     result.add(oh.createView(HydroxideView.TEXT_HO));
     result.add(carb1.createView("C", AtomView.C_BLACK));

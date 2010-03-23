@@ -41,7 +41,7 @@ public class SN2Model extends Model {
   
   private void setHydrogenLocations() {
     // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double rotation = 109.5 * (1.0 - carb.getInsideOutness()) + ((180.0 - 109.5) * carb.getInsideOutness());
+    double rotation = carb.getXRotation();
     Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
     Point3D hLoc = new Point3D(0, 0, Atom.BOND_LENGTH + SOrbitalView.RADIUS/2);
     Point3D hLoc1 = hLoc.transform(rotX);

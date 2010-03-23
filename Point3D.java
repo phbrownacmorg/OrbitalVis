@@ -1,3 +1,6 @@
+/**
+ * Class to represent a point in 3D.  This class is immutable.
+ */
 public class Point3D {
   double elt[] = new double[3];
   
