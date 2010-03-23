@@ -76,12 +76,8 @@ public class E2Model extends Model {
   private void setHydrogenLocations() {
     // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
     double rotation = -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
-    Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
-    Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
-    Point3D hLoc1 = hLoc.transform(rotX);
-    meth1.setLoc(hLoc1);
-    meth1.setRot(180 + rotation, 0, 0);
     
+    // Set the chlorine
     Matrix rot180LessX = Matrix.makeRotationMatrix(-180.0 + rotation, Matrix.Axis.X);
     final double BOND_LENGTH_FUZZ_FACTOR = 1.05; // Arbitrary
     final double WITHDRAWAL_DISTANCE_FACTOR = 2; // Arbitrary
@@ -93,8 +89,17 @@ public class E2Model extends Model {
     chlor.setRot(rotation, 0, 0);
     chlor.setLoc(chlor.getX(), chlor.getY(), chlor.getZ() + Atom.BOND_LENGTH);
     
-    Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
+    // Set the CH3 that's bonded to carb1
+    double rot109To120 = 109.5 * ((0.5 - carb1.getInsideOutness())/0.5) + (120 * (carb1.getInsideOutness()/0.5));
+    double rot19To0 = (109.5 - 90) * ((0.5 - carb1.getInsideOutness())/0.5);
+    Matrix rotX = Matrix.makeRotationMatrix(-rotation, Matrix.Axis.X);
+    Matrix rotZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
+    Point3D hLoc = new Point3D(0, 0, Atom.SP3_SP3_BOND_LENGTH);
+    Point3D hLoc1 = hLoc.transform(rotX);
     Point3D hLoc2 = hLoc1.transform(rotZ);
+    meth1.setLoc(hLoc2.x(), hLoc2.y(), hLoc2.z() - Atom.BOND_LENGTH);
+    //meth1.setRot(180 + rotation, 0, 120);
+    meth1.setRot(-rot19To0, 180 - rot109To120, 0);
     
     rotZ =  Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
     Point3D hLoc3 = new Point3D(0, 0, Atom.BOND_LENGTH + SOrbitalView.RADIUS/2);
@@ -130,7 +135,7 @@ public class E2Model extends Model {
     super.setT(newT);
     
     // Set the angles betwen the carbon's orbitals, and the proportion of its center orbital
-    double insideOutness = Math.min(1.0, Math.max(0, (getT() - 0.05) * (0.5/0.9)));
+    double insideOutness = Math.min(0.5, Math.max(0, (getT() - 0.05) * (0.5/0.9)));
     double divergence = 2 * insideOutness; //Math.min(1.0, Math.max(0, (getT() - 0.05) * (1.0/0.9)));
     //double insideOutnessOffset =  Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
     //double insideOutness = 0.5 + insideOutnessOffset;
