@@ -34,4 +34,9 @@ public class Point3D {
     }
     return result;
   }
+  
+  public Point3D scale(double scalar) {
+    Point3D result = new Point3D(elt[0] * scalar, elt[1] * scalar, elt[2] * scalar);
+    return result;
+  }
 }

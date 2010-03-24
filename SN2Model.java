@@ -30,6 +30,7 @@ public class SN2Model extends Model {
     
     chlor = new SP3Atom(new Point3D(0, 0, 2 * Atom.BOND_LENGTH + Math.max(0, getT() - 0.5))); 
     chlor.setRot(0, 180, 0);
+    //chlor.setRot(90, 90, 0); // Rotates about Y, then about X
     
     // Create the Bonds
     carb_oh = new Bond(carb, oh, Bond.State.BROKEN);
@@ -40,20 +41,14 @@ public class SN2Model extends Model {
   }
   
   private void setHydrogenLocations() {
-    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double rotation = carb.getXRotation();
-    Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
-    Point3D hLoc = new Point3D(0, 0, Atom.BOND_LENGTH + SOrbitalView.RADIUS/2);
-    Point3D hLoc1 = hLoc.transform(rotX);
-    hydro1.setLoc(hLoc1);
+    Point3D orb1Vec = carb.getOrbitalVector(1).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    hydro1.setLoc(carb.getX() + orb1Vec.x(), carb.getY() + orb1Vec.y(), carb.getZ() + orb1Vec.z());
     
-    Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
-    Point3D hLoc2 = hLoc1.transform(rotZ);
-    hydro2.setLoc(hLoc2);
+    Point3D orb2Vec = carb.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    hydro2.setLoc(carb.getX() + orb2Vec.x(), carb.getY() + orb2Vec.y(), carb.getZ() + orb2Vec.z());
     
-    rotZ =  Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-    Point3D hLoc3 = hLoc1.transform(rotZ);
-    hydro3.setLoc(hLoc3);   
+    Point3D orb3Vec = carb.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    hydro3.setLoc(carb.getX() + orb3Vec.x(), carb.getY() + orb3Vec.y(), carb.getZ() + orb3Vec.z());
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
@@ -84,10 +79,10 @@ public class SN2Model extends Model {
     setHydrogenLocations();
     
     // The hydroxyl moves in as t is in [0, 0.5]
-    oh.setLoc(0, 0, -(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT()))));
+    oh.setLoc(0, 0, -(Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.5 - getT()))));
 
     // The chlorine moves away as t goes 0.5 - 1
-    chlor.setLoc(0, 0, 2 * Atom.BOND_LENGTH + Math.max(0, getT() - 0.5));
+    chlor.setLoc(0, 0, Atom.SP3_SP3_BOND_LENGTH + Math.max(0, getT() - 0.5));
     
     // Update the Bonds
     if (getT() < 0.4) {

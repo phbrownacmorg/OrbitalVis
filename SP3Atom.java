@@ -60,12 +60,34 @@ public class SP3Atom extends Atom {
    * @param i Index of the desired orbital
    * @return Unit vector as a Point3D
    */
-  public Point3D orbitalVector(int i) {
+  public Point3D getOrbitalVector(int i) {
     Point3D result = new Point3D(0, 0, 1);  // Unit vector along the z-axis
     
     // Transform it by the atom's own rotations
-  
-    // Now, associate it with the appropriate orbital
+    // Then associate it with the appropriate orbital
+    if (i == 0) { // Orbital 0 lies along the z-axis
+      result = result.transform(rotMatrix);
+    }
+    else if (i == 1) {
+      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
+      Matrix m = rotMatrix.mult(rotX);
+      result = result.transform(m);
+    }
+    else if (i == 2) {
+      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
+      Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
+      Matrix rotZX = rotZ.mult(rotX);
+      Matrix m = rotMatrix.mult(rotZX);
+      result = result.transform(m);
+    }
+    else if (i == 3) {
+      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
+      Matrix rotZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
+      Matrix rotZX = rotZ.mult(rotX);
+      Matrix m = rotMatrix.mult(rotZX);
+      result = result.transform(m);
+    }
+
     return result;
   }
   
@@ -74,6 +96,8 @@ public class SP3Atom extends Atom {
     Matrix mx = Matrix.makeRotationMatrix(rx, Matrix.Axis.X);
     Matrix my = Matrix.makeRotationMatrix(ry, Matrix.Axis.Y);
     Matrix mz = Matrix.makeRotationMatrix(rz, Matrix.Axis.Z);
+    Matrix myx = my.mult(mx);
+    rotMatrix = mz.mult(myx);
     
   }
   

@@ -3,6 +3,11 @@
  */
 
 public class Matrix {
+  public static final double EPSILON = 0.0000001;
+  public static boolean fpEquals(double num1, double num2) {
+    return (Math.abs(num1 - num2) < EPSILON);
+  }
+  
   public enum Axis { X, Y, Z };
   private double elt[][];
   
@@ -28,9 +33,12 @@ public class Matrix {
     Matrix result = new Matrix(this.rows(), m.cols());
     for (int i = 0; i < this.rows(); i++) {
       for (int j = 0; j < m.cols(); j++) {
+//        System.out.print(i + "," + j + ": ");
         for (int k = 0; k < this.cols(); k++) {
-          result.elt[i][j] += elt[i][k] * m.elt[k][i];
+//          System.out.print(elt[i][k] + "*" + m.elt[k][j] + " + ");
+          result.elt[i][j] += elt[i][k] * m.elt[k][j];
         }
+//        System.out.println(" = " + result.elt[i][j]);
       }
     }
     return result;

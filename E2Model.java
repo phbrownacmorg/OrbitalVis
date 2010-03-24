@@ -34,29 +34,19 @@ public class E2Model extends Model {
     carb2 = new SP3Atom(new Point3D(0, 0, Atom.BOND_LENGTH)); 
     carb2.setRot(180 + carbonXRot, 0, 0);  // 0 orbital interacts with the leaving Cl, and eventually forms the pi-bond.
     
-   // oh = new Hydroxide(new Point3D(0, 0, -(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
-                     //    AtomOrGroup.Charge.MINUS);
-    
-     //-(2*Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL)), 
     oh = new Hydroxide(new Point3D(0, 0, -2*MAX_WITHDRAWAL), AtomOrGroup.Charge.MINUS);
             
     hydro1 = new Atom();
     hydro2 = new Atom();
     hydro3 = new Atom();
     
-    chlor = new SP3Atom(new Point3D(0, 0, 2 * Atom.BOND_LENGTH + Math.max(0, getT() - 0.5))); 
-    //chlor.setRot(0, 180, 0);
+    chlor = new SP3Atom();
     
     meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     meth2 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     
-    double rotation = -carb1.getXRotation();
-      // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
-    Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
-    Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
-    Point3D hLoc1 = hLoc.transform(rotX);
-    hLoc1 = new Point3D(hLoc1.x(), hLoc1.y(), hLoc1.z() - Atom.BOND_LENGTH);
-    hydro1.setLoc(hLoc1);
+    Point3D orb0Vec = carb1.getOrbitalVector(0).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    hydro1.setLoc(carb1.getX() + orb0Vec.x(), carb1.getY() + orb0Vec.y(), carb1.getZ() + orb0Vec.z());
     hydro1InitialZ = hydro1.getZ();
     oHClosestZ = hydro1InitialZ - 1.5*(Atom.S_TO_SP3_BOND_LENGTH);
 
@@ -80,33 +70,30 @@ public class E2Model extends Model {
       // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
     
     // Set the chlorine
-    Matrix rot180LessX = Matrix.makeRotationMatrix(-180.0 + rotation, Matrix.Axis.X);
     final double BOND_LENGTH_FUZZ_FACTOR = 1.05; // Arbitrary
     final double WITHDRAWAL_DISTANCE_FACTOR = 2; // Arbitrary
-    Point3D hLocClPreRot = new Point3D(0, 0, Atom.SP3_SP3_BOND_LENGTH * BOND_LENGTH_FUZZ_FACTOR 
-                                         + WITHDRAWAL_DISTANCE_FACTOR * Math.max(0, getT() - 0.4)
-                                         + 8 * Math.max(0, getT() - 0.6));
-    Point3D hLocCl = hLocClPreRot.transform(rot180LessX);
-    chlor.setLoc(hLocCl);
+    double scalingFactor = Atom.SP3_SP3_BOND_LENGTH * BOND_LENGTH_FUZZ_FACTOR 
+      + WITHDRAWAL_DISTANCE_FACTOR * Math.max(0, getT() - 0.4)
+      + 8 * Math.max(0, getT() - 0.6);
+    Point3D carb2orb0Vec = carb2.getOrbitalVector(0).scale(scalingFactor);
+    chlor.setLoc(carb2.getX() + carb2orb0Vec.x(), carb2.getY() + carb2orb0Vec.y(),
+                 carb2.getZ() + carb2orb0Vec.z());
     chlor.setRot(rotation, 0, 0);
-    chlor.setLoc(chlor.getX(), chlor.getY(), chlor.getZ() + Atom.BOND_LENGTH);
     
-    // Set the CH3 that's bonded to carb1
-    double rot109To120 = 109.5 * ((0.5 - carb1.getInsideOutness())/0.5) + (120 * (carb1.getInsideOutness()/0.5));
-    double rot19To0 = (109.5 - 90) * ((0.5 - carb1.getInsideOutness())/0.5);
-    Matrix rotX = Matrix.makeRotationMatrix(-rotation, Matrix.Axis.X);
-    Matrix rotZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-    Point3D hLoc = new Point3D(0, 0, Atom.SP3_SP3_BOND_LENGTH);
-    Point3D hLoc1 = hLoc.transform(rotX);
-    Point3D hLoc2 = hLoc1.transform(rotZ);
-    meth1.setLoc(hLoc2.x(), hLoc2.y(), hLoc2.z() - Atom.BOND_LENGTH);
-    //meth1.setRot(180 + rotation, 0, 120);
-    meth1.setRot(-rot19To0, 180 - rot109To120, 0);
-    
-    rotZ =  Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-    Point3D hLoc3 = new Point3D(0, 0, Atom.BOND_LENGTH + SOrbitalView.RADIUS/2);
-    hLoc3 = hLoc3.transform(rotX);
-    hLoc3 = hLoc3.transform(rotZ);
+    // Set the CH3 that's bonded to carb1 (on orbital 3)
+    Point3D carb1orb3Vec = carb1.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
+    meth1.setLoc(carb1.getX() + carb1orb3Vec.x(), carb1.getY() + carb1orb3Vec.y(),
+                 carb1.getZ() + carb1orb3Vec.z());
+    double rotY = Math.toDegrees(Math.atan(-carb1orb3Vec.x() / -carb1orb3Vec.z()));
+    double rotX = Math.toDegrees(Math.asin(carb1orb3Vec.y() / Atom.SP3_SP3_BOND_LENGTH));
+    meth1.setRot(rotX, rotY, 0);
+
+    // Set the H that's on carb1's orbital 2
+    // Set the CH3 that's on carb2's orbital 2
+    // Set the H that's on carb2's orbital 3
+    Point3D carb2orb3Vec = carb2.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    hydro3.setLoc(carb2.getX() + carb2orb3Vec.x(), carb2.getY() + carb2orb3Vec.y(),
+                                carb2.getZ() + carb2orb3Vec.z());
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
@@ -118,17 +105,17 @@ public class E2Model extends Model {
       result.add(new BondView(carb1_hydro1));
       result.add(new BondView(carb1_hydro2));
       result.add(new BondView(carb2_chlor));
-//      result.add(new BondView(carb2_hydro3));
+      result.add(new BondView(carb2_hydro3));
 //      result.add(new BondView(carb2_meth2));
     }
-//    result.add(meth1.createView());
+    result.add(meth1.createView());
 //    result.add(meth2.createView());
     result.add(oh.createView(HydroxideView.TEXT_HO));
     result.add(carb1.createView("C", AtomView.C_BLACK));
     result.add(carb2.createView("C", AtomView.C_BLACK));
     result.add(hydro1.createView());
     //result.add(hydro2.createView());
-    //result.add(hydro3.createView());
+    result.add(hydro3.createView());
     result.add(chlor.createView("Cl", AtomView.CL_GREEN));
     return result;
   }
@@ -179,8 +166,6 @@ public class E2Model extends Model {
       oh.setLoc(0, hydro1.getY(), hohZ);
       hydro1.setLoc(hydro1.getX(), hydro1.getY(), hohZ + Atom.S_TO_SP3_BOND_LENGTH);
     }
-    
-    
     
     // Update the Bonds
 //    if (getT() < 0.3) {

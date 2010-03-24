@@ -53,25 +53,21 @@ public class SN1Model extends Model {
   }
   
   private void setHydrogenLocations() {
-    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
     double rotation = carb.getXRotation();
-      //109.5 * (1.0 - carb.getInsideOutness()) + ((180.0 - 109.5) * carb.getInsideOutness());
-    Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
-    Point3D hLoc = new Point3D(0, 0, 2 * Atom.BOND_LENGTH);
-    Point3D hLoc1 = hLoc.transform(rotX);
-    ethyl.setLoc(hLoc1);
+    
+    // Hang the ethyl on orbital 1
+    Point3D orb1Vec = carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
+    ethyl.setLoc(carb.getX() + orb1Vec.x(), carb.getY() + orb1Vec.y(), carb.getZ() + orb1Vec.z());
     ethyl.setRot(180 + rotation, 0, 0);
 
-    Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
-    Point3D hLoc2 = hLoc1.transform(rotZ);
-    ch3.setLoc(hLoc2);
+    // Set methyl on orbital 2
+    Point3D orb2Vec = carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
+    ch3.setLoc(carb.getX() + orb2Vec.x(), carb.getY() + orb2Vec.y(), carb.getZ() + orb2Vec.z());
     ch3.setRot(0, 180 + rotation, -90 + 120); // (X up, Y right)
     
-    rotZ =  Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-    Point3D hLoc3 = new Point3D(0, 0, Atom.BOND_LENGTH + SOrbitalView.RADIUS/2);
-    hLoc3 = hLoc3.transform(rotX);
-    hLoc3 = hLoc3.transform(rotZ);
-    hydro.setLoc(hLoc3);   
+    // Hydrogen on orbital 3
+    Point3D orb3Vec = carb.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    hydro.setLoc(carb.getX() + orb3Vec.x(), carb.getY() + orb3Vec.y(), carb.getZ() + orb3Vec.z());
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {

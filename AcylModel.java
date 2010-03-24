@@ -46,27 +46,22 @@ public class AcylModel extends Model {
   }
   
   private void setHydrogenLocations() {
-    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
+//    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
     double rotation = -carb.getXRotation();
-      // -109.5 * (1.0 - carb.getInsideOutness()) + ((-180.0 + 109.5) * carb.getInsideOutness());
-    Matrix rotX = Matrix.makeRotationMatrix(rotation, Matrix.Axis.X);
-    Point3D hLoc = new Point3D(0, 0, Atom.SP3_SP3_BOND_LENGTH);
-    Point3D hLoc1 = hLoc.transform(rotX);
-    oxy.setLoc(hLoc1);
+
+    // Oxygen on orbital 1
+    Point3D orb1Vec = carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
+    oxy.setLoc(carb.getX() + orb1Vec.x(), carb.getY() + orb1Vec.y(), carb.getZ() + orb1Vec.z());
     oxy.setRot(180 + 2 * rotation, 0, 0);
     
-    Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
-    Point3D hLoc2 = hLoc1.transform(rotZ);
-    ethyl.setLoc(hLoc2);
-    //ethyl.setRot(180 + rotation, 0, 120);
-    //ethyl.setRot(180 + rotation, 90, 120); // X left, Y up
+    // Ethyl on orbital 2
+    Point3D orb2Vec = carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
+    ethyl.setLoc(carb.getX() + orb2Vec.x(), carb.getY() + orb2Vec.y(), carb.getZ() + orb2Vec.z());
     ethyl.setRot(0, 180 + rotation, -90 + 120); // (X up, Y right)
     
-    rotZ =  Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-    Point3D hLoc3 = hLoc.transform(rotX);
-    hLoc3 = hLoc3.transform(rotZ);
-    ch3.setLoc(hLoc3);
-    //ch3.setRot(180 + rotation, 90, -120); // 0,0,0 gives Y up, Z right.  0,0,-120 points Y away, X down.  Want to rot X into Y.
+    // Methyl on orbital 3
+    Point3D orb3Vec = carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
+    ch3.setLoc(carb.getX() + orb3Vec.x(), carb.getY() + orb3Vec.y(), carb.getZ() + orb3Vec.z());
     ch3.setRot(0, 180 - rotation, 90 - 120);
   }
 
