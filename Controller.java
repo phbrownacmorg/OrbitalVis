@@ -215,6 +215,9 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     else if (modelName.equals("E2")) {
       result.add(new E2Model());
     }
+    else if (modelName.equals("E1")) {
+      result.add(new E1Model());
+    }
     else {
       boolean markHydrogens = true;
       if (props.containsKey("markHydrogens")) {
