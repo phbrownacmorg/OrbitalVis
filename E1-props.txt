@@ -1,0 +1,21 @@
+# default is "SN2 Visualization"
+title: E1 Visualization
+
+# default is 30
+#fov: 15
+fov: 25
+
+# default is 30
+near: 7
+  
+# default is to mark the hydrogens
+markHydrogens: false
+
+# default is horizontal
+# canvasLayout: horizontal
+
+# default is 350 170
+2DOffsets: 475 170
+
+# default is 25 100 100
+2DScales: -25 110 110

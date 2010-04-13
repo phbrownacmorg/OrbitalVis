@@ -179,35 +179,29 @@ public class E2Model extends Model {
     }
     
     // Update the Bonds
-//    if (getT() < 0.3) {
-      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
-//      carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
-      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
-//      carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
-      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
-//      carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
-//      carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
-//    }
-//    else if (getT() > 0.5) {
-      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
-//      carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
-      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
-//      carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
-      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
-//      carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
-//      carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
-//    }
-//    else {
-      hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-      carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
-//      carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
-      carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
-//      carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
-      carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
-//      carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
-//      carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
-//    }
+    if (getT() < 0.45) { // Initial state
+      hydro2_oh.setState(Bond.State.BROKEN);
+      carb1_carb2.setState(Bond.State.FULL);
+      carb1_hydro2.setState(Bond.State.FULL);
+      carb2_chlor.setState(Bond.State.FULL);
+      oh.setCharge(AtomOrGroup.Charge.MINUS);
+      chlor.setCharge(AtomOrGroup.Charge.NEUTRAL);
+    }
+    else if (getT() > 0.55) { // Final state
+      hydro2_oh.setState(Bond.State.FULL);
+      carb1_carb2.setState(Bond.State.DOUBLE);
+      carb1_hydro2.setState(Bond.State.BROKEN);
+      carb2_chlor.setState(Bond.State.BROKEN);
+      oh.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      chlor.setCharge(AtomOrGroup.Charge.MINUS);
+    }
+    else { // Intermediate
+      hydro2_oh.setState(Bond.State.PARTIAL);
+      carb1_carb2.setState(Bond.State.FULL_PARTIAL);
+      carb1_hydro2.setState(Bond.State.PARTIAL);
+      carb2_chlor.setState(Bond.State.PARTIAL);
+      oh.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      chlor.setCharge(AtomOrGroup.Charge.PART_MINUS);
+    }
   }
 }
