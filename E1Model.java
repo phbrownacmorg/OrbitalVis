@@ -63,20 +63,18 @@ public class E1Model extends Model {
   }
   
   private void setHydrogenLocations() {
-    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double rotation = -carb1.getXRotation();
-      // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
-    
     // Set the chlorine
     final double BOND_LENGTH_FUZZ_FACTOR = 1.05; // Arbitrary
     final double WITHDRAWAL_DISTANCE_FACTOR = 1; // Arbitrary
     double scalingFactor = Atom.SP3_SP3_BOND_LENGTH * BOND_LENGTH_FUZZ_FACTOR 
       + WITHDRAWAL_DISTANCE_FACTOR * Math.max(0, getT() - 0.1)
-      + 8 * Math.max(0, getT() - 0.45);
+      + 5 * MAX_WITHDRAWAL * Math.max(0, getT() - 0.45);
     Point3D carb2orb0Vec = carb2.getOrbitalVector(0).scale(scalingFactor);
     chlor.setLoc(carb2.getX() + carb2orb0Vec.x(), carb2.getY() + carb2orb0Vec.y(),
                  carb2.getZ() + carb2orb0Vec.z());
-    chlor.setRot(rotation, 0, 0);  // Fix this to use carb2orbVec
+    double rotation = -carb2.getXRotation();
+      // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
+    chlor.setRot(rotation, 0, 0);
     
     // Set the CH3 that's bonded to carb1 (on orbital 3)
     Point3D carb1orb3Vec = carb1.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
@@ -157,55 +155,75 @@ public class E1Model extends Model {
     //oh.setLoc(0, 0, (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
     
     if (getT() < 0.5) {
-      //oh.setLoc(0, hydro2.getY(), -2*MAX_WITHDRAWAL);
-      //hydro2.setLoc(hydro2.getX(), hydro2.getY(), hydro2InitialZ);
+      // Do nothing
     }
     else if (getT() < 0.6) {
       oh.setLoc(0, hydro2.getY(), ((0.6 - getT())/0.1) * -1.25 * MAX_WITHDRAWAL + ((getT() - 0.5)/0.1) * oHClosestZ);
       hydro2.setLoc(hydro2.getX(), hydro2.getY(), hydro2InitialZ);
     }
-    else if (getT() < 0.7) {
-      oh.setLoc(0, hydro2.getY(), oHClosestZ + ((getT() - 0.6)/0.1) * SOrbitalView.RADIUS);
+    else if (getT() < 0.75) {
+      oh.setLoc(0, hydro2.getY(), oHClosestZ + ((getT() - 0.6)/0.15) * SOrbitalView.RADIUS);
       hydro2.setLoc(hydro2.getX(), hydro2.getY(),
-                    (((0.8 - getT())/0.2) * hydro2InitialZ) 
-                      + ((getT() - 0.6)/0.2) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestZ));
+                    (((0.9 - getT())/0.3) * hydro2InitialZ) 
+                      + ((getT() - 0.6)/0.3) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestZ));
     }
-    else if (getT() < 0.8) {
-      oh.setLoc(0, hydro2.getY(), oHClosestZ + ((0.8 - getT())/0.1) * SOrbitalView.RADIUS);
+    else if (getT() < 0.9) {
+      oh.setLoc(0, hydro2.getY(), oHClosestZ + ((0.9 - getT())/0.15) * SOrbitalView.RADIUS);
       hydro2.setLoc(hydro2.getX(), hydro2.getY(),
-                    (((0.8 - getT())/0.2) * hydro2InitialZ) 
-                      + ((getT() - 0.6)/0.2) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestZ));
+                    (((0.9 - getT())/0.3) * hydro2InitialZ) 
+                      + ((getT() - 0.6)/0.3) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestZ));
     }
     else {
-      double hohZ = ((getT() - 0.8)/0.2) * -(MAX_WITHDRAWAL/1.5) + ((1.0 - getT())/0.2) * oHClosestZ;
+      double hohZ = ((getT() - 0.9)/0.1) * -(MAX_WITHDRAWAL/1.5) + ((1.0 - getT())/0.1) * oHClosestZ;
       oh.setLoc(0, hydro2.getY(), hohZ);
       hydro2.setLoc(hydro2.getX(), hydro2.getY(), hohZ + Atom.S_TO_SP3_BOND_LENGTH);
     }
     
     // Update the Bonds
-    if (getT() < 0.45) { // Initial state
+    if (getT() < 0.12) { // Initial state
       hydro2_oh.setState(Bond.State.BROKEN);
       carb1_carb2.setState(Bond.State.FULL);
       carb1_hydro2.setState(Bond.State.FULL);
       carb2_chlor.setState(Bond.State.FULL);
       oh.setCharge(AtomOrGroup.Charge.MINUS);
       chlor.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      carb2.setCharge(AtomOrGroup.Charge.NEUTRAL);
     }
-    else if (getT() > 0.55) { // Final state
+    else if (getT() < 0.46) { // Intermediate state 1
+      hydro2_oh.setState(Bond.State.BROKEN);
+      carb1_carb2.setState(Bond.State.FULL);
+      carb1_hydro2.setState(Bond.State.FULL);
+      carb2_chlor.setState(Bond.State.PARTIAL);
+      oh.setCharge(AtomOrGroup.Charge.MINUS);
+      chlor.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      carb2.setCharge(AtomOrGroup.Charge.PART_PLUS);
+    }
+    else if (getT() < 0.7) { // Intermediate state 2
+      hydro2_oh.setState(Bond.State.BROKEN);
+      carb1_carb2.setState(Bond.State.FULL);
+      carb1_hydro2.setState(Bond.State.FULL);
+      carb2_chlor.setState(Bond.State.BROKEN);
+      oh.setCharge(AtomOrGroup.Charge.MINUS);
+      chlor.setCharge(AtomOrGroup.Charge.MINUS);
+      carb2.setCharge(AtomOrGroup.Charge.PLUS);
+    }
+    else if (getT() < 0.91) { // Intermediate state 3
+      hydro2_oh.setState(Bond.State.PARTIAL);
+      carb1_carb2.setState(Bond.State.FULL_PARTIAL);
+      carb1_hydro2.setState(Bond.State.PARTIAL);
+      carb2_chlor.setState(Bond.State.BROKEN);
+      oh.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      chlor.setCharge(AtomOrGroup.Charge.MINUS);
+      carb2.setCharge(AtomOrGroup.Charge.PART_PLUS);
+    }
+    else { // Final state
       hydro2_oh.setState(Bond.State.FULL);
       carb1_carb2.setState(Bond.State.DOUBLE);
       carb1_hydro2.setState(Bond.State.BROKEN);
       carb2_chlor.setState(Bond.State.BROKEN);
       oh.setCharge(AtomOrGroup.Charge.NEUTRAL);
       chlor.setCharge(AtomOrGroup.Charge.MINUS);
-    }
-    else { // Intermediate
-      hydro2_oh.setState(Bond.State.PARTIAL);
-      carb1_carb2.setState(Bond.State.FULL_PARTIAL);
-      carb1_hydro2.setState(Bond.State.PARTIAL);
-      carb2_chlor.setState(Bond.State.PARTIAL);
-      oh.setCharge(AtomOrGroup.Charge.PART_MINUS);
-      chlor.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      carb2.setCharge(AtomOrGroup.Charge.NEUTRAL);
     }
   }
 }

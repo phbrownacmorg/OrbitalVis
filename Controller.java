@@ -79,6 +79,16 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       System.out.println(e);
     }
 
+    if (props.containsKey("fontSize")) {
+      try {
+        float newFontSize = Float.parseFloat(props.getProperty("fontSize"));
+        View2D.setFontSize(newFontSize);
+      } catch (NumberFormatException e) {
+        System.out.println("Ignoring fontSize specification, due to the following:");
+        System.out.println(e);
+      }
+    }
+
     cineStep = 0;
     java.util.List<Model> modelList = makeModels(props);
     iterator = modelList.listIterator();

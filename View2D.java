@@ -10,7 +10,7 @@ public class View2D {
   private static int X_OFF = 365;
   private static int Y_OFF = 170;
   
-  public static final float FONT_SIZE = 24.0f;
+  public static float FONT_SIZE = 24.0f;
   
   private ArrayList<Drawable> drawList;
  
@@ -38,6 +38,10 @@ public class View2D {
 //      g.drawLine(250, 0, 250, 500);
     }
     
+  }
+  
+  public static void setFontSize(float newFontSize) {
+    FONT_SIZE = newFontSize;
   }
   
   public static void setOffsets(int offX, int offY) {
