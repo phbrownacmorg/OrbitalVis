@@ -20,11 +20,16 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * OpenGL test class, due to Gregory Pierce.  It is a
- * controller class in the Model-View-Controller paradigm.
+ * Controller class to start the whole thing going.
  *
- * @author Peter Brown
- * @version 31 May 2008
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class Controller extends Animator implements ActionListener, ChangeListener
 {

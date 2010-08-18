@@ -1,3 +1,17 @@
+/**
+ * Class to model a methyl group.  The origin of the carbon atom
+ * is the origin of the group.
+ *
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 public class Methyl extends AtomOrGroup {
   private Atom hydro1, hydro2, hydro3;
   private SP3Atom carb;

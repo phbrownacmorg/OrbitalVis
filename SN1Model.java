@@ -3,11 +3,23 @@ import javax.media.opengl.*;
 
 /**
  * The Model class for the SN1 reaction
+ *
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public class SN1Model extends Model {
-  public static final double MAX_WITHDRAWAL = 10.0 * Atom.SP3_SP3_BOND_LENGTH; // Distance from the bonded position of the entering/leaving group 
-                                                                              // to its position outside the viewing frustum
+  /** 
+   * Distance from the bonded position of the entering/leaving group to its
+   * position outside the viewing frustum
+   */
+  public static final double MAX_WITHDRAWAL = 10.0 * Atom.SP3_SP3_BOND_LENGTH;
   
   // OH attacks from the left or the right?
   private int zSign;

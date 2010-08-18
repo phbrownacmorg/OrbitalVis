@@ -5,7 +5,7 @@
 # default is SN2
 #model: Acyl
 #model: SN1
-model: E1
+#model: E1
 #model: E2
 
 #---------- Projection properties -----------------

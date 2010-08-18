@@ -1,9 +1,18 @@
 import junit.framework.TestCase;
 
 /**
- * A JUnit test case class.
+ * A JUnit test case class for the Matrix class.
  * Every method starting with the word "test" will be called when running
  * the test with JUnit.
+ *
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class MatrixTest extends TestCase {
   

@@ -6,6 +6,15 @@ import javax.media.opengl.*;
  * Orbital 1 is in the YZ plane.  When the atom's insideOutness == 0.5, it lies along the atom's +Y axis.  
  * Orbital 2 points on the +X side of the YZ plane.  When insideOutness == 0.5, it lies in the XY plane.
  * Orbital 3 points on the -X side of the YZ plane.  When insideOutness == 0.5, it lies in the XY plane.
+ *
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public class SP3Atom extends Atom {

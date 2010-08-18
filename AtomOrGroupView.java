@@ -3,7 +3,18 @@ import java.awt.Graphics2D;
 import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
 import java.util.Hashtable;
-
+/**
+ * View for an AtomOrGroup.
+ *
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 public abstract class AtomOrGroupView extends Drawable {
   private AtomOrGroup frame;
   private String text;

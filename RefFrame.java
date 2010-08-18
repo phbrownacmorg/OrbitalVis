@@ -1,8 +1,17 @@
 import java.awt.geom.Point2D;
 
 /**
- * Represents a frame of reference (coordinate system), which may be nested within a larger frame.
- * It is mutable.
+ * Represents a frame of reference (coordinate system), which may be nested
+ * within a larger frame. It is mutable.
+ *
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class RefFrame {
   private Point3D pt;

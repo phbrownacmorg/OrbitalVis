@@ -6,12 +6,18 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * OpenGL test class, due almost completely to Gregory
- * Pierce.  It is a View class, in the terms of the
- * Model-View-Controller paradigm.
+ * A View class, in the terms of the Model-View-Controller paradigm.
+ * This class borrows from code originally written by Gregory Pierce (freely
+ * available on the Web).
  *
- * @author Peter Brown
- * @version 31 May 2008
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class View implements GLEventListener, ConstantMgr
 {

@@ -2,6 +2,15 @@ import javax.media.opengl.*;
 
 /**
  * A class to represent an atom.  It can also set the bond length.
+ *
+ * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ *
+ * This code is distributed under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3 of the
+ * license or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class Atom extends AtomOrGroup {
   public static final double BOND_LENGTH = 1.0 - POrbital.SP3_PROP;
