@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">  <head>
+    <title></title>
+    <style type="text/css"  id="internalStyle">
+      body { background-color: white }
+      h1 { text-align: center }
+
+      var { 
+      font-weight: bold;
+      font-family: monospace;
+      }
+
+      code { 
+      font-weight: bold;
+      font-family: monospace;
+      white-space: pre;
+      }
+
+      samp {
+      font-weight: bold;
+      font-family: monospace;
+      font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>How to use OrbitalVis</h1>
+
+    <h2>Prerequisites</h2>
+
+    <p>OrbitalVis requires the following software to be installed on
+      your computer:</p>
+    <ul>
+      <li>Sun/Oracle Java Runtime Environment 1.6, update 18 or later.
+	Earlier updates of the JRE might work, but haven't been
+	tested.  JRE's other than Sun's/Oracle's might also work, but
+	haven't been
+	tested.  <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle's
+	latest JRE</a> is a free download, so this shouldn't pose a
+	real problem.</li>
+      <li>JOGL [[HAVE TO EXPERIMENT]]</li>
+    </ul>
+
+    <h2>Using OrbitalVis</h2>
+
+    <h3>Selecting a reaction mechanism</h3>
+
+    <p>You can select a reaction mechanism by editing the
+      file <samp>generic-props.txt</samp> with a text editor (Notepad,
+      for example).  In the part of that file marked "Which model?",
+      you can remove the <samp>#</samp> character at the beginning of
+      the line that indicates the model you want.  So, for example, if
+      you want to see an E1 reaction, you change the line that looks
+      like this:<br /><code>#model: E1</code><br />to 
+      this:<br /><code>model: E1</code><br />Make sure that the lines
+      for all the other models start with a <samp>#</samp>, and you're
+      ready to run.
+    </p>
+    <p>If you want to see an S<sub><small>N</small></sub>2 reaction,
+      just make sure that lines for all the other models start with
+      a <samp>#</samp> character, and you're ready to go.
+      (S<sub><small>N</small></sub>2 is the default, which is why
+      there's no specific line for it.)</p>
+    
+    <p>Many other properties of the animation can also be changed by
+      editing either the <samp>generic-props.txt</samp> file or the
+      several mechanism-specific files (for
+      example, <samp>E1-props.txt</samp> sets properties specific to the
+      E1 animation).</p>
+
+    <h3>Starting the program</h3>
+ 
+    <p>Just open <samp>OrbitalVis.jar</samp>.</p>
+
+    <h3>Controls</h3>
+
+    <h4>Running the reaction</h4>
+ 
+    <p>The reaction can be run by using the arrow buttons at the top
+      (press <strong>and hold</strong> to run the reaction forward or
+      backward).  A specific point in the reaction can be chosen with
+      the slider bar between the two arrow buttons.</p>
+    
+    <h4>Changing the viewpoint</h4>
+    
+    <p>The <samp>Rock</samp> button makes the model rock back and
+      forth automatically.  This motion can be quite helpful in
+      disambiguating the 3D structure, especially with more complex
+      reactions.  Clicking the same button again (it will now be
+      marked <samp>Stop</samp>) makes the rocking stop.</p>
+
+    <p>The model can also be rotated about the vertical axis by
+      clicking the mouse in the 3D window and dragging sideways.
+      This can be useful if you want to look at a reaction from some
+      particular angle.</p>
+    <p>There is currently no way to rotate the model about either of
+      the other two axes.</p>
+
+    <h4>Attacking from the other side</h4>
+
+    <p>If the reaction mechanism allows attack from the other side
+      (such as E1 or S<sub><small>N</small></sub>1), the <samp>Attack
+      other side</samp> button will restart the simulation with the
+      attacking group coming from the other side.</p>
+
+    <h4>Exiting the program</h4>
+    
+    <p>Closing the window exits the program. (For example, on Windows,
+      click the little button with the &ldquo;X&rdquo; in the
+      upper-right corner.)</p>
+
+    <hr />
+    <address><a>Peter Brown</a> &lt;<a href="mailto:peter.brown@converse.edu">peter.brown@converse.edu</a>&gt;</address>
+    <p style="margin: 0">
+      Last modified: <!-- hhmts start -->18 Aug 2010 22:06:36
+</p></body></html>
