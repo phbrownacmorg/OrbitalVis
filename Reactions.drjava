@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <drjava version="drjava-20100816-r5366">
   <project autorefresh="false" build="" main="Controller" manifest="Main-Class: Controller&#10;Class-Path: jogl.jar gluegen-rt.jar&#10;" root="" work="">
-    <createjar file="SN2.jar" flags="27"/>
+    <createjar file="OrbitalVis.jar" flags="27"/>
     <source>
       <file active="true" name="View.java" package="" timestamp="18-Aug-2010 09:52:10">
         <select from="152" to="152"/>
