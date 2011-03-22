@@ -20,7 +20,7 @@ public class AcylModel extends Model {
   
   // Atoms/groups
   private Atom nucleophile;
-  private SP3Atom carb;
+  private SP3Atom carb;  // Central carbon
   private Ethyl ethyl;
   private Methyl ch3;
   private SP3Atom oxy;
@@ -82,6 +82,8 @@ public class AcylModel extends Model {
       result.add(new BondView(carb_ch3));
       result.add(new BondView(carb_oxy));
     }
+
+    // Draw the 3-D view back to front
     result.add(ch3.createView());
     result.add(nucleophile.createView());
     result.add(carb.createView("C", AtomView.C_BLACK));
