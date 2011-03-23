@@ -4,7 +4,7 @@ import javax.media.opengl.*;
 /**
  * The Model class for electrophilic addition to an alkene
  *
- * Copyright 2011 Peter Brown <phbrown@acm.org>, Megan Dobbins, and Ashleigh Geldenhuys
+ * Copyright 2011 Peter Brown <phbrown@acm.org>, Megan Dobbins<megan.dobbins@converse.edu>, and Ashleigh Geldenhuys<ashleigh.geldenhuys@converse.edu>
  *
  * This code is distributed under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of the
@@ -23,13 +23,17 @@ public class EA2AModel extends Model {
   private SP3Atom top_carb;     // Top carbon in double bond
   private Atom bottom_H;
   private Atom top_H;
+  private Methyl ch3a;
+  private Methyl ch3b;
   
   private Atom nucleophile;
-  private Methyl ch3;
   
   // bonds
   private Bond bottom_carb_nucleophile;
-  private Bond bottom_carb_H, top_carb_H, bottom_carb_ch3, carb_carb;
+  /**
+   * Remember to add the new bonds here please!!!!
+   */
+  private Bond bottom_carb_H, top_carb_H, bottom_carb_ch3, carb_carb, top_carb_ch3;
 
   public EA2AModel(int zSign) {
     this.zSign = zSign;
@@ -44,7 +48,8 @@ public class EA2AModel extends Model {
     
     bottom_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    ch3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
+    ch3a = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
+    ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     top_carb = new SP3Atom();
     top_carb.setInsideOutness(0.5);
     top_carb.setP0Divergence(1);
@@ -54,7 +59,8 @@ public class EA2AModel extends Model {
     bottom_carb_nucleophile = new Bond(bottom_carb, nucleophile, Bond.State.BROKEN);
     bottom_carb_H = new Bond(bottom_carb, bottom_H, Bond.State.FULL);
     top_carb_H = new Bond(top_carb, top_H, Bond.State.FULL);
-    bottom_carb_ch3 = new Bond(bottom_carb, ch3, Bond.State.FULL);
+    bottom_carb_ch3 = new Bond(bottom_carb, ch3a, Bond.State.FULL);
+    top_carb_ch3 = new Bond(top_carb, ch3b, Bond.State.FULL);            // creating the top methyl group
     carb_carb = new Bond(bottom_carb, top_carb, Bond.State.DOUBLE);
   }
   
@@ -73,10 +79,14 @@ public class EA2AModel extends Model {
     Point3D orb3Vec = top_carb.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
     top_H.setLoc(top_carb.getX() + orb3Vec.x(), top_carb.getY() + orb3Vec.y(), top_carb.getZ() + orb3Vec.z());
     
-    // Methyl on orbital 3
-    orb3Vec = bottom_carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
-    ch3.setLoc(bottom_carb.getX() + orb3Vec.x(), bottom_carb.getY() + orb3Vec.y(), bottom_carb.getZ() + orb3Vec.z());
-    ch3.setRot(0, 180 - rotation, 90 - 120);
+    // Methyl on orbital 3 (orbital 2 on the top)
+    Point3D orb4Vec = bottom_carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
+    ch3a.setLoc(bottom_carb.getX() + orb4Vec.x(), bottom_carb.getY() + orb4Vec.y(), bottom_carb.getZ() + orb4Vec.z());
+    
+    Point3D orb5Vec = top_carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
+    ch3b.setLoc(top_carb.getX() + orb5Vec.x(), top_carb.getY() + orb5Vec.y(), top_carb.getZ() + orb5Vec.z());
+    ch3a.setRot(0, 180 - rotation, 90 - 120);
+    ch3b.setRot(0, 175 - rotation, 90 - 75);
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
@@ -85,12 +95,14 @@ public class EA2AModel extends Model {
       //result.add(new BondView(bottom_carb_nucleophile));
       result.add(new BondView(bottom_carb_H));
       result.add(new BondView(top_carb_H));
-      //result.add(new BondView(bottom_carb_ch3));
+      result.add(new BondView(bottom_carb_ch3));
+      result.add(new BondView(top_carb_ch3));
       result.add(new BondView(carb_carb));
     }
 
     // Draw the 3-D view back to front
-    //result.add(ch3.createView());
+    result.add(ch3a.createView());
+    result.add(ch3b.createView());
     //result.add(nucleophile.createView());
     result.add(bottom_carb.createView("C", AtomView.C_BLACK));
     result.add(top_carb.createView("C", AtomView.C_BLACK));
@@ -111,6 +123,7 @@ public class EA2AModel extends Model {
     bottom_carb.setP0Divergence(divergence);
     top_carb.setInsideOutness(insideOutness);
     top_carb.setP0Divergence(divergence);
+
     
     // Set the corresponding locations of the hydrogens
     setHydrogenLocations();
@@ -124,18 +137,24 @@ public class EA2AModel extends Model {
       nucleophile.setCharge(AtomOrGroup.Charge.MINUS);
       top_carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
       carb_carb.setState(Bond.State.DOUBLE);
+      bottom_carb_ch3.setState(Bond.State.FULL);
+      top_carb_ch3.setState(Bond.State.FULL);
     }
     else if (getT() > 0.5) {
       bottom_carb_nucleophile.setState(Bond.State.FULL);
       nucleophile.setCharge(AtomOrGroup.Charge.NEUTRAL);
       top_carb.setCharge(AtomOrGroup.Charge.MINUS);
       carb_carb.setState(Bond.State.FULL);
+      bottom_carb_ch3.setState(Bond.State.FULL);
+      top_carb_ch3.setState(Bond.State.FULL);
     }
     else {
       bottom_carb_nucleophile.setState(Bond.State.PARTIAL);
       nucleophile.setCharge(AtomOrGroup.Charge.PART_MINUS);
       top_carb.setCharge(AtomOrGroup.Charge.PART_MINUS);
       carb_carb.setState(Bond.State.FULL_PARTIAL);
+      bottom_carb_ch3.setState(Bond.State.FULL);
+      top_carb_ch3.setState(Bond.State.FULL);
     }
   }
 }
