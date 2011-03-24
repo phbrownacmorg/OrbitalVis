@@ -101,12 +101,18 @@ public class EA2AModel extends Model {
     // Now the rotation, which is the tricky part.  There's no comparable code in Acyl,
     // because in Acyl the top atom is an oxygen, so there aren't any groups attached to
     // its upper orbitals
-    double rotX = top_carb.getXRotation();
+    double orbRotX = top_carb.getXRotation();
     double inout = top_carb.getInsideOutness();
     double divergence = top_carb.getP0DivergenceAngle();
+    double rotX = top_carb.getRotX();
+    double rotY = top_carb.getRotY();
+    double rotZ = top_carb.getRotZ();
     
     if ((super.getT() < 0.001) || (super.getT() > 0.999)) {
-      System.out.println("top carb: " + rotX + " " + inout + " " + divergence);
+      System.out.print("top carb: " + orbRotX + " " + inout + " " + divergence);
+      System.out.println(" rotation: " + rotX + " " + rotY + " " + rotZ);
+      System.out.println("\ttop methyl rotation: " + 0 + " " + 
+                         (rotY - 180.0 + orbRotX) + " " + rotX);
     }
     // This really needs a better way of working out chained rotations.
     // Y: rotX is really the rotation needed to hit the *orbital* in X, not the
@@ -120,7 +126,8 @@ public class EA2AModel extends Model {
     //    is that the progression in the Z rotation shouldn't be linear, because the
     //    vertical (in world space) movement of top_carb's orbital 2 isn't linear.  It's
     //    some funky trig thing, and I haven't yet figured it out.
-    ch3b.setRot(0, /*-270 + 2*rotX*/ 0, -60 + rotX);
+    ch3b.setRot(0, -90, -rotX);
+    //ch3b.setRot(0, -270 + 2*orbRotX, -60 + orbRotX);
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
