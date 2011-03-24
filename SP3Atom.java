@@ -110,6 +110,10 @@ public class SP3Atom extends Atom {
     
   }
   
+  public double getP0DivergenceAngle() {
+    return porb[0].centralAngle();
+  }
+  
   public void setP0Divergence(double d) {
     porb[0].setDivergence(d);
   }

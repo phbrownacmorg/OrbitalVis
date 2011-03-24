@@ -70,23 +70,57 @@ public class EA2AModel extends Model {
 
     // Top carbon on orbital 1
     Point3D orb1Vec = bottom_carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
-    top_carb.setLoc(bottom_carb.getX() + orb1Vec.x(), bottom_carb.getY() + orb1Vec.y(), bottom_carb.getZ() + orb1Vec.z());
+    top_carb.setLoc(bottom_carb.getX() + orb1Vec.x(), 
+                    bottom_carb.getY() + orb1Vec.y(), 
+                    bottom_carb.getZ() + orb1Vec.z());
     top_carb.setRot(180 + 2 * rotation, 0, 0);
     
     // Hydrogen on orbital 2 (orbital 3 on the top carbon)
     Point3D orb2Vec = bottom_carb.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    bottom_H.setLoc(bottom_carb.getX() + orb2Vec.x(), bottom_carb.getY() + orb2Vec.y(), bottom_carb.getZ() + orb2Vec.z());
+    bottom_H.setLoc(bottom_carb.getX() + orb2Vec.x(), 
+                    bottom_carb.getY() + orb2Vec.y(), 
+                    bottom_carb.getZ() + orb2Vec.z());
     Point3D orb3Vec = top_carb.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    top_H.setLoc(top_carb.getX() + orb3Vec.x(), top_carb.getY() + orb3Vec.y(), top_carb.getZ() + orb3Vec.z());
+    top_H.setLoc(top_carb.getX() + orb3Vec.x(), 
+                 top_carb.getY() + orb3Vec.y(), 
+                 top_carb.getZ() + orb3Vec.z());
     
     // Methyl on orbital 3 (orbital 2 on the top)
-    Point3D orb4Vec = bottom_carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
-    ch3a.setLoc(bottom_carb.getX() + orb4Vec.x(), bottom_carb.getY() + orb4Vec.y(), bottom_carb.getZ() + orb4Vec.z());
-    
-    Point3D orb5Vec = top_carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
-    ch3b.setLoc(top_carb.getX() + orb5Vec.x(), top_carb.getY() + orb5Vec.y(), top_carb.getZ() + orb5Vec.z());
+    orb3Vec = bottom_carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
+    ch3a.setLoc(bottom_carb.getX() + orb3Vec.x(), 
+                bottom_carb.getY() + orb3Vec.y(), 
+                bottom_carb.getZ() + orb3Vec.z());
     ch3a.setRot(0, 180 - rotation, 90 - 120);
-    ch3b.setRot(0, 175 - rotation, 90 - 75);
+    
+    // Action of top carbon and its methyl group is altogether more complex
+    // First, the position
+    orb2Vec = top_carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
+    ch3b.setLoc(top_carb.getX() + orb2Vec.x(), 
+                top_carb.getY() + orb2Vec.y(), 
+                top_carb.getZ() + orb2Vec.z());
+    // Now the rotation, which is the tricky part.  There's no comparable code in Acyl,
+    // because in Acyl the top atom is an oxygen, so there aren't any groups attached to
+    // its upper orbitals
+    double rotX = top_carb.getXRotation();
+    double inout = top_carb.getInsideOutness();
+    double divergence = top_carb.getP0DivergenceAngle();
+    
+    if ((super.getT() < 0.001) || (super.getT() > 0.999)) {
+      System.out.println("top carb: " + rotX + " " + inout + " " + divergence);
+    }
+    // This really needs a better way of working out chained rotations.
+    // Y: rotX is really the rotation needed to hit the *orbital* in X, not the
+    //    rotation applied to the whole *atom* in X.  -rotX works great at t = 0,
+    //    but is thrown off for higher t-values by top_carb's own rotation.
+    // Z: Similarly, while 30 is the correct *starting* value (the orbitals of the
+    //    planar-configured atom are rotated up 120 = 30 deg beyond 90), neither 30
+    //    nor 19.5 would be the correct *ending* value because of the rotation
+    //    applied to top_carb's own frame of reference (specifically, top_carb's
+    //    Y-axis has been rotated 2*19.5 deg = 39 deg into its Z).  Key to note here
+    //    is that the progression in the Z rotation shouldn't be linear, because the
+    //    vertical (in world space) movement of top_carb's orbital 2 isn't linear.  It's
+    //    some funky trig thing, and I haven't yet figured it out.
+    ch3b.setRot(0, /*-270 + 2*rotX*/ 0, -60 + rotX);
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
@@ -124,7 +158,6 @@ public class EA2AModel extends Model {
     top_carb.setInsideOutness(insideOutness);
     top_carb.setP0Divergence(divergence);
 
-    
     // Set the corresponding locations of the hydrogens
     setHydrogenLocations();
     
