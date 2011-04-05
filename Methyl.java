@@ -16,9 +16,17 @@ public class Methyl extends AtomOrGroup {
   private Atom hydro1, hydro2, hydro3;
   private SP3Atom carb;
   
+  public Methyl(Point3D pt, AtomOrGroup.Charge charge, RefFrame parent) {
+    super(pt, charge, parent);
+    makeMethylStuff();
+  }
+
   public Methyl(Point3D pt, AtomOrGroup.Charge charge) {
     super(pt, charge);
-    
+    makeMethylStuff();
+  }
+  
+  private void makeMethylStuff() {
     Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
     Matrix rotMatrix = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
     hLoc = hLoc.transform(rotMatrix);

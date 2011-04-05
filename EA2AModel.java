@@ -49,10 +49,10 @@ public class EA2AModel extends Model {
     bottom_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     ch3a = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     top_carb = new SP3Atom();
     top_carb.setInsideOutness(0.5);
     top_carb.setP0Divergence(1);
+    ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
     setHydrogenLocations();
     
     // Create the Bonds
@@ -95,9 +95,13 @@ public class EA2AModel extends Model {
     // Action of top carbon and its methyl group is altogether more complex
     // First, the position
     orb2Vec = top_carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
-    ch3b.setLoc(top_carb.getX() + orb2Vec.x(), 
-                top_carb.getY() + orb2Vec.y(), 
-                top_carb.getZ() + orb2Vec.z());
+    // Located relative to the top carbon, so we just go down the orbital vector
+    
+    // [[FIX: WHY ISN'T THE ORBITAL VECTOR GIVING THE CORRECT POSITION 
+    //   AT THE END?  (ANSWER: IT IS, BUT IN WORLD COORDINATES NOT RELATIVE
+    //   COORDINATES.)]]
+    ch3b.setLoc(orb2Vec.x(), orb2Vec.y(), orb2Vec.z());
+    
     // Now the rotation, which is the tricky part.  There's no comparable code in Acyl,
     // because in Acyl the top atom is an oxygen, so there aren't any groups attached to
     // its upper orbitals
@@ -126,7 +130,7 @@ public class EA2AModel extends Model {
     //    is that the progression in the Z rotation shouldn't be linear, because the
     //    vertical (in world space) movement of top_carb's orbital 2 isn't linear.  It's
     //    some funky trig thing, and I haven't yet figured it out.
-    ch3b.setRot(0, -90, -rotX);
+    ch3b.setRot(0, 0, 0);
     //ch3b.setRot(0, -270 + 2*orbRotX, -60 + orbRotX);
   }
 

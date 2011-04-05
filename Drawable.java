@@ -24,10 +24,17 @@ public class Drawable {
   
   public void initXfm(GL gl) {
     gl.glPushMatrix();
-    gl.glTranslated(frame.getX(), frame.getY(), frame.getZ());
-    gl.glRotated(frame.getRotZ(), 0.0, 0.0, 1.0);
-    gl.glRotated(frame.getRotY(), 0.0, 1.0, 0.0);
-    gl.glRotated(frame.getRotX(), 1.0, 0.0, 0.0);
+    initXfmForFrame(gl, frame);
+  }
+  
+  protected void initXfmForFrame(GL gl, RefFrame thisFrame) {
+    if (thisFrame.getParent() != null) {
+      initXfmForFrame(gl, thisFrame.getParent());
+    }
+    gl.glTranslated(thisFrame.getX(), thisFrame.getY(), thisFrame.getZ());
+    gl.glRotated(thisFrame.getRotZ(), 0.0, 0.0, 1.0);
+    gl.glRotated(thisFrame.getRotY(), 0.0, 1.0, 0.0);
+    gl.glRotated(thisFrame.getRotX(), 1.0, 0.0, 0.0);
   }
   
   public void endXfm(GL gl) {

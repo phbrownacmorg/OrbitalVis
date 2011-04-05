@@ -20,6 +20,11 @@ public abstract class AtomOrGroup extends RefFrame {
     charge = initialCharge;
   }
     
+  protected AtomOrGroup(Point3D pt, Charge initialCharge, RefFrame parent) {
+    super(pt, parent);
+    charge = initialCharge;
+  }
+    
   public Charge getCharge() { return charge; }
   public void setCharge(Charge newCharge) { charge = newCharge; }
 }

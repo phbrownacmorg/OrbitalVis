@@ -19,24 +19,43 @@ public class RefFrame {
   private double ry;
   private double rz;
   private Point2D pt2d;
+  private RefFrame parent;  // Frame within which this one is nested
   
   public RefFrame() {
     updatePt(new Point3D());
+    this.parent = null;
+  }
+  
+  public RefFrame(RefFrame parent) {
+    updatePt(new Point3D());
+    this.parent = parent;
   }
   
   public RefFrame(Point3D pt3d) {
     updatePt(pt3d);
+    this.parent = null;
+  }
+  
+  public RefFrame(Point3D pt3d, RefFrame parent) {
+    updatePt(pt3d);
+    this.parent = parent;
   }
   
   public RefFrame(double x, double y, double z) {
     updatePt(new Point3D(x, y, z));
+    this.parent = null;
+  }
+  
+  public RefFrame(double x, double y, double z, RefFrame parent) {
+    updatePt(new Point3D(x, y, z));
+    this.parent = parent;
   }
   
   /**
    * Update both the Point3D and Point2D members, which need to be kept in sync.
    * 
    * Because this is used in the constructors, it is important that this method
-   * not be virtual (that is, that it not be not protected or public).  If it were virtual,
+   * not be virtual (that is, that it not be protected or public).  If it were virtual,
    * it could be overridden by a subclass.  Since it's called by this class's
    * constructors, it gets called at a time when a subclass object might not yet be
    * fully initialized as an instance of the subclass.
@@ -62,6 +81,8 @@ public class RefFrame {
   }
   
   public Point2D getPt2D() { return pt2d; }
+  
+  public RefFrame getParent() { return parent; }
   
   public double distanceTo(RefFrame f) {
     return pt.distanceTo(f.pt);

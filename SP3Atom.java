@@ -74,6 +74,7 @@ public class SP3Atom extends Atom {
     
     // Transform it by the atom's own rotations
     // Then associate it with the appropriate orbital
+    // [[FIX: FAILS IN CASE OF NESTED FRAMES]]
     if (i == 0) { // Orbital 0 lies along the z-axis
       result = result.transform(rotMatrix);
     }
