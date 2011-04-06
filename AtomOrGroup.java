@@ -15,14 +15,13 @@ public abstract class AtomOrGroup extends RefFrame {
   public enum Charge { MINUS, PART_MINUS, NEUTRAL, PART_PLUS, PLUS };
   private Charge charge;
   
-  protected AtomOrGroup(Point3D pt, Charge initialCharge) {
-    super(pt);
-    charge = initialCharge;
-  }
-    
   protected AtomOrGroup(Point3D pt, Charge initialCharge, RefFrame parent) {
     super(pt, parent);
     charge = initialCharge;
+  }
+    
+  protected AtomOrGroup(Point3D pt, Charge initialCharge) {
+    this(pt, initialCharge, null);
   }
     
   public Charge getCharge() { return charge; }

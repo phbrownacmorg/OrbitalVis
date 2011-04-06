@@ -16,8 +16,8 @@ public class Ethyl extends AtomOrGroup {
   private Atom hydro1;
   private Atom hydro2;
   
-  public Ethyl(Point3D pt, AtomOrGroup.Charge charge) {
-    super(pt, charge);
+  public Ethyl(Point3D pt, AtomOrGroup.Charge charge, RefFrame parent) {
+    super(pt, charge, parent);
     
     carbon = new SP3Atom();
     
@@ -37,6 +37,10 @@ public class Ethyl extends AtomOrGroup {
     rotZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
     Point3D hLoc3 = hLoc.transform(rotZ);
     hydro2 = new Atom(hLoc3);   
+  }
+  
+  public Ethyl(Point3D pt, AtomOrGroup.Charge charge) {
+    this(pt, charge, null);
   }
   
   public EthylView createView() {

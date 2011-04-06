@@ -42,16 +42,16 @@ public class E1Model extends Model {
     carb2 = new SP3Atom(new Point3D(0, 0, Atom.BOND_LENGTH)); 
     carb2.setRot(180 + carbon1XRot, 0, 0);  // 0 orbital interacts with the leaving Cl, and eventually forms the pi-bond.
     
-    hydro1 = new Atom();
+    hydro1 = new Atom(new Point3D(), carb1);
     hydro2 = new Atom();
-    hydro3 = new Atom();
+    hydro3 = new Atom(new Point3D(), carb2);
     
-    chlor = new SP3Atom();
+    chlor = new SP3Atom(new Point3D(), carb2);
     
-    meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    meth2 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
+    meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb1);
+    meth2 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb2);
     
-    Point3D orb0Vec = carb1.getOrbitalVector(0).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    Point3D orb0Vec = carb1.getAbsOrbitalVector(0).scale(Atom.S_TO_SP3_BOND_LENGTH);
     hydro2.setLoc(carb1.getX() + orb0Vec.x(), carb1.getY() + orb0Vec.y(), carb1.getZ() + orb0Vec.z());
     hydro2InitialZ = hydro2.getZ();
     oHClosestZ = hydro2InitialZ - 1.5*(Atom.S_TO_SP3_BOND_LENGTH);
@@ -79,37 +79,32 @@ public class E1Model extends Model {
       + WITHDRAWAL_DISTANCE_FACTOR * Math.max(0, getT() - 0.1)
       + 5 * MAX_WITHDRAWAL * Math.max(0, getT() - 0.45);
     Point3D carb2orb0Vec = carb2.getOrbitalVector(0).scale(scalingFactor);
-    chlor.setLoc(carb2.getX() + carb2orb0Vec.x(), carb2.getY() + carb2orb0Vec.y(),
-                 carb2.getZ() + carb2orb0Vec.z());
+    chlor.setLoc(carb2orb0Vec.x(), carb2orb0Vec.y(), carb2orb0Vec.z());
     double rotation = -carb2.getXRotation();
       // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
-    chlor.setRot(rotation, 0, 0);
+    chlor.setRot(180, 0, 0);//(rotation, 0, 0);
     
     // Set the CH3 that's bonded to carb1 (on orbital 3)
     Point3D carb1orb3Vec = carb1.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
-    meth1.setLoc(carb1.getX() + carb1orb3Vec.x(), carb1.getY() + carb1orb3Vec.y(),
-                 carb1.getZ() + carb1orb3Vec.z());
-    double rotY = Math.toDegrees(Math.atan(carb1orb3Vec.x() / carb1orb3Vec.z()));
-    double rotX = Math.toDegrees(Math.asin(carb1orb3Vec.y() / Atom.SP3_SP3_BOND_LENGTH));
-    meth1.setRot(rotX, rotY, 0);
+    meth1.setLoc(carb1orb3Vec.x(), carb1orb3Vec.y(), carb1orb3Vec.z());
+//    double rotY = Math.toDegrees(Math.atan(carb1orb3Vec.x() / carb1orb3Vec.z()));
+//    double rotX = Math.toDegrees(Math.asin(carb1orb3Vec.y() / Atom.SP3_SP3_BOND_LENGTH));
+    meth1.setRot(0, 180 - carb1.getXRotation(), -30); //(rotX, rotY, 0);
 
     // Set the H that's on carb1's orbital 2
     Point3D carb1orb2Vec = carb1.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    hydro1.setLoc(carb1.getX() + carb1orb2Vec.x(), carb1.getY() + carb1orb2Vec.y(),
-                                carb1.getZ() + carb1orb2Vec.z());
+    hydro1.setLoc(carb1orb2Vec.x(), carb1orb2Vec.y(), carb1orb2Vec.z());
     
     // Set the CH3 that's on carb2's orbital 2
     Point3D carb2orb2Vec = carb2.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
-    meth2.setLoc(carb2.getX() + carb2orb2Vec.x(), carb2.getY() + carb2orb2Vec.y(),
-                 carb2.getZ() + carb2orb2Vec.z());
-    rotY = Math.toDegrees(Math.atan(carb2orb2Vec.x() / carb2orb2Vec.z()));
-    rotX = Math.toDegrees(Math.asin(carb2orb2Vec.y() / Atom.SP3_SP3_BOND_LENGTH));
-    meth2.setRot(rotX, 180 + rotY, 0);
+    meth2.setLoc(carb2orb2Vec.x(), carb2orb2Vec.y(), carb2orb2Vec.z());
+//    rotY = Math.toDegrees(Math.atan(carb2orb2Vec.x() / carb2orb2Vec.z()));
+//    rotX = Math.toDegrees(Math.asin(carb2orb2Vec.y() / Atom.SP3_SP3_BOND_LENGTH));
+    meth2.setRot(0, 180 - rotation, 30); //(rotX, 180 + rotY, 0);
     
     // Set the H that's on carb2's orbital 3
     Point3D carb2orb3Vec = carb2.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    hydro3.setLoc(carb2.getX() + carb2orb3Vec.x(), carb2.getY() + carb2orb3Vec.y(),
-                                carb2.getZ() + carb2orb3Vec.z());
+    hydro3.setLoc(carb2orb3Vec.x(), carb2orb3Vec.y(), carb2orb3Vec.z());
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {

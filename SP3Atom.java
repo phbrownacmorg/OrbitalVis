@@ -27,8 +27,8 @@ public class SP3Atom extends Atom {
    */
   private Matrix rotMatrix;
   
-  public SP3Atom(Point3D pt) {
-    super(pt);
+  public SP3Atom(Point3D pt, RefFrame parent) {
+    super(pt, parent);
     insideOutness = 0;
     porb[0] = new POrbital(0, 0, 0);
     porb[1] = new POrbital(109.5, 0, 0);
@@ -37,6 +37,10 @@ public class SP3Atom extends Atom {
     rotMatrix = Matrix.makeRotationMatrix(0, Matrix.Axis.X); // Identity matrix
   }
 
+  public SP3Atom(Point3D pt) {
+    this(pt, null);
+  }
+  
   public SP3Atom() {
     this(new Point3D());
   }
@@ -59,8 +63,9 @@ public class SP3Atom extends Atom {
   }
   
   /**
-   * Returns a Point3D representing the unit vector from the nucleus down the center of the given orbital.
-   * For orbital 0, the unit vector always points towards the lobe that would be the large lobe if insideOutness < 0.5.
+   * Returns a Point3D representing the unit vector IN WORLD COORDINATES from the nucleus down the center of the given
+   * orbital. For orbital 0, the unit vector always points towards the lobe that would be the large lobe if 
+   * insideOutness < 0.5.
    * 
    * NOTE: this method takes no account of the fact that this atom's rotations may be nested inside other rotations.
    * It can therefore be expected to fail if called on an SP3 atom that isn't defined in world coordinates (as is likely
@@ -69,12 +74,11 @@ public class SP3Atom extends Atom {
    * @param i Index of the desired orbital
    * @return Unit vector as a Point3D
    */
-  public Point3D getOrbitalVector(int i) {
+  public Point3D getAbsOrbitalVector(int i) {
     Point3D result = new Point3D(0, 0, 1);  // Unit vector along the z-axis
     
     // Transform it by the atom's own rotations
     // Then associate it with the appropriate orbital
-    // [[FIX: FAILS IN CASE OF NESTED FRAMES]]
     if (i == 0) { // Orbital 0 lies along the z-axis
       result = result.transform(rotMatrix);
     }
@@ -96,6 +100,46 @@ public class SP3Atom extends Atom {
       Matrix rotZX = rotZ.mult(rotX);
       Matrix m = rotMatrix.mult(rotZX);
       result = result.transform(m);
+    }
+
+    return result;
+  }
+  
+  /**
+   * Returns a Point3D representing the unit vector IN THE ATOM'S OWN FRAME from the nucleus down the center of the
+   * given orbital. For orbital 0, the unit vector always points towards the lobe that would be the large lobe if 
+   * insideOutness < 0.5.
+   * 
+   * @param i Index of the desired orbital
+   * @return Unit vector as a Point3D
+   */
+  public Point3D getOrbitalVector(int i) {
+    Point3D result = new Point3D(0, 0, 1);  // Unit vector along the z-axis
+    
+    // Transform it by the atom's own rotations
+    // Then associate it with the appropriate orbital
+    // [[FIX: FAILS IN CASE OF NESTED FRAMES]]
+    if (i == 0) { // Orbital 0 lies along the z-axis
+      //result = result.transform(rotMatrix);
+    }
+    else if (i == 1) {
+      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
+      //Matrix m = rotMatrix.mult(rotX);
+      result = result.transform(rotX);
+    }
+    else if (i == 2) {
+      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
+      Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
+      Matrix rotZX = rotZ.mult(rotX);
+      //Matrix m = rotMatrix.mult(rotZX);
+      result = result.transform(rotZX);
+    }
+    else if (i == 3) {
+      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
+      Matrix rotZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
+      Matrix rotZX = rotZ.mult(rotX);
+      //Matrix m = rotMatrix.mult(rotZX);
+      result = result.transform(rotZX);
     }
 
     return result;

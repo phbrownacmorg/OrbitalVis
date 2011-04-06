@@ -17,6 +17,14 @@ public class Atom extends AtomOrGroup {
   public static final double S_TO_SP3_BOND_LENGTH = BOND_LENGTH + SOrbitalView.RADIUS; // Was (SOrbitalView.RADIUS/2);
   public static final double SP3_SP3_BOND_LENGTH = 2 * BOND_LENGTH;
   
+  public Atom(Point3D pt, AtomOrGroup.Charge initialCharge, RefFrame parent) {
+    super(pt, initialCharge, parent);
+  }
+  
+  public Atom(Point3D pt, RefFrame parent) {
+    this(pt, AtomOrGroup.Charge.NEUTRAL, parent);
+  }
+  
   public Atom() {
     this(new Point3D());
   }

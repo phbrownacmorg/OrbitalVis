@@ -46,12 +46,12 @@ public class EA2AModel extends Model {
     bottom_carb.setP0Divergence(1);
     bottom_carb.setRot(0, 0, 180);
     
-    bottom_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    ch3a = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    top_carb = new SP3Atom();
+    bottom_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, bottom_carb);
+    ch3a = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, bottom_carb);
+    top_carb = new SP3Atom(new Point3D(), bottom_carb);
     top_carb.setInsideOutness(0.5);
     top_carb.setP0Divergence(1);
+    top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
     ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
     setHydrogenLocations();
     
@@ -70,27 +70,19 @@ public class EA2AModel extends Model {
 
     // Top carbon on orbital 1
     Point3D orb1Vec = bottom_carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
-    top_carb.setLoc(bottom_carb.getX() + orb1Vec.x(), 
-                    bottom_carb.getY() + orb1Vec.y(), 
-                    bottom_carb.getZ() + orb1Vec.z());
-    top_carb.setRot(180 + 2 * rotation, 0, 0);
+    top_carb.setLoc(orb1Vec.x(), orb1Vec.y(), orb1Vec.z());
+    top_carb.setRot(180 + 2 * rotation, 0, 180);
     
     // Hydrogen on orbital 2 (orbital 3 on the top carbon)
     Point3D orb2Vec = bottom_carb.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    bottom_H.setLoc(bottom_carb.getX() + orb2Vec.x(), 
-                    bottom_carb.getY() + orb2Vec.y(), 
-                    bottom_carb.getZ() + orb2Vec.z());
+    bottom_H.setLoc(orb2Vec.x(), orb2Vec.y(), orb2Vec.z());
     Point3D orb3Vec = top_carb.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    top_H.setLoc(top_carb.getX() + orb3Vec.x(), 
-                 top_carb.getY() + orb3Vec.y(), 
-                 top_carb.getZ() + orb3Vec.z());
+    top_H.setLoc(orb3Vec.x(), orb3Vec.y(), orb3Vec.z());
     
     // Methyl on orbital 3 (orbital 2 on the top)
     orb3Vec = bottom_carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
-    ch3a.setLoc(bottom_carb.getX() + orb3Vec.x(), 
-                bottom_carb.getY() + orb3Vec.y(), 
-                bottom_carb.getZ() + orb3Vec.z());
-    ch3a.setRot(0, 180 - rotation, 90 - 120);
+    ch3a.setLoc(orb3Vec.x(), orb3Vec.y(), orb3Vec.z());
+    ch3a.setRot(0, 180 - rotation, 150); //(0, 180 - rotation, 90 - 120);
     
     // Action of top carbon and its methyl group is altogether more complex
     // First, the position
@@ -105,19 +97,24 @@ public class EA2AModel extends Model {
     // Now the rotation, which is the tricky part.  There's no comparable code in Acyl,
     // because in Acyl the top atom is an oxygen, so there aren't any groups attached to
     // its upper orbitals
-    double orbRotX = top_carb.getXRotation();
-    double inout = top_carb.getInsideOutness();
-    double divergence = top_carb.getP0DivergenceAngle();
-    double rotX = top_carb.getRotX();
-    double rotY = top_carb.getRotY();
-    double rotZ = top_carb.getRotZ();
+//    double orbRotX = top_carb.getXRotation();
+//    double inout = top_carb.getInsideOutness();
+//    double divergence = top_carb.getP0DivergenceAngle();
+//    double rotX = top_carb.getRotX();
+//    double rotY = top_carb.getRotY();
+//    double rotZ = top_carb.getRotZ();
     
-    if ((super.getT() < 0.001) || (super.getT() > 0.999)) {
-      System.out.print("top carb: " + orbRotX + " " + inout + " " + divergence);
-      System.out.println(" rotation: " + rotX + " " + rotY + " " + rotZ);
-      System.out.println("\ttop methyl rotation: " + 0 + " " + 
-                         (rotY - 180.0 + orbRotX) + " " + rotX);
-    }
+//    if ((super.getT() < 0.001) || (super.getT() > 0.999)) {
+//      System.out.print("bottom carb: " + bottom_carb.getXRotation() + " "
+//                         + bottom_carb.getInsideOutness() + " "
+//                         + bottom_carb.getP0DivergenceAngle());
+//      System.out.println(" rotation: " + bottom_carb.getRotX() + " "
+//                           + bottom_carb.getRotY() + " " + bottom_carb.getRotZ());
+//      System.out.print("top carb: " + orbRotX + " " + inout + " " + divergence);
+//      System.out.println(" rotation: " + rotX + " " + rotY + " " + rotZ);
+//      System.out.println("\ttop methyl rotation: " + 0 + " " + 
+//                         (rotY - 180.0 + orbRotX) + " " + rotX);
+//    }
     // This really needs a better way of working out chained rotations.
     // Y: rotX is really the rotation needed to hit the *orbital* in X, not the
     //    rotation applied to the whole *atom* in X.  -rotX works great at t = 0,
@@ -130,7 +127,7 @@ public class EA2AModel extends Model {
     //    is that the progression in the Z rotation shouldn't be linear, because the
     //    vertical (in world space) movement of top_carb's orbital 2 isn't linear.  It's
     //    some funky trig thing, and I haven't yet figured it out.
-    ch3b.setRot(0, 0, 0);
+    ch3b.setRot(0, 180 - rotation, 30);
     //ch3b.setRot(0, -270 + 2*orbRotX, -60 + orbRotX);
   }
 

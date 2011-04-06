@@ -40,9 +40,9 @@ public class AcylModel extends Model {
     carb.setP0Divergence(1);
     carb.setRot(0, 0, 180);
     
-    ethyl = new Ethyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    ch3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    oxy = new SP3Atom();
+    ethyl = new Ethyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb);
+    ch3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb);
+    oxy = new SP3Atom(new Point3D(), carb);
     oxy.setInsideOutness(0.5);
     oxy.setP0Divergence(1);
     setHydrogenLocations();
@@ -60,18 +60,18 @@ public class AcylModel extends Model {
 
     // Oxygen on orbital 1
     Point3D orb1Vec = carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
-    oxy.setLoc(carb.getX() + orb1Vec.x(), carb.getY() + orb1Vec.y(), carb.getZ() + orb1Vec.z());
-    oxy.setRot(180 + 2 * rotation, 0, 0);
+    oxy.setLoc(orb1Vec.x(), orb1Vec.y(), orb1Vec.z());
+    oxy.setRot(180 + 2 * rotation, 0, 180);
     
     // Ethyl on orbital 2
     Point3D orb2Vec = carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
-    ethyl.setLoc(carb.getX() + orb2Vec.x(), carb.getY() + orb2Vec.y(), carb.getZ() + orb2Vec.z());
-    ethyl.setRot(0, 180 + rotation, -90 + 120); // (X up, Y right)
+    ethyl.setLoc(orb2Vec.x(), orb2Vec.y(), orb2Vec.z());
+    ethyl.setRot(0, 180 + rotation, 210); // (X up, Y right)
     
     // Methyl on orbital 3
     Point3D orb3Vec = carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
-    ch3.setLoc(carb.getX() + orb3Vec.x(), carb.getY() + orb3Vec.y(), carb.getZ() + orb3Vec.z());
-    ch3.setRot(0, 180 - rotation, 90 - 120);
+    ch3.setLoc(orb3Vec.x(), orb3Vec.y(), orb3Vec.z());
+    ch3.setRot(0, 180 - rotation, 150);
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
