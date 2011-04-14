@@ -26,10 +26,12 @@ public class EA2AModel extends Model {
   private Methyl ch3a;
   private Methyl ch3b;
   
-  private Atom nucleophile;
+  private Atom new_H;           // H from the HCl
+  private SP3Atom cl;
   
   // bonds
-  private Bond bottom_carb_nucleophile;
+  private Bond cl_H;  //maybe
+  private Bond bottom_carb_new_H;
   /**
    * Remember to add the new bonds here please!!!!
    */
@@ -37,9 +39,7 @@ public class EA2AModel extends Model {
 
   public EA2AModel(int zSign) {
     this.zSign = zSign;
-    
-    nucleophile = new Atom(new Point3D(0, 0, zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT())))),
-                           AtomOrGroup.Charge.MINUS);
+
     
     bottom_carb = new SP3Atom();
     bottom_carb.setInsideOutness(0.5);
@@ -53,15 +53,19 @@ public class EA2AModel extends Model {
     top_carb.setP0Divergence(1);
     top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
     ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
+    cl = new SP3Atom(new Point3D(), new_H);  // theory test -M
+    new_H = new Atom(new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))),
+                     AtomOrGroup.Charge.MINUS, top_carb);
     setHydrogenLocations();
     
     // Create the Bonds
-    bottom_carb_nucleophile = new Bond(bottom_carb, nucleophile, Bond.State.BROKEN);
+    bottom_carb_new_H = new Bond(bottom_carb, new_H, Bond.State.BROKEN);
     bottom_carb_H = new Bond(bottom_carb, bottom_H, Bond.State.FULL);
     top_carb_H = new Bond(top_carb, top_H, Bond.State.FULL);
     bottom_carb_ch3 = new Bond(bottom_carb, ch3a, Bond.State.FULL);
     top_carb_ch3 = new Bond(top_carb, ch3b, Bond.State.FULL);            // creating the top methyl group
     carb_carb = new Bond(bottom_carb, top_carb, Bond.State.DOUBLE);
+    cl_H = new Bond(cl, new_H, Bond.State.FULL);  //theory
   }
   
   private void setHydrogenLocations() {
@@ -134,7 +138,7 @@ public class EA2AModel extends Model {
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
-      //result.add(new BondView(bottom_carb_nucleophile));
+      //result.add(new BondView(bottom_carb_new_H));
       result.add(new BondView(bottom_carb_H));
       result.add(new BondView(top_carb_H));
       result.add(new BondView(bottom_carb_ch3));
@@ -145,7 +149,7 @@ public class EA2AModel extends Model {
     // Draw the 3-D view back to front
     result.add(ch3a.createView());
     result.add(ch3b.createView());
-    //result.add(nucleophile.createView());
+    result.add(new_H.createView());
     result.add(bottom_carb.createView("C", AtomView.C_BLACK));
     result.add(top_carb.createView("C", AtomView.C_BLACK));
     result.add(bottom_H.createView());
@@ -169,29 +173,29 @@ public class EA2AModel extends Model {
     // Set the corresponding locations of the hydrogens
     setHydrogenLocations();
     
-    // The nucleophile moves in
-    nucleophile.setLoc(0, 0, zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
+    // The new_H moves in
+    new_H.setLoc(0, 0, (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
     
     // Update the Bonds
     if (getT() < 0.3) {
-      bottom_carb_nucleophile.setState(Bond.State.BROKEN);
-      nucleophile.setCharge(AtomOrGroup.Charge.MINUS);
+      bottom_carb_new_H.setState(Bond.State.BROKEN);
+      new_H.setCharge(AtomOrGroup.Charge.MINUS);
       top_carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
       carb_carb.setState(Bond.State.DOUBLE);
       bottom_carb_ch3.setState(Bond.State.FULL);
       top_carb_ch3.setState(Bond.State.FULL);
     }
     else if (getT() > 0.5) {
-      bottom_carb_nucleophile.setState(Bond.State.FULL);
-      nucleophile.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      bottom_carb_new_H.setState(Bond.State.FULL);
+      new_H.setCharge(AtomOrGroup.Charge.NEUTRAL);
       top_carb.setCharge(AtomOrGroup.Charge.MINUS);
       carb_carb.setState(Bond.State.FULL);
       bottom_carb_ch3.setState(Bond.State.FULL);
       top_carb_ch3.setState(Bond.State.FULL);
     }
     else {
-      bottom_carb_nucleophile.setState(Bond.State.PARTIAL);
-      nucleophile.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      bottom_carb_new_H.setState(Bond.State.PARTIAL);
+      new_H.setCharge(AtomOrGroup.Charge.PART_MINUS);
       top_carb.setCharge(AtomOrGroup.Charge.PART_MINUS);
       carb_carb.setState(Bond.State.FULL_PARTIAL);
       bottom_carb_ch3.setState(Bond.State.FULL);
