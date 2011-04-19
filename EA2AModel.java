@@ -30,7 +30,7 @@ public class EA2AModel extends Model {
   private SP3Atom cl;
   
   // bonds
-  private Bond cl_H;  //maybe
+  private Bond cl_new_H;  //maybe
   private Bond bottom_carb_new_H;
   /**
    * Remember to add the new bonds here please!!!!
@@ -65,7 +65,7 @@ public class EA2AModel extends Model {
     bottom_carb_ch3 = new Bond(bottom_carb, ch3a, Bond.State.FULL);
     top_carb_ch3 = new Bond(top_carb, ch3b, Bond.State.FULL);            // creating the top methyl group
     carb_carb = new Bond(bottom_carb, top_carb, Bond.State.DOUBLE);
-    cl_H = new Bond(cl, new_H, Bond.State.FULL);  //theory
+    cl_new_H = new Bond(cl, new_H, Bond.State.FULL);  //theory
   }
   
   private void setHydrogenLocations() {
@@ -144,6 +144,7 @@ public class EA2AModel extends Model {
       result.add(new BondView(bottom_carb_ch3));
       result.add(new BondView(top_carb_ch3));
       result.add(new BondView(carb_carb));
+      result.add(new BondView(cl_new_H));
     }
 
     // Draw the 3-D view back to front
@@ -154,6 +155,7 @@ public class EA2AModel extends Model {
     result.add(top_carb.createView("C", AtomView.C_BLACK));
     result.add(bottom_H.createView());
     result.add(top_H.createView());
+    result.add(cl.createView("Cl", AtomView.CL_GREEN)); // added but not in correct position
     return result;
   }
   
