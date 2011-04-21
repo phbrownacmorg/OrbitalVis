@@ -177,11 +177,13 @@ public class EA2AModel extends Model {
     
     // The new_H moves in
     new_H.setLoc(0, 0, (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
+   // cl.setLoc(0, 0, );
     
     // Update the Bonds
     if (getT() < 0.3) {
       bottom_carb_new_H.setState(Bond.State.BROKEN);
       new_H.setCharge(AtomOrGroup.Charge.MINUS);
+      cl_new_H.setState(Bond.State.FULL);
       top_carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
       carb_carb.setState(Bond.State.DOUBLE);
       bottom_carb_ch3.setState(Bond.State.FULL);
@@ -190,6 +192,7 @@ public class EA2AModel extends Model {
     else if (getT() > 0.5) {
       bottom_carb_new_H.setState(Bond.State.FULL);
       new_H.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      cl_new_H.setState(Bond.State.PARTIAL);
       top_carb.setCharge(AtomOrGroup.Charge.MINUS);
       carb_carb.setState(Bond.State.FULL);
       bottom_carb_ch3.setState(Bond.State.FULL);
