@@ -39,7 +39,6 @@ public class EA2AModel extends Model {
 
   public EA2AModel(int zSign) {
     this.zSign = zSign;
-
     
     bottom_carb = new SP3Atom();
     bottom_carb.setInsideOutness(0.5);
