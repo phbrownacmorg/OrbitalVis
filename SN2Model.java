@@ -16,7 +16,7 @@ import javax.media.opengl.*;
 
 public class SN2Model extends Model {
   // Atoms/groups
-  private Hydroxide oh;
+  private Water water;
   private SP3Atom carb;
   private Atom hydro1, hydro2, hydro3;
   private SP3Atom chlor;
@@ -27,7 +27,7 @@ public class SN2Model extends Model {
   private Bond carb_chlor;
 
   public SN2Model(boolean markH) {
-    oh = new Hydroxide(new Point3D(0, 0, -(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
+    water = new Water(new Point3D(0, 0, -(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
                          AtomOrGroup.Charge.MINUS);
     
     carb = new SP3Atom();
@@ -42,7 +42,7 @@ public class SN2Model extends Model {
     //chlor.setRot(90, 90, 0); // Rotates about Y, then about X
     
     // Create the Bonds
-    carb_oh = new Bond(carb, oh, Bond.State.BROKEN);
+    carb_oh = new Bond(carb, water, Bond.State.BROKEN);
     carb_hydro1 = new Bond(carb, hydro1, Bond.State.FULL);
     carb_hydro2 = new Bond(carb, hydro2, Bond.State.FULL);
     carb_hydro3 = new Bond(carb, hydro3, Bond.State.FULL);
@@ -69,7 +69,7 @@ public class SN2Model extends Model {
       result.add(new BondView(carb_hydro3));
       result.add(new BondView(carb_chlor));
     }
-    result.add(oh.createView(HydroxideView.TEXT_HO));
+    result.add(water.createView(HydroxideView.TEXT_HO));
     result.add(carb.createView("C", AtomView.C_BLACK));
     result.add(hydro1.createView());
     result.add(hydro2.createView());
@@ -88,7 +88,7 @@ public class SN2Model extends Model {
     setHydrogenLocations();
     
     // The hydroxyl moves in as t is in [0, 0.5]
-    oh.setLoc(0, 0, -(Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.5 - getT()))));
+    water.setLoc(0, 0, -(Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.5 - getT()))));
 
     // The chlorine moves away as t goes 0.5 - 1
     chlor.setLoc(0, 0, Atom.SP3_SP3_BOND_LENGTH + Math.max(0, getT() - 0.5));
@@ -97,20 +97,20 @@ public class SN2Model extends Model {
     if (getT() < 0.4) {
       carb_oh.setState(Bond.State.BROKEN);
       carb_chlor.setState(Bond.State.FULL);
-      oh.setCharge(AtomOrGroup.Charge.MINUS);
+      water.setCharge(AtomOrGroup.Charge.MINUS);
       chlor.setCharge(AtomOrGroup.Charge.NEUTRAL);
     }
     else if (getT() > 0.6) {
       carb_oh.setState(Bond.State.FULL);
       carb_chlor.setState(Bond.State.BROKEN);
       chlor.setCharge(AtomOrGroup.Charge.MINUS);
-      oh.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      water.setCharge(AtomOrGroup.Charge.NEUTRAL);
     }
     else {
       carb_oh.setState(Bond.State.PARTIAL);
       carb_chlor.setState(Bond.State.PARTIAL);
       chlor.setCharge(AtomOrGroup.Charge.PART_MINUS);
-      oh.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      water.setCharge(AtomOrGroup.Charge.PART_MINUS);
     }
   }
 }

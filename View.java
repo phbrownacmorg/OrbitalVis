@@ -197,7 +197,7 @@ public class View implements GLEventListener, ConstantMgr
     
     gl.glDisable(GL.GL_LIGHTING);
     
-    //ShapeBuilder.axes(gl);
+    ShapeBuilder.axes(gl);
     for (Drawable d:drawList) {
       d.draw(gl);
     }
