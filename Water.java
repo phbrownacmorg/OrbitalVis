@@ -23,13 +23,15 @@ public class Water extends AtomOrGroup {
     Point3D hydroLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
     Matrix rX = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
     Matrix rZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
-    Matrix rotMatrix = rX.mult(rZ);
+    Matrix rotMatrix = rZ.mult(rX);
     hydroLoc = hydroLoc.transform(rotMatrix);
     h1 = new Atom(hydroLoc);
     
     hydroLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
-    //rotMatrix = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
-    //hydroLoc = hydroLoc.transform(rotMatrix);
+    rX = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
+    rZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
+    rotMatrix = rZ.mult(rX);
+    hydroLoc = hydroLoc.transform(rotMatrix);
     h2 = new Atom(hydroLoc);
 
     oxygen = new SP3Atom();

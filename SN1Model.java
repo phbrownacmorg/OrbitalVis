@@ -25,7 +25,7 @@ public class SN1Model extends Model {
   private int zSign;
 
   // Atoms/groups
-  private Hydroxide oh;
+  private Water water;
   private SP3Atom carb;
   private Ethyl ethyl;
   private Methyl ch3;
@@ -33,17 +33,17 @@ public class SN1Model extends Model {
   private SP3Atom chlor;
   
   // bonds
-  private Bond carb_oh;
+  private Bond carb_water;
   private Bond carb_hydro, carb_ethyl, carb_methyl;
   private Bond carb_chlor;
 
   public SN1Model(int zSign) {
     this.zSign = zSign;
-    oh = new Hydroxide(new Point3D(0, 0,  zSign * (Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL)), 
-                       AtomOrGroup.Charge.MINUS);
+    water = new Water(new Point3D(0, 0,  zSign * (Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL)), 
+                       AtomOrGroup.Charge.NEUTRAL);
                        // zSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
     if (zSign > 0) {
-      oh.setRot(0, 180, 0);
+      water.setRot(0, 180, 0);
     }
     
     carb = new SP3Atom();
@@ -57,7 +57,7 @@ public class SN1Model extends Model {
     chlor.setRot(0, 180, 0);
     
     // Create the Bonds
-    carb_oh = new Bond(carb, oh, Bond.State.BROKEN);
+    carb_water = new Bond(carb, water, Bond.State.BROKEN);
     carb_hydro = new Bond(carb, hydro, Bond.State.FULL);
     carb_ethyl = new Bond(carb, ethyl, Bond.State.FULL);
     carb_methyl = new Bond(carb, ch3, Bond.State.FULL);
@@ -85,17 +85,17 @@ public class SN1Model extends Model {
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
-      result.add(new BondView(carb_oh));
+      result.add(new BondView(carb_water));
       result.add(new BondView(carb_hydro));
       result.add(new BondView(carb_ethyl));
       result.add(new BondView(carb_methyl));
       result.add(new BondView(carb_chlor));
     }
     if (zSign < 0) {
-      result.add(oh.createView(HydroxideView.TEXT_HO));
+      result.add(water.createView(WaterView.TEXT_H2O));
     }
     else {
-      result.add(oh.createView(HydroxideView.TEXT_OH));
+      result.add(water.createView(WaterView.TEXT_OH2));
     }
     result.add(carb.createView("C", AtomView.C_BLACK));
     result.add(hydro.createView());
@@ -134,55 +134,55 @@ public class SN1Model extends Model {
     }
     
     // The hydroxyl moves in, forming its bond at t=0.65 //t=0.6
-    //oh.setLoc(0, 0, zSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT()))));
+    //water.setLoc(0, 0, zSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT()))));
     if (getT() > 0.65) {
-      oh.setLoc(0, 0, zSign * (Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.95 - getT())) * (0.1/0.3)));
+      water.setLoc(0, 0, zSign * (Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.95 - getT())) * (0.1/0.3)));
     }
     else {
-      oh.setLoc(0, 0, zSign * (Atom.SP3_SP3_BOND_LENGTH + 0.1 + Math.pow(Math.max(0, (0.65 - getT())) * (MAX_WITHDRAWAL/0.65), 2)));
+      water.setLoc(0, 0, zSign * (Atom.SP3_SP3_BOND_LENGTH + 0.1 + Math.pow(Math.max(0, (0.65 - getT())) * (MAX_WITHDRAWAL/0.65), 2)));
     }
     
     // Update the Bonds
     // PROBABLY NEEDS FIXING; BONDS FORM AND BREAK AT DIFFERENT VALUES OF T
     // Initial state
     if (getT() < 0.06) {
-      carb_oh.setState(Bond.State.BROKEN);
+      carb_water.setState(Bond.State.BROKEN);
       carb_chlor.setState(Bond.State.FULL);
-      oh.setCharge(AtomOrGroup.Charge.MINUS);
+      water.setCharge(AtomOrGroup.Charge.NEUTRAL);
       chlor.setCharge(AtomOrGroup.Charge.NEUTRAL);
       carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
     }
     // Final state
     else if (getT() > 0.94) {
-      carb_oh.setState(Bond.State.FULL);
+      carb_water.setState(Bond.State.FULL);
       carb_chlor.setState(Bond.State.BROKEN);
       chlor.setCharge(AtomOrGroup.Charge.MINUS);
-      oh.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      water.setCharge(AtomOrGroup.Charge.PLUS);
       carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
     }
     // Early intermediate state
     else if (getT() < 0.36) {
-      carb_oh.setState(Bond.State.BROKEN);
+      carb_water.setState(Bond.State.BROKEN);
       carb_chlor.setState(Bond.State.PARTIAL);
-      oh.setCharge(AtomOrGroup.Charge.MINUS);
+      water.setCharge(AtomOrGroup.Charge.NEUTRAL);
       chlor.setCharge(AtomOrGroup.Charge.PART_MINUS);
       carb.setCharge(AtomOrGroup.Charge.PART_PLUS);
     }
     // Late intermediate state
     else if (getT() > 0.64) {
-      carb_oh.setState(Bond.State.PARTIAL);
+      carb_water.setState(Bond.State.PARTIAL);
       carb_chlor.setState(Bond.State.BROKEN);
-      oh.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      water.setCharge(AtomOrGroup.Charge.PART_PLUS);
       chlor.setCharge(AtomOrGroup.Charge.MINUS);
       carb.setCharge(AtomOrGroup.Charge.PART_PLUS);
     }
     // Middle intermediate state
     else {
-      carb_oh.setState(Bond.State.BROKEN);
+      carb_water.setState(Bond.State.BROKEN);
       carb_chlor.setState(Bond.State.BROKEN);
       carb.setCharge(AtomOrGroup.Charge.PLUS);
       chlor.setCharge(AtomOrGroup.Charge.MINUS);
-      oh.setCharge(AtomOrGroup.Charge.MINUS);
+      water.setCharge(AtomOrGroup.Charge.NEUTRAL);
     }
   }
 }

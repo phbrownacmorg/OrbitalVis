@@ -16,8 +16,8 @@ import javax.media.opengl.*;
  */
 
 public class WaterView extends AtomOrGroupView {
-  public static final String TEXT_OH = "OH";
-  public static final String TEXT_HO = "HO";
+  public static final String TEXT_OH2 = "OH2";
+  public static final String TEXT_H2O = "H2O";
   
   private HydrogenView h1View;
   private HydrogenView h2View;
