@@ -1,7 +1,7 @@
 import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
-import com.sun.opengl.util.GLUT;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 /**
  * Class to build a set of generally-useful shapes.
@@ -48,9 +48,9 @@ public class ShapeBuilder implements ConstantMgr {
   /**
    * Make a unit cube in the first octant.  This method does assign normals to the faces.
    */
-  public static void cube(GL gl) {
+  public static void cube(GL2 gl) {
     // unit cube in the first octant
-    gl.glBegin(GL.GL_QUADS);
+    gl.glBegin(GL2.GL_QUADS);
     for (int face = 0; face < 6; face++) {
       gl.glNormal3dv(n[face], 0);
       for (int edge = 0; edge < 4; edge++) {
@@ -63,8 +63,8 @@ public class ShapeBuilder implements ConstantMgr {
   /**
    * Make a unit square in the first quadrant of the XY plane.
    */
-  public static void square(GL gl) {
-    gl.glBegin(GL.GL_QUADS);
+  public static void square(GL2 gl) {
+    gl.glBegin(GL2.GL_QUADS);
     gl.glNormal3dv(n[0], 0);
     gl.glVertex3dv(v[0], 0);
     gl.glNormal3dv(n[0], 0);
@@ -76,8 +76,8 @@ public class ShapeBuilder implements ConstantMgr {
     gl.glEnd();
   }
   
-  public static void yzSquare(GL gl) {
-    gl.glBegin(GL.GL_QUADS);
+  public static void yzSquare(GL2 gl) {
+    gl.glBegin(GL2.GL_QUADS);
     gl.glNormal3dv(n[3], 0);
     gl.glVertex3dv(v[0], 0);
     gl.glNormal3dv(n[3], 0);
@@ -94,7 +94,7 @@ public class ShapeBuilder implements ConstantMgr {
   /**
    * Make a unit square centered on the origin.
    */
-  public static void centeredSquare(GL gl) {
+  public static void centeredSquare(GL2 gl) {
     gl.glTranslated(-0.5, -0.5, 0);
     square(gl);
   }
@@ -102,8 +102,8 @@ public class ShapeBuilder implements ConstantMgr {
   /**
    * Make a 45-45-90 right triangle in the XY plane, with the right angle at the origin.
    */
-  public static void triangle(GL gl) {
-    gl.glBegin(GL.GL_TRIANGLES);
+  public static void triangle(GL2 gl) {
+    gl.glBegin(GL2.GL_TRIANGLES);
     gl.glNormal3dv(n[0], 0);
     gl.glVertex3dv(v[0], 0);
     gl.glNormal3dv(n[0], 0);
@@ -116,10 +116,10 @@ public class ShapeBuilder implements ConstantMgr {
   /**
    * Make a unit set of axes.  The X axis is in red, the Y axis is in green, and the Z axis is in blue.
    */
-  public static void axes(GL gl) {
-    gl.glDisable(GL.GL_LIGHTING);
+  public static void axes(GL2 gl) {
+    gl.glDisable(GL2.GL_LIGHTING);
     double colors[] = new double[4];
-    gl.glGetDoublev(GL.GL_CURRENT_COLOR, colors, 0);
+    gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
     
     gl.glBegin(GL.GL_LINES);
     gl.glColor4fv(RED, 0);
@@ -141,7 +141,7 @@ public class ShapeBuilder implements ConstantMgr {
   /**
    * Make a unit sphere, centered on the origin.
    */
-  public static void sphere(GL gl) {
+  public static void sphere(GL2 gl) {
     GLU glu = new GLU();
     GLUquadric gluq = glu.gluNewQuadric();
     glu.gluQuadricNormals(gluq, GLU.GLU_SMOOTH);
@@ -158,9 +158,9 @@ public class ShapeBuilder implements ConstantMgr {
     glu.gluCylinder(gluq, 1.0, 0.0, 1.0, SLICES, WEDGES);
   }
   
-  public static void quadrisphere(GL gl) {
+  public static void quadrisphere(GL2 gl) {
     // Make the polar cap
-    gl.glBegin(GL.GL_TRIANGLE_FAN);
+    gl.glBegin(GL2.GL_TRIANGLE_FAN);
     gl.glNormal3d(0, 0, 1);
     gl.glVertex3d(0.0, 0.0, 1.0);
     for (int i = 0; i <= WEDGES; i++) {
@@ -198,7 +198,7 @@ public class ShapeBuilder implements ConstantMgr {
   /**
    * Draw a ring of dots in the yz plane.
    */
-  public static void ringOfDots(GL gl, int numDots, double dotSize) {
+  public static void ringOfDots(GL2 gl, int numDots, double dotSize) {
     GLU glu = new GLU();
     GLUquadric gluq = glu.gluNewQuadric();
     glu.gluQuadricNormals(gluq, GLU.GLU_SMOOTH);
@@ -211,23 +211,23 @@ public class ShapeBuilder implements ConstantMgr {
     }
   }
   
-  public static void hemisphere(GL gl) {
+  public static void hemisphere(GL2 gl) {
     quadrisphere(gl);
     gl.glRotated(180.0, 0.0, 1.0, 0.0);
     quadrisphere(gl);
   }
   
-  public static void setMaterial(GL gl, int face, float[] rgba) {
+  public static void setMaterial(GL2 gl, int face, float[] rgba) {
     if (face == GL.GL_FRONT_AND_BACK) {
       setMaterial(gl, GL.GL_FRONT, rgba);
       setMaterial(gl, GL.GL_BACK, rgba);
     }
     else {
-      gl.glMaterialfv(face, GL.GL_AMBIENT, rgba, 0);
-      gl.glMaterialfv(face, GL.GL_DIFFUSE, rgba, 0);
-      gl.glMaterialfv(face, GL.GL_SPECULAR, rgba, 0);
-      gl.glMateriali(face, GL.GL_SHININESS, 4);
-      gl.glMaterialfv(face, GL.GL_EMISSION, BLACK, 0);
+      gl.glMaterialfv(face, GL2.GL_AMBIENT, rgba, 0);
+      gl.glMaterialfv(face, GL2.GL_DIFFUSE, rgba, 0);
+      gl.glMaterialfv(face, GL2.GL_SPECULAR, rgba, 0);
+      gl.glMateriali(face, GL2.GL_SHININESS, 4);
+      gl.glMaterialfv(face, GL2.GL_EMISSION, BLACK, 0);
     }
   }
 }

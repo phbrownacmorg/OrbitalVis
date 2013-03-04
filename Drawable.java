@@ -22,12 +22,12 @@ public class Drawable {
   
   protected RefFrame frame() { return frame; }
   
-  public void initXfm(GL gl) {
+  public void initXfm(GL2 gl) {
     gl.glPushMatrix();
     initXfmForFrame(gl, frame);
   }
   
-  protected void initXfmForFrame(GL gl, RefFrame thisFrame) {
+  protected void initXfmForFrame(GL2 gl, RefFrame thisFrame) {
     if (thisFrame.getParent() != null) {
       initXfmForFrame(gl, thisFrame.getParent());
     }
@@ -37,15 +37,15 @@ public class Drawable {
     gl.glRotated(thisFrame.getRotX(), 1.0, 0.0, 0.0);
   }
   
-  public void endXfm(GL gl) {
+  public void endXfm(GL2 gl) {
     gl.glPopMatrix();
   }
   
-  public void initDraw(GL gl) {
+  public void initDraw(GL2 gl) {
     initXfm(gl);
   }
   
-  public void endDraw(GL gl) {
+  public void endDraw(GL2 gl) {
     endXfm(gl);
   }
   

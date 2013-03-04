@@ -1,6 +1,6 @@
 import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
-import com.sun.opengl.util.*;
+import com.jogamp.opengl.util.*;
 
 import java.util.ArrayList;
 import java.util.Properties;
@@ -41,7 +41,7 @@ public class View implements GLEventListener, ConstantMgr
   private int canvasHeight = 1;
   
   private ArrayList<Drawable> drawList;
-  private GL              gl;
+  private GL2              gl;
   private GLDrawable      glDrawable;
   
   /**
@@ -128,7 +128,7 @@ public class View implements GLEventListener, ConstantMgr
    */
   public void init(GLAutoDrawable drawable)
   {
-    this.gl = drawable.getGL();
+    this.gl = (GL2)(drawable.getGL());
     this.glDrawable = drawable;
     
     //gl.glEnable(GL.GL_DEPTH_TEST);
@@ -139,20 +139,30 @@ public class View implements GLEventListener, ConstantMgr
     gl.glEnable(GL.GL_BLEND);
     gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         
-    gl.glEnable(GL.GL_POLYGON_SMOOTH);
-    gl.glHint(GL.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST);
+    gl.glEnable(GL2.GL_POLYGON_SMOOTH);
+    gl.glHint(GL2.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST);
     
     // Smooth shading
     //gl.glShadeModel(GL.GL_SMOOTH);
     
     // Keep normals normalized!
-    gl.glEnable(GL.GL_NORMALIZE);
+    gl.glEnable(GL2.GL_NORMALIZE);
     
-    drawable.setGL( new DebugGL(drawable.getGL() ));
+    drawable.setGL( new DebugGL2((GL2)(drawable.getGL()) ));
     
     System.out.println("Init GL is " + gl.getClass().getName());
   }
   
+  /**
+   * Dispose of the GL stuff if the drawable is destroyed for any reason.
+   */
+  public void dispose(GLAutoDrawable drawable) {
+	  if (drawable == this.glDrawable) {
+		  this.gl = null;
+		  this.glDrawable = null;
+		  this.drawList = null;
+	  }
+  }
   /**
    * Take an X coordinate of a point on the canvas, and transform it to the the interval [-1, 1].
    * -1 is at the left of the canvas, 1 is at the right of the canvas, and 0 is in the center.
@@ -182,7 +192,7 @@ public class View implements GLEventListener, ConstantMgr
   public void display(GLAutoDrawable drawable)
   {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-    gl.glMatrixMode(GL.GL_MODELVIEW);
+    gl.glMatrixMode(GL2.GL_MODELVIEW);
     gl.glLoadIdentity();
     
     // Set up the projection
@@ -195,7 +205,7 @@ public class View implements GLEventListener, ConstantMgr
     gl.glPushMatrix();
     gl.glRotated(hRotateBase + hAngle, up[0], up[1], up[2]);
     
-    gl.glDisable(GL.GL_LIGHTING);
+    gl.glDisable(GL2.GL_LIGHTING);
     
     ShapeBuilder.axes(gl);
     for (Drawable d:drawList) {
@@ -215,7 +225,7 @@ public class View implements GLEventListener, ConstantMgr
     canvasWidth = width;
     canvasHeight = height;
     gl.glViewport(x, y, width, height);
-    gl.glMatrixMode(GL.GL_PROJECTION);
+    gl.glMatrixMode(GL2.GL_PROJECTION);
     gl.glLoadIdentity();
     if (perspective) {
       double aspectRatio = this.aspect;

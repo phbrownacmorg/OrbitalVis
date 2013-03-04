@@ -34,21 +34,21 @@ public class AtomView extends AtomOrGroupView {
     }
   }
   
-  protected void setColor(GL gl) {
-    gl.glGetDoublev(GL.GL_CURRENT_COLOR, colors, 0); 
+  protected void setColor(GL2 gl) {
+    gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0); 
     gl.glColor4fv(atomColor, 0);
   }
   
-  protected void restoreColor(GL gl) {
+  protected void restoreColor(GL2 gl) {
     gl.glColor4dv(colors, 0);
   }
   
-  public void initDraw(GL gl) {
+  public void initDraw(GL2 gl) {
     super.initDraw(gl);
     setColor(gl);
   }
   
-  public void endDraw(GL gl) {
+  public void endDraw(GL2 gl) {
     restoreColor(gl);
     super.endDraw(gl);
   }

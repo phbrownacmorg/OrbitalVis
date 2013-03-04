@@ -21,7 +21,7 @@ public class SP3AtomView extends AtomView {
     porb = orbitals;
   }
 
-  public void draw (GL gl) {
+  public void draw (GL2 gl) {
     initDraw(gl);
     //ShapeBuilder.axes(gl);
     for (int i = 0; i < 4; i++) {

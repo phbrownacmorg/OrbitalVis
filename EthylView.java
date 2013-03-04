@@ -29,7 +29,7 @@ public class EthylView extends AtomOrGroupView {
     methylView = mview;
   }
   
-  public void draw(GL gl) {
+  public void draw(GL2 gl) {
     initDraw(gl);
     //ShapeBuilder.axes(gl);
     carbView.draw(gl);

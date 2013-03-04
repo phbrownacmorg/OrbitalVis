@@ -1,7 +1,7 @@
 import javax.swing.*;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.GLCapabilities;
-import com.sun.opengl.util.Animator;
+import com.jogamp.opengl.util.Animator;
 
 import java.util.Properties;
 
@@ -147,7 +147,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       
       view = new View(model, props);
 
-      GLCapabilities glCaps = new GLCapabilities();
+      GLCapabilities glCaps = new GLCapabilities(null);
       GLCanvas canvas = new GLCanvas( glCaps );
       canvas.addGLEventListener(view);
       canvas.addMouseMotionListener(makeMouseListener());
@@ -250,9 +250,9 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   /**
    * Start drawing.
    */
-  public void start() {
+  public boolean start() {
     testFrame.setVisible(true);
-    super.start();
+    return super.start();
   }
   
   private void quit() {

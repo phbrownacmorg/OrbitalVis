@@ -24,7 +24,7 @@ public class POrbitalView extends Drawable {
     this.orbital = orbital;
   }
   
-  public void draw (GL gl) {
+  public void draw (GL2 gl) {
     initDraw(gl);
     // Scale the thing correctly
     gl.glPushMatrix();
@@ -47,7 +47,7 @@ public class POrbitalView extends Drawable {
     endDraw(gl);
   }
   
-  private void makeHalfOrbital(GL gl) {
+  private void makeHalfOrbital(GL2 gl) {
     gl.glPushMatrix();
     double tanAngleX = Math.tan(Math.toRadians(POrbital.MIN_CENTRAL_ANGLE/2));
     double tanAngleY = Math.tan(Math.toRadians(orbital.centralAngle()/2));

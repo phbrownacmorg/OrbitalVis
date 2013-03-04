@@ -23,7 +23,7 @@ public class HydrogenView extends AtomView {
     numDots = 0;
   }
   
-  public void draw(GL gl) {
+  public void draw(GL2 gl) {
     initDraw(gl);
     sorb.draw(gl);
     endDraw(gl);

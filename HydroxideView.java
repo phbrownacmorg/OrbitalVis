@@ -27,7 +27,7 @@ public class HydroxideView extends AtomOrGroupView {
     oxyView = oview;
   }
   
-  public void draw(GL gl) {
+  public void draw(GL2 gl) {
     initDraw(gl);
     //ShapeBuilder.axes(gl);
     oxyView.draw(gl);
