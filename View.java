@@ -1,6 +1,6 @@
 import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
-import com.jogamp.opengl.util.*;
+//import com.jogamp.opengl.util.*;
 
 import java.util.ArrayList;
 import java.util.Properties;
@@ -38,7 +38,7 @@ public class View implements GLEventListener, ConstantMgr
                                     // in degrees
   
   private int canvasWidth = 1;
-  private int canvasHeight = 1;
+  //private int canvasHeight = 1;
   
   private ArrayList<Drawable> drawList;
   private GL2              gl;
@@ -223,7 +223,7 @@ public class View implements GLEventListener, ConstantMgr
   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
   {
     canvasWidth = width;
-    canvasHeight = height;
+    //canvasHeight = height;
     gl.glViewport(x, y, width, height);
     gl.glMatrixMode(GL2.GL_PROJECTION);
     gl.glLoadIdentity();

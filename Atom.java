@@ -1,4 +1,4 @@
-import javax.media.opengl.*;
+//import javax.media.opengl.*;
 
 /**
  * A class to represent an atom.  It can also set the bond length.

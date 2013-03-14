@@ -1,4 +1,4 @@
-import javax.media.opengl.*;
+//import javax.media.opengl.*;
 
 /**
  * Model a P-orbital or hybridized orbital along the Z-axis.  The proportion

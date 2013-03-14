@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import javax.media.opengl.*;
+//import javax.media.opengl.*;
 
 /**
  * ABC for the model classes representing the various reactions.

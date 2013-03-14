@@ -1,7 +1,7 @@
 import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
-import com.jogamp.opengl.util.gl2.GLUT;
+//import com.jogamp.opengl.util.gl2.GLUT;
 
 /**
  * Class to build a set of generally-useful shapes.

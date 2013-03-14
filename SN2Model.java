@@ -1,6 +1,6 @@
 
 import java.util.ArrayList;
-import javax.media.opengl.*;
+//import javax.media.opengl.*;
 
 /**
  * The Model class for the SN2 reaction

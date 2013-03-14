@@ -7,7 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 
 /**
  * Class to display a Bond.  Since bonds aren't represented explicitly in the 3D view,

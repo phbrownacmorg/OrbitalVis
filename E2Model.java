@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import javax.media.opengl.*;
+//import javax.media.opengl.*;
 
 /**
  * The Model class for the E2 reaction

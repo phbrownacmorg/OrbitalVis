@@ -1,4 +1,4 @@
-import javax.media.opengl.*;
+//import javax.media.opengl.*;
 
 /**
  * A class to represent a atom with SP3 hybridization.  The class is composed of four POrbital objects.
