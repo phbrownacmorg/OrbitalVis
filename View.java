@@ -128,6 +128,10 @@ public class View implements GLEventListener, ConstantMgr
    */
   public void init(GLAutoDrawable drawable)
   {
+	GLCapabilitiesImmutable glCapsActual = drawable.getChosenGLCapabilities();
+	System.out.println("Alpha bits: " + glCapsActual.getAccumAlphaBits());
+	System.out.println("Profile: " + glCapsActual.getGLProfile());
+
     this.gl = (GL2)(drawable.getGL());
     this.glDrawable = drawable;
     

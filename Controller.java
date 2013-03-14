@@ -149,8 +149,16 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       view = new View(model, props);
 
       //GLProfile profile = ;
-      GLCapabilities glCaps = new GLCapabilities(null);
-      GLCanvas canvas = new GLCanvas();
+      GLCapabilities glCaps = new GLCapabilities(null); //GLProfile.get(GLProfile.GL2)
+      System.out.println(glCaps);
+      glCaps.setBackgroundOpaque(false);
+      glCaps.setAlphaBits(8);
+      System.out.println(glCaps);
+      
+      //System.out.println("AbstractDevice: " + GLProfile.getDefaultDevice());
+      
+      GLCanvas canvas = new GLCanvas( glCaps, null, null, null );
+
       canvas.addGLEventListener(view);
       canvas.addMouseMotionListener(makeMouseListener());
       canvas.addKeyListener(makeKeyListener());
