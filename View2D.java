@@ -2,6 +2,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Properties;
+
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
 
 /**
  * A View class for the 2D part of the visualization.
@@ -16,7 +22,7 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class View2D {
+public class View2D implements GLEventListener, ConstantMgr {
   private static int Z_SCALE = 100;
   private static int Y_SCALE = 100;
   private static int X_SCALE = 25;
@@ -25,11 +31,38 @@ public class View2D {
   
   public static float FONT_SIZE = 24.0f;
   
+  private double near = NEAR;          // Distance to the near clipping plane
+  private double far = FAR;            // Distance to the far clipping plane
+  
   private ArrayList<Drawable> drawList;
  
-  public View2D(Model m) {
+  public View2D(Model m, Properties props) {
     drawList = m.createDrawList(true);
+    
+    if (props.containsKey("near")) {
+        try {
+          this.near = Double.parseDouble(props.getProperty("near"));
+        } catch (NumberFormatException e) {
+          System.out.println("Ignoring near specification, due to the following:");
+          System.out.println(e);
+        }
+    }
+      
+    if (props.containsKey("far")) {
+        try {
+          this.far = Double.parseDouble(props.getProperty("far"));
+        } catch (NumberFormatException e) {
+          System.out.println("Ignoring far specification, due to the following:");
+          System.out.println(e);
+        }
+    }
+
   }
+
+  public void init(GLAutoDrawable drawable) {
+	  
+  }
+  
   
   /**
    * Reset the model.
@@ -51,6 +84,37 @@ public class View2D {
 //      g.drawLine(250, 0, 250, 500);
     }
     
+  }
+  
+  public void display(GLAutoDrawable canvas2D) {
+	  GL2 gl = (GL2)(canvas2D.getGL());
+	  
+	  gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
+	  gl.glMatrixMode(GL2.GL_MODELVIEW);
+	  gl.glLoadIdentity();
+
+	  // Set up the projection
+
+	  // Draw stuff.
+	  gl.glPushMatrix();
+	  gl.glDisable(GL2.GL_LIGHTING);
+	  
+	  for (Drawable d:drawList) {
+		  d.draw2D(gl);
+	  }	
+	  gl.glPopMatrix();
+  }
+  
+  public void dispose(GLAutoDrawable drawable) { }
+  
+  public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
+  {
+	  GL2 gl = (GL2)(drawable.getGL());
+	  
+	  gl.glViewport(x, y, width, height);
+	  gl.glMatrixMode(GL2.GL_PROJECTION);
+	  gl.glLoadIdentity();
+	  gl.glOrtho(-5, 5, -5, 5, near, far);
   }
   
   public static void setFontSize(float newFontSize) {

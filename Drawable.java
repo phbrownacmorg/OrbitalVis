@@ -52,4 +52,6 @@ public class Drawable {
   public void draw(GL2 gl) { }
   
   public void draw2D(java.awt.Graphics2D g) { }
+  
+  public void draw2D(GL2 gl) { }
 }

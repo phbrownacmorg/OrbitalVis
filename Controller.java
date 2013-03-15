@@ -161,19 +161,22 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 
       testFrame.addWindowListener(makeWindowListener());
 
-      view2d = new View2D(model);
-      canvas2d = new Canvas2D(view2d);
-
+      view2d = new View2D(model, props);
+      //canvas2d = new Canvas2D(view2d);
+      GLCanvas canvas2D = new GLCanvas(glCaps);
+      canvas2D.addGLEventListener(view2d);
+      this.add(canvas2D);
+      
       // add the canvases
       if (props.getProperty("canvasLayout", "horizontal").equals("vertical")) {
         Box canvasBox = Box.createHorizontalBox();
         canvasBox.add(canvas);
-        canvasBox.add(canvas2d);
+        canvasBox.add(canvas2D);
         vbox.add(canvasBox);
       }
       else {
         vbox.add(canvas);
-        vbox.add(canvas2d);
+        vbox.add(canvas2D);
       }
     }
     catch( Exception e )
