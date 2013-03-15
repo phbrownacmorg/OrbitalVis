@@ -49,7 +49,7 @@ public class Drawable {
     endXfm(gl);
   }
   
-  public void draw(GL gl) { }
+  public void draw(GL2 gl) { }
   
   public void draw2D(java.awt.Graphics2D g) { }
 }
