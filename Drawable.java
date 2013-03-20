@@ -50,6 +50,14 @@ public class Drawable {
     endXfm(gl);
   }
   
+  public void initDraw2D(GL2 gl) {
+	  initXfm(gl);
+  }
+  
+  public void endDraw2D(GL2 gl) {
+	  endXfm(gl);
+  }
+  
   public void draw(GL2 gl) { }
   
   public void draw2D(java.awt.Graphics2D g) { }

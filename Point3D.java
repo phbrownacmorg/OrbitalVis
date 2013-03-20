@@ -48,4 +48,8 @@ public class Point3D {
     Point3D result = new Point3D(elt[0] * scalar, elt[1] * scalar, elt[2] * scalar);
     return result;
   }
+  
+  public String toString() {
+	  return "("+this.x()+","+this.y()+","+this.z()+")";
+  }
 }

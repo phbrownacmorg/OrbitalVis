@@ -8,6 +8,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.glu.GLU;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
 
@@ -31,11 +32,13 @@ public class View2D implements GLEventListener, ConstantMgr {
   private static int X_OFF = 365;
   private static int Y_OFF = 170;
   
-  public static float FONT_SIZE = 24.0f;
+  public static float FONT_SIZE = 6.0f; // 24.0f
   
   private double near = NEAR;          // Distance to the near clipping plane
   private double far = FAR;            // Distance to the far clipping plane
   
+  private float[] eye = {VP/2.f, VP/4.f, VP, 1};  // Eye point, in model coordinates
+
   private ArrayList<Drawable> drawList;
   private TextRenderer tr;
   
@@ -60,6 +63,26 @@ public class View2D implements GLEventListener, ConstantMgr {
         }
     }
 
+    if (props.containsKey("eye")) {
+        String[] eyeStrings = props.getProperty("eye").split("\\s");
+        if (eyeStrings.length != 3) {
+          System.out.println("Wrong number of coordinates in eye property: ignoring it");
+        }
+        else {
+          float[] eyePt = new float[4];
+          eyePt[3] = 0; // Default
+          try {
+            for (int i = 0; i < eyeStrings.length; i++) {
+              eyePt[i] = Float.parseFloat(eyeStrings[i]);
+            }
+            this.eye = eyePt;
+          } catch (NumberFormatException e) {
+            System.out.println("Ignoring eyepoint specification, due to the following:");
+            System.out.println(e);
+          }
+        }
+      }
+      
   }
 
   public void init(GLAutoDrawable drawable) {
@@ -106,11 +129,19 @@ public class View2D implements GLEventListener, ConstantMgr {
 	  gl.glLoadIdentity();
 
 	  // Set up the projection
+	  GLU glu = new GLU();
+	  //           eye point      center of view       up
+	  glu.gluLookAt(eye[0], eye[1], eye[2], LOOK_AT[0], LOOK_AT[1], LOOK_AT[2], 
+			  UP[0], UP[1], UP[2]);
+
 
 	  // Draw stuff.
 	  gl.glPushMatrix();
+	  gl.glRotated(H_ROTATE_BASE, UP[0], UP[1], UP[2]);
+
 	  gl.glDisable(GL2.GL_LIGHTING);
 	  
+	  System.out.println("Drawing " + drawList.size() + " Drawables");
 	  for (Drawable d:drawList) {
 		  d.draw2D(gl, this.tr);
 	  }	

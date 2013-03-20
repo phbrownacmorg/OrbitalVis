@@ -23,6 +23,7 @@ public class AtomView extends AtomOrGroupView {
 
   private double colors[] = new double[4];
   private float atomColor[] = {0, 0, 0, OPACITY};
+  private double textColors[] = new double[4];
   private Color textColor;
 
   public AtomView(Atom frame, String text, Color col) {
@@ -52,6 +53,18 @@ public class AtomView extends AtomOrGroupView {
     restoreColor(gl);
     super.endDraw(gl);
   }
+  
+  public void initDraw2D(GL2 gl) {
+	  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, textColors, 0);
+	  gl.glColor3i(textColor.getRed(), textColor.getGreen(), textColor.getBlue());
+	  super.initDraw2D(gl);
+  }
+  
+  public void endDraw2D(GL2 gl) {
+	  gl.glColor4dv(textColors, 0);
+	  super.endDraw2D(gl);
+  }
+  
   
   public void draw2D(java.awt.Graphics2D g) {
     java.awt.Paint paint = g.getPaint();

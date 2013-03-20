@@ -87,4 +87,9 @@ public class RefFrame {
   public double distanceTo(RefFrame f) {
     return pt.distanceTo(f.pt);
   }
+  
+  public String toString() {
+	  // So what about the rotation?
+	  return pt.toString();
+  }
 }

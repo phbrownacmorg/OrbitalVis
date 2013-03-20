@@ -27,15 +27,10 @@ public class View implements GLEventListener, ConstantMgr
   private double aspect = -1;          // Aspect ratio of the viewing frustum
   private double near = NEAR;          // Distance to the near clipping plane
   private double fovy = FOVY;          // Vertical field of view, in degrees
-  private float vp = 30.0f;            // Constant used for setting the eye point
-  private float[] eye = {vp/2.f, vp/4.f, vp, 1};  // Eye point, in model coordinates
-  private float[] lookAt = {0, 0, 0};  // Look-at point, in model coordinates
-  private float[] up = {0, 1, 0};      // Up vector, in model coordinates
+  private float[] eye = {VP/2.f, VP/4.f, VP, 1};  // Eye point, in model coordinates
    
   private double hAngle = 0;  // Angle of rotation of the model about 
                              //   the up vector, in degrees
-  private double hRotateBase = 180; // Static amount of rotation about the up vector,
-                                    // in degrees
   
   private int canvasWidth = 1;
   //private int canvasHeight = 1;
@@ -110,15 +105,6 @@ public class View implements GLEventListener, ConstantMgr
         this.aspect = Double.parseDouble(props.getProperty("aspect"));
       } catch (NumberFormatException e) {
         System.out.println("Ignoring aspect-ratio specification, due to the following:");
-        System.out.println(e);
-      }
-    }
-    
-    if (props.containsKey("baseRotation")) {
-      try {
-        this.hRotateBase = Double.parseDouble(props.getProperty("baseRotation"));
-      } catch (NumberFormatException e) {
-        System.out.println("Ignoring base-rotation specification, due to the following:");
         System.out.println(e);
       }
     }
@@ -203,12 +189,12 @@ public class View implements GLEventListener, ConstantMgr
     // Set up the projection
     GLU glu = new GLU();
     //           eye point      center of view       up
-    glu.gluLookAt(eye[0], eye[1], eye[2], lookAt[0], lookAt[1], lookAt[2], 
-                  up[0], up[1], up[2]);
+    glu.gluLookAt(eye[0], eye[1], eye[2], LOOK_AT[0], LOOK_AT[1], LOOK_AT[2], 
+			  UP[0], UP[1], UP[2]);
     
     // Draw stuff.
     gl.glPushMatrix();
-    gl.glRotated(hRotateBase + hAngle, up[0], up[1], up[2]);
+    gl.glRotated(H_ROTATE_BASE + hAngle, UP[0], UP[1], UP[2]);
     
     gl.glDisable(GL2.GL_LIGHTING);
     
@@ -227,6 +213,7 @@ public class View implements GLEventListener, ConstantMgr
    */
   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
   {
+	  System.out.println("Reshaping");
     canvasWidth = width;
     //canvasHeight = height;
     gl.glViewport(x, y, width, height);

@@ -89,11 +89,16 @@ public abstract class AtomOrGroupView extends Drawable {
   }
   
   public void draw2D(GL2 gl, TextRenderer tr) {
+	  this.initDraw2D(gl);
+	  
 	  tr.begin3DRendering();
-	  // Change this later
+	  // Later, should set the color elsewhere
 	  tr.setColor(java.awt.Color.BLACK);
 	  tr.draw3D(text, (float)frame.getX(), (float)frame.getY(), (float)frame.getZ(), 1.0f);
+	  System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
 	  tr.end3DRendering();
+	  
+	  this.endDraw2D(gl);
   }
   
 }

@@ -11,6 +11,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public interface ConstantMgr {
+	public static final float VP = 30.0f;            // Constant used for setting the eye point
+	public static final float[] LOOK_AT = {0, 0, 0};  // Look-at point, in model coordinates
+	public static final float[] UP = {0, 1, 0};      // Up vector, in model coordinates
+	
+	// Static amount of rotation about the up vector, in degrees
+	public static final double H_ROTATE_BASE = 180; 
+
   /**
    * Distance to the far clipping plane.
    */
