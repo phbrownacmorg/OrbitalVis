@@ -1,4 +1,5 @@
 import javax.media.opengl.*;
+import com.jogamp.opengl.util.awt.TextRenderer;
 
 /**
  * Class to draw a RefFrame (atom, group of atoms, bond, or orbital).  
@@ -53,5 +54,5 @@ public class Drawable {
   
   public void draw2D(java.awt.Graphics2D g) { }
   
-  public void draw2D(GL2 gl) { }
+  public void draw2D(GL2 gl, TextRenderer tr) { }
 }

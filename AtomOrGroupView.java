@@ -3,6 +3,10 @@ import java.awt.Graphics2D;
 import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
 import java.util.Hashtable;
+
+import javax.media.opengl.GL2;
+import com.jogamp.opengl.util.awt.TextRenderer; 
+
 /**
  * View for an AtomOrGroup.
  *
@@ -18,7 +22,7 @@ import java.util.Hashtable;
 public abstract class AtomOrGroupView extends Drawable {
   private AtomOrGroup frame;
   private String text;
-  private Hashtable<TextAttribute, Object> map;
+  private Hashtable<TextAttribute, Object> map; // Is this even used?
   
   protected AtomOrGroupView(AtomOrGroup frame, String text) {
     super(frame);
@@ -82,6 +86,14 @@ public abstract class AtomOrGroupView extends Drawable {
     }
     
     g.setFont(f); // reset the font
+  }
+  
+  public void draw2D(GL2 gl, TextRenderer tr) {
+	  tr.begin3DRendering();
+	  // Change this later
+	  tr.setColor(java.awt.Color.BLACK);
+	  tr.draw3D(text, (float)frame.getX(), (float)frame.getY(), (float)frame.getZ(), 1.0f);
+	  tr.end3DRendering();
   }
   
 }

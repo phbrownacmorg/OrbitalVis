@@ -9,6 +9,8 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
+import com.jogamp.opengl.util.awt.TextRenderer;
+
 /**
  * A View class for the 2D part of the visualization.
  *
@@ -35,7 +37,8 @@ public class View2D implements GLEventListener, ConstantMgr {
   private double far = FAR;            // Distance to the far clipping plane
   
   private ArrayList<Drawable> drawList;
- 
+  private TextRenderer tr;
+  
   public View2D(Model m, Properties props) {
     drawList = m.createDrawList(true);
     
@@ -60,7 +63,15 @@ public class View2D implements GLEventListener, ConstantMgr {
   }
 
   public void init(GLAutoDrawable drawable) {
+	  GL2 gl = (GL2)(drawable.getGL());
 	  
+	  gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	  gl.glClearDepth(FAR);
+
+	  // Keep normals normalized!
+	  gl.glEnable(GL2.GL_NORMALIZE);
+	  
+	  this.tr = new TextRenderer(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 36));
   }
   
   
@@ -87,6 +98,7 @@ public class View2D implements GLEventListener, ConstantMgr {
   }
   
   public void display(GLAutoDrawable canvas2D) {
+	  //System.out.println("View2D.display called");
 	  GL2 gl = (GL2)(canvas2D.getGL());
 	  
 	  gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
@@ -100,7 +112,7 @@ public class View2D implements GLEventListener, ConstantMgr {
 	  gl.glDisable(GL2.GL_LIGHTING);
 	  
 	  for (Drawable d:drawList) {
-		  d.draw2D(gl);
+		  d.draw2D(gl, this.tr);
 	  }	
 	  gl.glPopMatrix();
   }

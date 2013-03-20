@@ -336,7 +336,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       slider.setValue(0);
       view.setModel(model);
       view2d.setModel(model);
-      canvas2d.repaint();
+      //canvas2d.repaint();
     }
   }
   
@@ -391,7 +391,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   
   public void stateChanged(ChangeEvent e) {
     model.setT(slider.getValue()/((double)(reactionSteps)));
-    canvas2d.repaint();
+    //canvas2d.repaint();
   }
   
   /**
