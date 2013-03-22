@@ -1,4 +1,4 @@
-import java.awt.geom.Point2D;
+//import java.awt.geom.Point2D;
 
 /**
  * Class to represent a Bond.  It turns out that changing bond state purely by a distance rule
@@ -28,8 +28,8 @@ public class Bond {
   }
   
   public AtomOrGroup getStart3D() { return frame1; }
-  public Point2D getStart() { return frame1.getPt2D(); }
-  public Point2D getEnd()   { return frame2.getPt2D(); }
+//  public Point2D getStart() { return frame1.getPt2D(); }
+//  public Point2D getEnd()   { return frame2.getPt2D(); }
   
   public State getState()       { return state; }
   public void setState(State s) { state = s; }

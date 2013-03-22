@@ -50,11 +50,11 @@ public class Drawable {
     endXfm(gl);
   }
   
-  public void initDraw2D(GL2 gl) {
+  public void initDraw2D(GL2 gl, TextRenderer tr) {
 	  initXfm(gl);
   }
   
-  public void endDraw2D(GL2 gl) {
+  public void endDraw2D(GL2 gl, TextRenderer tr) {
 	  endXfm(gl);
   }
   

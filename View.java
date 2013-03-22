@@ -23,9 +23,9 @@ public class View implements GLEventListener, ConstantMgr
 {
   // The attributes have default values, so that we don't have to specify everything.
   private boolean perspective = true;  // Use perspective projection if true
+  private double near = NEAR;          // Distance to the near clipping plane
   private double far = FAR;            // Distance to the far clipping plane
   private double aspect = -1;          // Aspect ratio of the viewing frustum
-  private double near = NEAR;          // Distance to the near clipping plane
   private double fovy = FOVY;          // Vertical field of view, in degrees
   private float[] eye = {VP/2.f, VP/4.f, VP, 1};  // Eye point, in model coordinates
    
@@ -35,8 +35,8 @@ public class View implements GLEventListener, ConstantMgr
   private int canvasWidth = 1;
   //private int canvasHeight = 1;
   
-  private ArrayList<Drawable> drawList;
-  private GL2              gl;
+  protected ArrayList<Drawable> drawList;
+  protected GL2              gl;
   private GLDrawable      glDrawable;
   
   /**
@@ -176,27 +176,31 @@ public class View implements GLEventListener, ConstantMgr
     drawList = newModel.createDrawList(false);
   }
   
+
+  protected void startDisplay() {
+	    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
+	    gl.glMatrixMode(GL2.GL_MODELVIEW);
+	    gl.glLoadIdentity();
+	    
+	    // Set up the projection
+	    GLU glu = new GLU();
+	    //           eye point      center of view       up
+	    glu.gluLookAt(eye[0], eye[1], eye[2], LOOK_AT[0], LOOK_AT[1], LOOK_AT[2], 
+				  UP[0], UP[1], UP[2]);
+
+	    gl.glDisable(GL2.GL_LIGHTING);
+  }
+  
   /**
    * Actually draw the picture.  Again, this should be called from
    * the event-handling thread.
    */
   public void display(GLAutoDrawable drawable)
   {
-    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-    gl.glMatrixMode(GL2.GL_MODELVIEW);
-    gl.glLoadIdentity();
-    
-    // Set up the projection
-    GLU glu = new GLU();
-    //           eye point      center of view       up
-    glu.gluLookAt(eye[0], eye[1], eye[2], LOOK_AT[0], LOOK_AT[1], LOOK_AT[2], 
-			  UP[0], UP[1], UP[2]);
-    
+	  this.startDisplay();
     // Draw stuff.
     gl.glPushMatrix();
     gl.glRotated(H_ROTATE_BASE + hAngle, UP[0], UP[1], UP[2]);
-    
-    gl.glDisable(GL2.GL_LIGHTING);
     
     ShapeBuilder.axes(gl);
     for (Drawable d:drawList) {
@@ -213,7 +217,7 @@ public class View implements GLEventListener, ConstantMgr
    */
   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
   {
-	  System.out.println("Reshaping");
+	System.out.println("Reshaping");
     canvasWidth = width;
     //canvasHeight = height;
     gl.glViewport(x, y, width, height);

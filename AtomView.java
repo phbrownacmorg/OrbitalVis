@@ -1,5 +1,7 @@
 import javax.media.opengl.*;
 import java.awt.Color;
+import com.jogamp.opengl.util.awt.TextRenderer; 
+
 
 /**
  * A class to view an atom.  The basic difference between this and a bare Drawable
@@ -23,7 +25,6 @@ public class AtomView extends AtomOrGroupView {
 
   private double colors[] = new double[4];
   private float atomColor[] = {0, 0, 0, OPACITY};
-  private double textColors[] = new double[4];
   private Color textColor;
 
   public AtomView(Atom frame, String text, Color col) {
@@ -54,15 +55,13 @@ public class AtomView extends AtomOrGroupView {
     super.endDraw(gl);
   }
   
-  public void initDraw2D(GL2 gl) {
-	  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, textColors, 0);
-	  gl.glColor3i(textColor.getRed(), textColor.getGreen(), textColor.getBlue());
-	  super.initDraw2D(gl);
+  public void initDraw2D(GL2 gl, TextRenderer tr) {
+	  tr.setColor(textColor);
+	  super.initDraw2D(gl, tr);
   }
   
-  public void endDraw2D(GL2 gl) {
-	  gl.glColor4dv(textColors, 0);
-	  super.endDraw2D(gl);
+  public void endDraw2D(GL2 gl, TextRenderer tr) {
+	  super.endDraw2D(gl, tr);
   }
   
   

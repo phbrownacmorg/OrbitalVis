@@ -112,48 +112,48 @@ public class BondView extends Drawable {
                              dist * LINE_SCALE_FACTOR, 2));
   }
   
-  public void draw2D(Graphics2D g) {
-    Paint oldPaint = g.getPaint();
-    g.setPaint(BOND_COLOR);
-    Point2D start = bond.getStart();
-    Point2D end = bond.getEnd();
-    if (bond.getState() == Bond.State.FULL) {
-      // Draw a regular bond
-      int dir = bond.getDepthDir();
-      switch (dir) {
-        case 0:
-          drawLine(g, start, end);
-//          g.draw(new java.awt.geom.Line2D.Double(bond.getStart(), bond.getEnd()));
-          break;
-        case 1:
-          g.setPaint(pattern);
-        case -1:
-          AffineTransform oldXfm = g.getTransform();
-          drawWedge(g, start, end);
-          g.setTransform(oldXfm);
-          break;
-      }
-    }
-    else if (bond.getState() == Bond.State.PARTIAL) {
-      // Draw a dashed line for the bond
-      // All partial bonds are asumed to lie in the plane of the screen.
-      //    This is mainly because I don't really know how to handle a partial
-      //    bond that isn't in the plane of the screen.
-      Stroke oldStroke = g.getStroke();
-      g.setStroke(dashedStroke);
-      drawLine(g, start, end);
-      g.setStroke(oldStroke);
-    }
-    else if ((bond.getState() == Bond.State.DOUBLE) || (bond.getState() == Bond.State.FULL_PARTIAL)) {
-      // Draw a double line for the bond
-      // Double lines are assumed to lie in the plane of the screen.
-      AffineTransform oldXfm = g.getTransform();
-      Stroke oldStroke = g.getStroke();
-      drawDoubleLine(g, start, end, (bond.getState() == Bond.State.FULL_PARTIAL));
-      g.setStroke(oldStroke);
-      g.setTransform(oldXfm);
-    }
-    // If the bond's state is BROKEN, don't draw anything (naturally)
-    g.setPaint(oldPaint);
-  }
+//  public void draw2D(Graphics2D g) {
+//    Paint oldPaint = g.getPaint();
+//    g.setPaint(BOND_COLOR);
+//    Point2D start = bond.getStart();
+//    Point2D end = bond.getEnd();
+//    if (bond.getState() == Bond.State.FULL) {
+//      // Draw a regular bond
+//      int dir = bond.getDepthDir();
+//      switch (dir) {
+//        case 0:
+//          drawLine(g, start, end);
+////          g.draw(new java.awt.geom.Line2D.Double(bond.getStart(), bond.getEnd()));
+//          break;
+//        case 1:
+//          g.setPaint(pattern);
+//        case -1:
+//          AffineTransform oldXfm = g.getTransform();
+//          drawWedge(g, start, end);
+//          g.setTransform(oldXfm);
+//          break;
+//      }
+//    }
+//    else if (bond.getState() == Bond.State.PARTIAL) {
+//      // Draw a dashed line for the bond
+//      // All partial bonds are asumed to lie in the plane of the screen.
+//      //    This is mainly because I don't really know how to handle a partial
+//      //    bond that isn't in the plane of the screen.
+//      Stroke oldStroke = g.getStroke();
+//      g.setStroke(dashedStroke);
+//      drawLine(g, start, end);
+//      g.setStroke(oldStroke);
+//    }
+//    else if ((bond.getState() == Bond.State.DOUBLE) || (bond.getState() == Bond.State.FULL_PARTIAL)) {
+//      // Draw a double line for the bond
+//      // Double lines are assumed to lie in the plane of the screen.
+//      AffineTransform oldXfm = g.getTransform();
+//      Stroke oldStroke = g.getStroke();
+//      drawDoubleLine(g, start, end, (bond.getState() == Bond.State.FULL_PARTIAL));
+//      g.setStroke(oldStroke);
+//      g.setTransform(oldXfm);
+//    }
+//    // If the bond's state is BROKEN, don't draw anything (naturally)
+//    g.setPaint(oldPaint);
+//  }
 }

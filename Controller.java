@@ -1,7 +1,7 @@
 import javax.swing.*;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
+//import javax.media.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
 
 import java.util.Properties;
@@ -42,7 +42,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private int cineStep; // Number of steps per cine step in the automatic loop
   
   private Frame testFrame;   // Top-level window
-  private Canvas2D canvas2d;
+  //private Canvas2D canvas2d;
   
   private JButton rockButton;
   private JButton fwdButton;

@@ -1,4 +1,4 @@
-import java.awt.geom.Point2D;
+//import java.awt.geom.Point2D;
 
 /**
  * Represents a frame of reference (coordinate system), which may be nested
@@ -18,7 +18,7 @@ public class RefFrame {
   private double rx;
   private double ry;
   private double rz;
-  private Point2D pt2d;
+  //private Point2D pt2d;
   private RefFrame parent;  // Frame within which this one is nested
   
   public RefFrame() {
@@ -62,7 +62,7 @@ public class RefFrame {
    */
   private void updatePt(Point3D newPt) {
     pt = newPt;
-    pt2d = View2D.to2D(pt);
+    //pt2d = View2D.to2D(pt);
   }
   
   public double getX()                                      { return pt.x(); }
@@ -80,7 +80,7 @@ public class RefFrame {
     rz = newRZ;
   }
   
-  public Point2D getPt2D() { return pt2d; }
+  //public Point2D getPt2D() { return pt2d; }
   
   public RefFrame getParent() { return parent; }
   

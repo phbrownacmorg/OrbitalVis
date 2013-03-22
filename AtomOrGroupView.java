@@ -1,7 +1,7 @@
 //import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.TextAttribute;
-import java.awt.geom.Rectangle2D;
+//import java.awt.geom.Rectangle2D;
 import java.util.Hashtable;
 
 import javax.media.opengl.GL2;
@@ -62,43 +62,51 @@ public abstract class AtomOrGroupView extends Drawable {
     }
   }
   
-  public void draw2D(Graphics2D g) {
-    java.awt.Font f = g.getFont();
-    g.setFont(f.deriveFont(View2D.FONT_SIZE)); // font size is in points
-//    java.awt.FontMetrics fm = g.getFontMetrics();
-//    System.out.print(fm.getAscent() + " " + fm.getDescent() + " " + fm.getLeading() + " ");
-    Rectangle2D textRect = g.getFontMetrics().getStringBounds(text, g);
-//    System.out.println(textRect);
-    java.awt.geom.Point2D pt2d = frame.getPt2D();
-    // Remember, this thing is specified from the baseline, not one of the corners
-//    System.out.println(textRect);
-
-    // Find the left end of the baseline.  
-    // getCenterX() and getCenterY() work perfectly for drawString because the textRect is specified baseline-relative,
-    // and drawString wants to know where to start the baseline.
-    double startX = pt2d.getX() - textRect.getCenterX();
-    double startY = pt2d.getY() - textRect.getCenterY();
-    g.drawString(text, (float)startX, (float)startY);
-    
-    // Display the charge, if any.
-    if (frame.getCharge() != AtomOrGroup.Charge.NEUTRAL) { // Don't display a neutral charge
-      displayCharge(g, (float)(startX + textRect.getWidth()), (float)startY);
-    }
-    
-    g.setFont(f); // reset the font
+//  public void draw2D(Graphics2D g) {
+//    java.awt.Font f = g.getFont();
+//    g.setFont(f.deriveFont(View2D.FONT_SIZE)); // font size is in points
+////    java.awt.FontMetrics fm = g.getFontMetrics();
+////    System.out.print(fm.getAscent() + " " + fm.getDescent() + " " + fm.getLeading() + " ");
+//    Rectangle2D textRect = g.getFontMetrics().getStringBounds(text, g);
+////    System.out.println(textRect);
+//    java.awt.geom.Point2D pt2d = frame.getPt2D();
+//    // Remember, this thing is specified from the baseline, not one of the corners
+////    System.out.println(textRect);
+//
+//    // Find the left end of the baseline.  
+//    // getCenterX() and getCenterY() work perfectly for drawString because the textRect is specified baseline-relative,
+//    // and drawString wants to know where to start the baseline.
+//    double startX = pt2d.getX() - textRect.getCenterX();
+//    double startY = pt2d.getY() - textRect.getCenterY();
+//    g.drawString(text, (float)startX, (float)startY);
+//    
+//    // Display the charge, if any.
+//    if (frame.getCharge() != AtomOrGroup.Charge.NEUTRAL) { // Don't display a neutral charge
+//      displayCharge(g, (float)(startX + textRect.getWidth()), (float)startY);
+//    }
+//    
+//    g.setFont(f); // reset the font
+//  }
+  
+  public void initDraw2D(GL2 gl, TextRenderer tr) {
+	  tr.begin3DRendering();
+	  super.initDraw2D(gl, tr);
   }
   
-  public void draw2D(GL2 gl, TextRenderer tr) {
-	  this.initDraw2D(gl);
-	  
-	  tr.begin3DRendering();
-	  // Later, should set the color elsewhere
-	  tr.setColor(java.awt.Color.BLACK);
-	  tr.draw3D(text, (float)frame.getX(), (float)frame.getY(), (float)frame.getZ(), 1.0f);
-	  System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
+  public void endDraw2D(GL2 gl, TextRenderer tr) {
+	  super.endDraw2D(gl, tr);
 	  tr.end3DRendering();
+  }
+
+  public void draw2D(GL2 gl, TextRenderer tr) {
+//	  if (text.equals("C")) {
+		  this.initDraw2D(gl, tr);
 	  
-	  this.endDraw2D(gl);
+		  tr.draw3D(text, (float)frame.getX(), (float)frame.getY(), (float)frame.getZ(), 1.0f);
+		  System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
+	  
+		  this.endDraw2D(gl, tr);
+//	  }
   }
   
 }
