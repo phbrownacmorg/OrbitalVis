@@ -1,6 +1,5 @@
 import javax.media.opengl.*;
-import java.awt.Color;
-import com.jogamp.opengl.util.awt.TextRenderer; 
+import java.awt.Color; 
 
 
 /**
@@ -25,15 +24,10 @@ public class AtomView extends AtomOrGroupView {
 
   private double colors[] = new double[4];
   private float atomColor[] = {0, 0, 0, OPACITY};
-  private Color textColor;
 
   public AtomView(Atom frame, String text, Color col) {
-    super(frame, text);
+    super(frame, text, new Color(col.getRed(), col.getGreen(), col.getBlue(), 255));
     atomColor = col.getComponents(atomColor);
-    textColor = new Color(col.getRed(), col.getGreen(), col.getBlue(), 255);
-    if (textColor.equals(Color.WHITE)) { // White text won't show up
-      textColor = Color.DARK_GRAY;
-    }
   }
   
   protected void setColor(GL2 gl) {
@@ -55,20 +49,10 @@ public class AtomView extends AtomOrGroupView {
     super.endDraw(gl);
   }
   
-  public void initDraw2D(GL2 gl, TextRenderer tr) {
-	  tr.setColor(textColor);
-	  super.initDraw2D(gl, tr);
-  }
-  
-  public void endDraw2D(GL2 gl, TextRenderer tr) {
-	  super.endDraw2D(gl, tr);
-  }
-  
-  
-  public void draw2D(java.awt.Graphics2D g) {
-    java.awt.Paint paint = g.getPaint();
-    g.setPaint(textColor);
-    super.draw2D(g);
-    g.setPaint(paint);
-  }
+//  public void draw2D(java.awt.Graphics2D g) {
+//    java.awt.Paint paint = g.getPaint();
+//    g.setPaint(textColor);
+//    super.draw2D(g);
+//    g.setPaint(paint);
+//  }
 }

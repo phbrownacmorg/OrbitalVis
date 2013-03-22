@@ -75,10 +75,10 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     }
 
     try {
-      String spec[] = props.getProperty("2DScales", "25 100 100").split(" ");
-      int sx = Integer.parseInt(spec[0]);
-      int sy = Integer.parseInt(spec[1]);
-      int sz = Integer.parseInt(spec[2]);
+      String spec[] = props.getProperty("2DScales", "0.16 0.16 0.16").split(" ");
+      double sx = Double.parseDouble(spec[0]);
+      double sy = Double.parseDouble(spec[1]);
+      double sz = Double.parseDouble(spec[2]);
       View2D.setScales(sx, sy, sz);
     } catch (NumberFormatException e) {
       System.out.println("Ignoring 2DScales specification, due to the following:");
@@ -87,7 +87,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 
     if (props.containsKey("fontSize")) {
       try {
-        float newFontSize = Float.parseFloat(props.getProperty("fontSize"));
+        int newFontSize = Integer.parseInt(props.getProperty("fontSize"));
         View2D.setFontSize(newFontSize);
       } catch (NumberFormatException e) {
         System.out.println("Ignoring fontSize specification, due to the following:");

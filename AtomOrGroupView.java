@@ -1,4 +1,5 @@
 //import java.awt.Font;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.font.TextAttribute;
 //import java.awt.geom.Rectangle2D;
@@ -22,15 +23,26 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 public abstract class AtomOrGroupView extends Drawable {
   private AtomOrGroup frame;
   private String text;
+  protected Color textColor;
+  
   private Hashtable<TextAttribute, Object> map; // Is this even used?
   
-  protected AtomOrGroupView(AtomOrGroup frame, String text) {
+  protected AtomOrGroupView(AtomOrGroup frame, String text, Color tColor) {
     super(frame);
     this.frame = frame;
     this.text = text;
+    this.textColor = tColor;
+    if (textColor.equals(Color.WHITE)) { // White text won't show up
+    	textColor = Color.DARK_GRAY;
+    }
+
     map = new Hashtable<TextAttribute, Object>();
     map.put(TextAttribute.SIZE, new Float(View2D.FONT_SIZE*1.1f));
     map.put(TextAttribute.SUPERSCRIPT, TextAttribute.SUPERSCRIPT_SUPER);
+  }
+  
+  protected AtomOrGroupView(AtomOrGroup frame, String text) {
+	  this(frame, text, Color.BLACK);
   }
   
   /**
@@ -90,6 +102,7 @@ public abstract class AtomOrGroupView extends Drawable {
   
   public void initDraw2D(GL2 gl, TextRenderer tr) {
 	  tr.begin3DRendering();
+	  tr.setColor(textColor);
 	  super.initDraw2D(gl, tr);
   }
   
@@ -99,14 +112,14 @@ public abstract class AtomOrGroupView extends Drawable {
   }
 
   public void draw2D(GL2 gl, TextRenderer tr) {
-//	  if (text.equals("C")) {
+	  if (text.equals("C")) {
 		  this.initDraw2D(gl, tr);
-	  
-		  tr.draw3D(text, (float)frame.getX(), (float)frame.getY(), (float)frame.getZ(), 1.0f);
+
+		  tr.draw3D(text, (float)frame.getZ(), (float)frame.getY(), 0.0f, 1.0f);
 		  System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
-	  
+
 		  this.endDraw2D(gl, tr);
-//	  }
+	  }
   }
   
 }

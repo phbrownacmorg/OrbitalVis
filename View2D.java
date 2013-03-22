@@ -1,11 +1,5 @@
-//import java.awt.Graphics;
-//import java.awt.Graphics2D;
-//import java.awt.geom.Point2D;
 import java.util.Properties;
-
-import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-
 import com.jogamp.opengl.util.awt.TextRenderer;
 
 /**
@@ -22,13 +16,13 @@ import com.jogamp.opengl.util.awt.TextRenderer;
  */
 
 public class View2D extends View {
-  private static int Z_SCALE = 100;
-  private static int Y_SCALE = 100;
-  private static int X_SCALE = 25;
-  private static int X_OFF = 365;
-  private static int Y_OFF = 170;
+	private static double X_SCALE = 1.0/6.0;
+	private static double Y_SCALE = X_SCALE;
+	private static double Z_SCALE = X_SCALE;
+	private static int X_OFF = 365;
+	private static int Y_OFF = 170;
   
-  public static float FONT_SIZE = 6.0f; // 24.0f
+	public static int FONT_SIZE = 12; // 24.0f
   
 //  private double near = NEAR;          // Distance to the near clipping plane
 //  private double far = FAR;            // Distance to the far clipping plane
@@ -41,13 +35,14 @@ public class View2D extends View {
   
   public View2D(Model m, Properties props) {
 	  super(m, props);
-	  drawList = m.createDrawList(true);
+	  this.drawList = m.createDrawList(true);
+	  this.perspective = false;
   }
 
   public void init(GLAutoDrawable drawable) {
 	  super.init(drawable);
 	  gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	  this.tr = new TextRenderer(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 36));
+	  this.tr = new TextRenderer(new java.awt.Font("SansSerif", java.awt.Font.BOLD, FONT_SIZE));
   }
   
   /**
@@ -63,8 +58,11 @@ public class View2D extends View {
 
 	  // Draw stuff.
 	  gl.glPushMatrix();
+	  gl.glScaled(X_SCALE, Y_SCALE, Z_SCALE);
 	  gl.glRotated(H_ROTATE_BASE, UP[0], UP[1], UP[2]);
+	  
 
+	  ShapeBuilder.axes(gl);
 	  //System.out.println("Drawing " + drawList.size() + " Drawables");
 	  for (Drawable d:drawList) {
 		  d.draw2D(gl, this.tr);
@@ -72,7 +70,7 @@ public class View2D extends View {
 	  gl.glPopMatrix();
   }
     
-  public static void setFontSize(float newFontSize) {
+  public static void setFontSize(int newFontSize) {
     FONT_SIZE = newFontSize;
   }
   
@@ -82,7 +80,7 @@ public class View2D extends View {
     //System.out.println("2D offsets set to " + X_OFF + " and " + Y_OFF);
   }
   
-  public static void setScales(int sx, int sy, int sz) {
+  public static void setScales(double sx, double sy, double sz) {
     X_SCALE = sx;
     Y_SCALE = sy;
     Z_SCALE = sz;

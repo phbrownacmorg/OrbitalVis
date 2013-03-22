@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 import javax.media.opengl.*;
  
 /** 
@@ -17,12 +19,13 @@ import javax.media.opengl.*;
 public class HydroxideView extends AtomOrGroupView {
   public static final String TEXT_OH = "OH";
   public static final String TEXT_HO = "HO";
+  public static final Color OH_COLOR = Color.RED;
   
   private HydrogenView hydroView;
   private SP3AtomView oxyView;
   
   public HydroxideView(Hydroxide frame, HydrogenView hview, SP3AtomView oview, String text) {
-    super(frame, text);
+    super(frame, text, OH_COLOR);
     hydroView = hview;
     oxyView = oview;
   }

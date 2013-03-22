@@ -22,7 +22,7 @@ import java.util.Properties;
 public class View implements GLEventListener, ConstantMgr
 {
   // The attributes have default values, so that we don't have to specify everything.
-  private boolean perspective = true;  // Use perspective projection if true
+  protected boolean perspective = true;  // Use perspective projection if true
   private double near = NEAR;          // Distance to the near clipping plane
   private double far = FAR;            // Distance to the far clipping plane
   private double aspect = -1;          // Aspect ratio of the viewing frustum
@@ -218,21 +218,26 @@ public class View implements GLEventListener, ConstantMgr
   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
   {
 	System.out.println("Reshaping");
-    canvasWidth = width;
+
+	canvasWidth = width;
+    double aspectRatio = this.aspect;
+    if (aspectRatio < 0) {
+      aspectRatio = (double)width/(double)height;
+    }
+
     //canvasHeight = height;
     gl.glViewport(x, y, width, height);
+
     gl.glMatrixMode(GL2.GL_PROJECTION);
     gl.glLoadIdentity();
     if (perspective) {
-      double aspectRatio = this.aspect;
-      if (aspectRatio < 0) {
-        aspectRatio = (double)width/(double)height;
-      }
       GLU glu = new GLU();
       glu.gluPerspective(fovy, aspectRatio, near, far);
     }
     else {
-      gl.glOrtho(-5, 5, -5, 5, near, far);
+    	double top = 5; 
+    	double left = -top * aspectRatio;
+    	gl.glOrtho(left, -left, -top, top, near, far);
     }
   }
   
