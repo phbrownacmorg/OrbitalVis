@@ -28,7 +28,7 @@ public class SN2Model extends Model {
   private Bond carb_chlor;
 
   public SN2Model(boolean markH) {
-    oh = new Hydroxide(new Point3D(0, 0, -(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
+    oh = new Hydroxide(new Point3D(-(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT()))), 0, 0),
                          AtomOrGroup.Charge.MINUS);
     
     carb = new SP3Atom();
@@ -38,7 +38,7 @@ public class SN2Model extends Model {
     hydro3 = new Atom();
     setHydrogenLocations();
     
-    chlor = new SP3Atom(new Point3D(0, 0, 2 * Atom.BOND_LENGTH + Math.max(0, getT() - 0.5))); 
+    chlor = new SP3Atom(new Point3D(2 * Atom.BOND_LENGTH + Math.max(0, getT() - 0.5), 0, 0)); 
     chlor.setRot(0, 180, 0);
     //chlor.setRot(90, 90, 0); // Rotates about Y, then about X
     
@@ -89,10 +89,10 @@ public class SN2Model extends Model {
     setHydrogenLocations();
     
     // The hydroxyl moves in as t is in [0, 0.5]
-    oh.setLoc(0, 0, -(Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.5 - getT()))));
+    oh.setLoc(-(Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.5 - getT()))), 0, 0);
 
     // The chlorine moves away as t goes 0.5 - 1
-    chlor.setLoc(0, 0, Atom.SP3_SP3_BOND_LENGTH + Math.max(0, getT() - 0.5));
+    chlor.setLoc(Atom.SP3_SP3_BOND_LENGTH + Math.max(0, getT() - 0.5), 0, 0);
     
     // Update the Bonds
     if (getT() < 0.4) {

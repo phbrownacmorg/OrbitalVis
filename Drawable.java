@@ -33,9 +33,9 @@ public class Drawable {
       initXfmForFrame(gl, thisFrame.getParent());
     }
     gl.glTranslated(thisFrame.getX(), thisFrame.getY(), thisFrame.getZ());
-    gl.glRotated(thisFrame.getRotZ(), 0.0, 0.0, 1.0);
-    gl.glRotated(thisFrame.getRotY(), 0.0, 1.0, 0.0);
     gl.glRotated(thisFrame.getRotX(), 1.0, 0.0, 0.0);
+    gl.glRotated(thisFrame.getRotY(), 0.0, 1.0, 0.0);
+    gl.glRotated(thisFrame.getRotZ(), 0.0, 0.0, 1.0);
   }
   
   public void endXfm(GL2 gl) {

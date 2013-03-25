@@ -1,7 +1,7 @@
 //import javax.media.opengl.*;
 
 /**
- * Model a P-orbital or hybridized orbital along the Z-axis.  The proportion
+ * Model a P-orbital or hybridized orbital along the X-axis.  The proportion
  * controls the level of hybridization.
  *
  * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King

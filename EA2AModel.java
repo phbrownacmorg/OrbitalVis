@@ -69,7 +69,7 @@ public class EA2AModel extends Model {
   
   private void setHydrogenLocations() {
 //    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double rotation = -bottom_carb.getXRotation();
+    double rotation = -bottom_carb.getZRotation();
 
     // Top carbon on orbital 1
     Point3D orb1Vec = bottom_carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);

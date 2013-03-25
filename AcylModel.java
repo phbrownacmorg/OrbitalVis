@@ -56,7 +56,7 @@ public class AcylModel extends Model {
   
   private void setHydrogenLocations() {
 //    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double rotation = -carb.getXRotation();
+    double rotation = -carb.getZRotation();
 
     // Oxygen on orbital 1
     Point3D orb1Vec = carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);

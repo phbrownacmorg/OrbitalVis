@@ -74,7 +74,7 @@ public class E2Model extends Model {
   
   private void setHydrogenLocations() {
     // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double rotation = -carb1.getXRotation();
+    double rotation = -carb1.getZRotation();
       // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
     
     // Set the chlorine
@@ -92,7 +92,7 @@ public class E2Model extends Model {
     meth1.setLoc(carb1orb3Vec.x(), carb1orb3Vec.y(), carb1orb3Vec.z());
 //    double rotY = Math.toDegrees(Math.atan(carb1orb3Vec.x() / carb1orb3Vec.z()));
 //    double rotX = Math.toDegrees(Math.asin(carb1orb3Vec.y() / Atom.SP3_SP3_BOND_LENGTH));
-    meth1.setRot(0, 180 - carb1.getXRotation(), -30); //(rotX, rotY, 0);
+    meth1.setRot(0, 180 - carb1.getZRotation(), -30); //(rotX, rotY, 0);
 
     // Set the H that's on carb1's orbital 2
     Point3D carb1orb2Vec = carb1.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);

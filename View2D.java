@@ -16,9 +16,9 @@ import com.jogamp.opengl.util.awt.TextRenderer;
  */
 
 public class View2D extends View {
-	private static double X_SCALE = 1.0/6.0;
-	private static double Y_SCALE = X_SCALE;
-	private static double Z_SCALE = X_SCALE;
+	public static double X_SCALE = 1.0/6.0;
+	public static double Y_SCALE = X_SCALE;
+	public static double Z_SCALE = X_SCALE;
 	private static int X_OFF = 365;
 	private static int Y_OFF = 170;
   

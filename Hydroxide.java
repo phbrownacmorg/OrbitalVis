@@ -18,8 +18,8 @@ public class Hydroxide extends AtomOrGroup {
   public Hydroxide(Point3D pt, AtomOrGroup.Charge charge) {
     super(pt, charge);
     
-    Point3D hydroLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
-    Matrix rotMatrix = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
+    Point3D hydroLoc = new Point3D(Atom.S_TO_SP3_BOND_LENGTH, 0, 0);
+    Matrix rotMatrix = Matrix.makeRotationMatrix(-109.5, Matrix.Axis.Z);
     hydroLoc = hydroLoc.transform(rotMatrix);
     hydrogen = new Atom(hydroLoc);
 

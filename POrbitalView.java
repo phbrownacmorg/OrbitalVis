@@ -1,7 +1,7 @@
 import javax.media.opengl.*;
 
 /**
- * View of a P-orbital or hybridized orbital along the Z-axis.  The proportion
+ * View of a P-orbital or hybridized orbital along the X-axis.  The proportion
  * controls the level of hybridization.
  *
  * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
@@ -38,7 +38,7 @@ public class POrbitalView extends Drawable {
     
     // Make the other cone
     gl.glPushMatrix();
-    gl.glRotated(180.0, 0.0, 0.0, 0.0);
+    gl.glRotated(180.0, 0.0, 0.0, 0.0); // Why in the world does this work?  There's no axis!
     gl.glScaled(1.0 - proportion, 1.0 - proportion, 1.0 - proportion);
     makeHalfOrbital(gl);
     gl.glPopMatrix();
@@ -58,6 +58,7 @@ public class POrbitalView extends Drawable {
 //                         tanAngle);
 //    }
     //gl.glScaled(tanAngle, tanAngle, 1.0);
+    gl.glRotated(90, 0, 1, 0);
     gl.glScaled(tanAngleX, tanAngleY, 1.0);
     gl.glTranslated(0, 0, -1);
     ShapeBuilder.cone(gl);

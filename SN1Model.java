@@ -65,7 +65,7 @@ public class SN1Model extends Model {
   }
   
   private void setHydrogenLocations() {
-    double rotation = carb.getXRotation();
+    double rotation = carb.getZRotation();
     
     // Hang the ethyl on orbital 1
     Point3D orb1Vec = carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);

@@ -31,9 +31,9 @@ public class SP3Atom extends Atom {
     super(pt, parent);
     insideOutness = 0;
     porb[0] = new POrbital(0, 0, 0);
-    porb[1] = new POrbital(109.5, 0, 0);
-    porb[2] = new POrbital(109.5, 0, 120);
-    porb[3] = new POrbital(109.5, 0, -120);
+    porb[1] = new POrbital(0, 0, -109.5);
+    porb[2] = new POrbital(120, 0, -109.5);
+    porb[3] = new POrbital(-120, 0, -109.5);
     rotMatrix = Matrix.makeRotationMatrix(0, Matrix.Axis.X); // Identity matrix
   }
 
@@ -48,18 +48,18 @@ public class SP3Atom extends Atom {
   public void setInsideOutness(double d) {
     insideOutness = d;
     porb[0].setProportion(POrbital.SP3_PROP * (1.0 - d) + (1.0 - POrbital.SP3_PROP) * d);
-    double rotation = this.getXRotation(); //109.5*(1.0 - insideOutness) + ((180.0 - 109.5) * insideOutness);
-    porb[1].setRot(rotation, 0, 0);
-    porb[2].setRot(rotation, 0, 120);
-    porb[3].setRot(rotation, 0, -120);
+    double rotation = this.getZRotation(); //109.5*(1.0 - insideOutness) + ((180.0 - 109.5) * insideOutness);
+    porb[1].setRot(0, 0, rotation);
+    porb[2].setRot(120, 0, rotation);
+    porb[3].setRot(-120, 0, rotation);
   }
   
   public double getInsideOutness() {
     return insideOutness;
   }
   
-  public double getXRotation() {
-    return 109.5*(1.0 - insideOutness) + ((180.0 - 109.5) * insideOutness);
+  public double getZRotation() {
+    return -(109.5*(1.0 - insideOutness) + ((180.0 - 109.5) * insideOutness));
   }
   
   /**
@@ -75,30 +75,30 @@ public class SP3Atom extends Atom {
    * @return Unit vector as a Point3D
    */
   public Point3D getAbsOrbitalVector(int i) {
-    Point3D result = new Point3D(0, 0, 1);  // Unit vector along the z-axis
+    Point3D result = new Point3D(1, 0, 0);  // Unit vector along the z-axis
     
     // Transform it by the atom's own rotations
     // Then associate it with the appropriate orbital
-    if (i == 0) { // Orbital 0 lies along the z-axis
+    if (i == 0) { // Orbital 0 lies along the x-axis
       result = result.transform(rotMatrix);
     }
     else if (i == 1) {
-      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
-      Matrix m = rotMatrix.mult(rotX);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix m = rotMatrix.mult(rotZ);
       result = result.transform(m);
     }
     else if (i == 2) {
-      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
-      Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
-      Matrix rotZX = rotZ.mult(rotX);
-      Matrix m = rotMatrix.mult(rotZX);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotX = Matrix.makeRotationMatrix(120, Matrix.Axis.X);
+      Matrix rotXZ = rotX.mult(rotZ);
+      Matrix m = rotMatrix.mult(rotXZ);
       result = result.transform(m);
     }
     else if (i == 3) {
-      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
-      Matrix rotZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-      Matrix rotZX = rotZ.mult(rotX);
-      Matrix m = rotMatrix.mult(rotZX);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotX = Matrix.makeRotationMatrix(-120, Matrix.Axis.X);
+      Matrix rotXZ = rotZ.mult(rotX);
+      Matrix m = rotMatrix.mult(rotXZ);
       result = result.transform(m);
     }
 
@@ -114,7 +114,7 @@ public class SP3Atom extends Atom {
    * @return Unit vector as a Point3D
    */
   public Point3D getOrbitalVector(int i) {
-    Point3D result = new Point3D(0, 0, 1);  // Unit vector along the z-axis
+    Point3D result = new Point3D(1, 0, 0);  // Unit vector along the x-axis
     
     // Transform it by the atom's own rotations
     // Then associate it with the appropriate orbital
@@ -123,23 +123,23 @@ public class SP3Atom extends Atom {
       //result = result.transform(rotMatrix);
     }
     else if (i == 1) {
-      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
       //Matrix m = rotMatrix.mult(rotX);
-      result = result.transform(rotX);
+      result = result.transform(rotZ);
     }
     else if (i == 2) {
-      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
-      Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
-      Matrix rotZX = rotZ.mult(rotX);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotX = Matrix.makeRotationMatrix(120, Matrix.Axis.X);
+      Matrix rotXZ = rotX.mult(rotZ);
       //Matrix m = rotMatrix.mult(rotZX);
-      result = result.transform(rotZX);
+      result = result.transform(rotXZ);
     }
     else if (i == 3) {
-      Matrix rotX = Matrix.makeRotationMatrix(getXRotation(), Matrix.Axis.X);
-      Matrix rotZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-      Matrix rotZX = rotZ.mult(rotX);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotX = Matrix.makeRotationMatrix(-120, Matrix.Axis.X);
+      Matrix rotXZ = rotX.mult(rotZ);
       //Matrix m = rotMatrix.mult(rotZX);
-      result = result.transform(rotZX);
+      result = result.transform(rotXZ);
     }
 
     return result;
@@ -150,9 +150,8 @@ public class SP3Atom extends Atom {
     Matrix mx = Matrix.makeRotationMatrix(rx, Matrix.Axis.X);
     Matrix my = Matrix.makeRotationMatrix(ry, Matrix.Axis.Y);
     Matrix mz = Matrix.makeRotationMatrix(rz, Matrix.Axis.Z);
-    Matrix myx = my.mult(mx);
-    rotMatrix = mz.mult(myx);
-    
+    Matrix myz = my.mult(mz);
+    rotMatrix = mx.mult(myz);
   }
   
   public double getP0DivergenceAngle() {
