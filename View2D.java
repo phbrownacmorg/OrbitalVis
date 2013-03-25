@@ -16,13 +16,14 @@ import com.jogamp.opengl.util.awt.TextRenderer;
  */
 
 public class View2D extends View {
-	public static double X_SCALE = 1.0/6.0;
+	public static double X_SCALE = 0.02;
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
+	private static double EYE_DIST_FACTOR = 1.0;
 	private static int X_OFF = 365;
 	private static int Y_OFF = 170;
   
-	public static int FONT_SIZE = 12; // 24.0f
+	public static int FONT_SIZE = 96; // 24.0f
   
 //  private double near = NEAR;          // Distance to the near clipping plane
 //  private double far = FAR;            // Distance to the far clipping plane
@@ -37,12 +38,18 @@ public class View2D extends View {
 	  super(m, props);
 	  this.drawList = m.createDrawList(true);
 	  this.perspective = false;
+	  // Properties cannot change the 2D eyepoint
+	  //this.eye[0] = 0; this.eye[1] = 0; this.eye[2] = VP;
+	  System.out.println(String.format("eye = (%f, %f, %f)", eye[0], eye[1], eye[2]));
+	  this.eye[2] = (float)(EYE_DIST_FACTOR * Math.sqrt(eye[0]*eye[0] + eye[1]*eye[1] + eye[2]*eye[2]));
+	  this.eye[0] = 0;
+	  this.eye[1] = 0;
   }
 
   public void init(GLAutoDrawable drawable) {
 	  super.init(drawable);
 	  gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	  this.tr = new TextRenderer(new java.awt.Font("SansSerif", java.awt.Font.BOLD, FONT_SIZE));
+	  this.tr = new TextRenderer(new java.awt.Font("SansSerif", java.awt.Font.BOLD, FONT_SIZE), true, true);
   }
   
   /**
@@ -59,9 +66,8 @@ public class View2D extends View {
 	  // Draw stuff.
 	  gl.glPushMatrix();
 	  gl.glScaled(X_SCALE, Y_SCALE, Z_SCALE);
-	  gl.glRotated(H_ROTATE_BASE, UP[0], UP[1], UP[2]);
+	  //gl.glRotated(H_ROTATE_BASE, UP[0], UP[1], UP[2]);
 	  
-
 	  ShapeBuilder.axes(gl);
 	  //System.out.println("Drawing " + drawList.size() + " Drawables");
 	  for (Drawable d:drawList) {

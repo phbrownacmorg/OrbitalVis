@@ -75,7 +75,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     }
 
     try {
-      String spec[] = props.getProperty("2DScales", "0.16 0.16 0.16").split(" ");
+    	String defaultSpec = String.format("%f %f %f", View2D.X_SCALE, View2D.Y_SCALE, View2D.Z_SCALE);
+      String spec[] = props.getProperty("2DScales", defaultSpec).split(" ");
       double sx = Double.parseDouble(spec[0]);
       double sy = Double.parseDouble(spec[1]);
       double sz = Double.parseDouble(spec[2]);

@@ -103,7 +103,11 @@ public abstract class AtomOrGroupView extends Drawable {
   public void initDraw2D(GL2 gl, TextRenderer tr) {
 	  tr.begin3DRendering();
 	  tr.setColor(textColor);
-	  super.initDraw2D(gl, tr);
+	  gl.glPushMatrix();
+	  //gl.glScaled(View2D.X_SCALE, View2D.Y_SCALE, View2D.Z_SCALE);
+	  this.initXfmForFrame(gl, frame);
+	  //super.initDraw2D(gl, tr);
+	  //gl.glScaled(View2D.X_SCALE, View2D.Y_SCALE, View2D.Z_SCALE);
   }
   
   public void endDraw2D(GL2 gl, TextRenderer tr) {
@@ -114,9 +118,10 @@ public abstract class AtomOrGroupView extends Drawable {
   public void draw2D(GL2 gl, TextRenderer tr) {
 	  if (text.equals("C") || text.equals("Cl")) {
 		  this.initDraw2D(gl, tr);
-
-		  tr.draw3D(text, (float)frame.getX(), (float)frame.getY(), (float)(frame.getZ() / View2D.Z_SCALE), 1.0f);
-		  System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
+		  
+		  tr.draw3D(text, (float)(frame.getX() / View2D.X_SCALE), (float)(frame.getY() / View2D.Y_SCALE), 
+				  (float)(frame.getZ() / View2D.Z_SCALE), 1.0f);
+		  //System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
 
 		  this.endDraw2D(gl, tr);
 	  }

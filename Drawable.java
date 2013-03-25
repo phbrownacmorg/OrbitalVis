@@ -52,8 +52,8 @@ public class Drawable {
   
   public void initDraw2D(GL2 gl, TextRenderer tr) {
 	  initXfm(gl);
-	  System.out.println("initDraw2D called for"+this);
-	  gl.glRotated(90.0, 0.0, 1.0, 0.0);
+	  //System.out.println("initDraw2D called for "+this);
+	  //gl.glRotated(90.0, 0.0, 1.0, 0.0);
 	  gl.glTranslated(0,  0,  0);
   }
   
