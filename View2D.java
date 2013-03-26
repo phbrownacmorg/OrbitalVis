@@ -16,14 +16,15 @@ import com.jogamp.opengl.util.awt.TextRenderer;
  */
 
 public class View2D extends View {
-	public static double X_SCALE = 0.02;
+	public static double X_SCALE = 1.0;
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
 	private static double EYE_DIST_FACTOR = 1.0;
 	private static int X_OFF = 365;
 	private static int Y_OFF = 170;
   
-	public static int FONT_SIZE = 96; // 24.0f
+	public static int FONT_SIZE = 4; //96; // 24.0f
+	public static double FONT_SCALE = 1.0/FONT_SIZE;
   
 //  private double near = NEAR;          // Distance to the near clipping plane
 //  private double far = FAR;            // Distance to the far clipping plane
@@ -69,6 +70,7 @@ public class View2D extends View {
 	  //gl.glRotated(H_ROTATE_BASE, UP[0], UP[1], UP[2]);
 	  
 	  ShapeBuilder.axes(gl);
+	  //gl.glScaled(FONT_SCALE, FONT_SCALE, FONT_SCALE);
 	  //System.out.println("Drawing " + drawList.size() + " Drawables");
 	  for (Drawable d:drawList) {
 		  d.draw2D(gl, this.tr);
