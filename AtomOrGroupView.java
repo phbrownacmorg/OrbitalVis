@@ -100,32 +100,43 @@ public abstract class AtomOrGroupView extends Drawable {
 //    g.setFont(f); // reset the font
 //  }
   
-  public void initDraw2D(GL2 gl, TextRenderer tr) {
-	  tr.setColor(textColor);
-	  gl.glPushMatrix();
-	  this.initXfmForFrame(gl, frame);
-	  gl.glScaled(View2D.FONT_SCALE, View2D.FONT_SCALE, View2D.FONT_SCALE);
-	  tr.begin3DRendering();
-	  //super.initDraw2D(gl, tr);
-	  //gl.glScaled(View2D.X_SCALE, View2D.Y_SCALE, View2D.Z_SCALE);
+ 
+  public String getChargeString() {
+	  AtomOrGroup.Charge charge = frame.getCharge();
+	  String chargeString = "";
+
+	  // Don't do anything for a neutral charge
+	  if (charge != AtomOrGroup.Charge.NEUTRAL) {
+		  if (charge == AtomOrGroup.Charge.MINUS) {
+			  chargeString = "-";
+		  }
+		  else if (charge == AtomOrGroup.Charge.PART_MINUS) {
+			  chargeString = "\u03B4-";
+		  }
+		  else if (charge == AtomOrGroup.Charge.PART_PLUS) {
+			  chargeString = "\u03B4+";
+		  }
+		  else if (charge == AtomOrGroup.Charge.PLUS) {
+			  chargeString = "+";
+		  }
+	  }
+	  return chargeString;
   }
   
-  public void endDraw2D(GL2 gl, TextRenderer tr) {
-	  super.endDraw2D(gl, tr);
-	  tr.end3DRendering();
-  }
-
   public void draw2D(GL2 gl, TextRenderer tr) {
-	  if (text.equals("C") || text.equals("Cl")) {
-		  this.initDraw2D(gl, tr);
-		  
-		  Point3D drawPt = (new Point3D(frame.getX(), frame.getY(), frame.getZ())).scale(1.0/View2D.FONT_SCALE);
-		  tr.draw3D(text, (float)(drawPt.x()), (float)(drawPt.y()), (float)(drawPt.z()), 1.0f);
-//				  (float)(frame.getZ() / View2D.FONT_SCALE), 1.0f);
-		  System.out.println("AOGView "+this+" drawing text '"+text+"' at "+drawPt.toString());
+	  this.initDraw(gl);
+	  
+	  // Text-specific transformations
+	  this.negateRotationsForFrame(gl, frame);
+	  gl.glScaled(View2D.FONT_SCALE / View2D.X_SCALE, View2D.FONT_SCALE / View2D.Y_SCALE, 
+			  View2D.FONT_SCALE / View2D.Z_SCALE);
 
-		  this.endDraw2D(gl, tr);
-	  }
+	  tr.begin3DRendering();
+	  tr.setColor(textColor);
+	  tr.draw3D(text + this.getChargeString(), 0.0f, 0.0f, 0.0f, 1.0f);
+	  tr.end3DRendering();
+
+	  this.endDraw(gl);
   }
   
 }

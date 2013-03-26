@@ -28,6 +28,15 @@ public class Drawable {
     initXfmForFrame(gl, frame);
   }
   
+  protected void negateRotationsForFrame(GL2 gl, RefFrame thisFrame) {
+	  gl.glRotated(-thisFrame.getRotZ(), 0.0, 0.0, 1.0);
+	  gl.glRotated(-thisFrame.getRotY(), 0.0, 1.0, 0.0);
+	  gl.glRotated(-thisFrame.getRotX(), 1.0, 0.0, 0.0);
+	  if (thisFrame.getParent() != null) {
+		  negateRotationsForFrame(gl, thisFrame.getParent());
+	  }
+  }
+  
   protected void initXfmForFrame(GL2 gl, RefFrame thisFrame) {
     if (thisFrame.getParent() != null) {
       initXfmForFrame(gl, thisFrame.getParent());
@@ -52,9 +61,6 @@ public class Drawable {
   
   public void initDraw2D(GL2 gl, TextRenderer tr) {
 	  initXfm(gl);
-	  //System.out.println("initDraw2D called for "+this);
-	  //gl.glRotated(90.0, 0.0, 1.0, 0.0);
-	  gl.glTranslated(0,  0,  0);
   }
   
   public void endDraw2D(GL2 gl, TextRenderer tr) {
