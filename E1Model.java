@@ -17,9 +17,9 @@ import java.util.ArrayList;
 public class E1Model extends Model {
   public static final double MAX_WITHDRAWAL = 5.0 * Atom.SP3_SP3_BOND_LENGTH;
   
-  private double carbon1XRot = -109.5;
-  private double hydro2InitialZ = 0;
-  private double oHClosestZ = 0;
+  private double carbon1ZRot = 109.5;
+  private double hydro2InitialX = 0;
+  private double oHClosestX = 0;
 
   // Atoms/groups
   private Hydroxide oh;
@@ -36,11 +36,11 @@ public class E1Model extends Model {
 
   public E1Model() {
     
-    carb1 = new SP3Atom(new Point3D(0, 0, -Atom.BOND_LENGTH));
-    carb1.setRot(carbon1XRot, 0, 0);  // 0 orbital interacts with the leaving H, and eventually forms the pi-bond.
+    carb1 = new SP3Atom(new Point3D(-Atom.BOND_LENGTH, 0, 0));
+    carb1.setRot(0, 0, carbon1ZRot);  // 0 orbital interacts with the leaving H, and eventually forms the pi-bond.
     
-    carb2 = new SP3Atom(new Point3D(0, 0, Atom.BOND_LENGTH)); 
-    carb2.setRot(180 + carbon1XRot, 0, 0);  // 0 orbital interacts with the leaving Cl, and eventually forms the pi-bond.
+    carb2 = new SP3Atom(new Point3D(Atom.BOND_LENGTH, 0, 0)); 
+    carb2.setRot(0, 0, 180 + carbon1ZRot);  // 0 orbital interacts with the leaving Cl, and eventually forms the pi-bond.
     
     hydro1 = new Atom(new Point3D(), carb1);
     hydro2 = new Atom();
@@ -53,9 +53,9 @@ public class E1Model extends Model {
     
     Point3D orb0Vec = carb1.getAbsOrbitalVector(0).scale(Atom.S_TO_SP3_BOND_LENGTH);
     hydro2.setLoc(carb1.getX() + orb0Vec.x(), carb1.getY() + orb0Vec.y(), carb1.getZ() + orb0Vec.z());
-    hydro2InitialZ = hydro2.getZ();
-    oHClosestZ = hydro2InitialZ - 1.5*(Atom.S_TO_SP3_BOND_LENGTH);
-    oh = new Hydroxide(new Point3D(0, hydro2.getY(), -1.25 * MAX_WITHDRAWAL), AtomOrGroup.Charge.MINUS);
+    hydro2InitialX = hydro2.getX();
+    oHClosestX = hydro2InitialX - 1.5*(Atom.S_TO_SP3_BOND_LENGTH);
+    oh = new Hydroxide(new Point3D(-1.25 * MAX_WITHDRAWAL, hydro2.getY(), 0), AtomOrGroup.Charge.MINUS);
             
     setHydrogenLocations();
     
@@ -68,7 +68,6 @@ public class E1Model extends Model {
     carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
     carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
     carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
-    
   }
   
   private void setHydrogenLocations() {
@@ -119,15 +118,15 @@ public class E1Model extends Model {
       result.add(new BondView(carb2_hydro3));
       result.add(new BondView(carb2_meth2));
     }
-    result.add(meth1.createView());
-    result.add(meth2.createView());
+    //result.add(meth1.createView());
+    //result.add(meth2.createView());
     result.add(oh.createView(HydroxideView.TEXT_HO));
     result.add(carb1.createView("C", AtomView.C_BLACK));
     result.add(carb2.createView("C", AtomView.C_BLACK));
     result.add(hydro1.createView());
     result.add(hydro2.createView());
     result.add(hydro3.createView());
-    result.add(chlor.createView("Cl", AtomView.CL_GREEN));
+    //result.add(chlor.createView("Cl", AtomView.CL_GREEN));
     return result;
   }
   
@@ -147,10 +146,10 @@ public class E1Model extends Model {
     carb2.setInsideOutness(carb2InsideOutness);
     carb2.setP0Divergence(2 * carb2InsideOutness);
     
-    carbon1XRot = Math.max(-109.5, Math.min(0.4, (getT() - 0.55)) * (19.5/0.4) - 109.5);
-    carb1.setRot(carbon1XRot, 0, 0);
-    double carbon2XRot = Math.max(-109.5, Math.min(0.4, (getT() - 0.05)) * (19.5/0.4) - 109.5);
-    carb2.setRot(180 + carbon2XRot, 0, 0);
+    carbon1ZRot = -Math.max(-109.5, Math.min(0.4, (getT() - 0.55)) * (19.5/0.4) - 109.5);
+    carb1.setRot(0, 0, carbon1ZRot);
+    double carbon2ZRot = -Math.max(-109.5, Math.min(0.4, (getT() - 0.05)) * (19.5/0.4) - 109.5);
+    carb2.setRot(0, 0, 180 + carbon2ZRot);
     
     // Set the corresponding locations of the substituents that rotate with the carbons as the carbons change shape
     setHydrogenLocations();
@@ -162,25 +161,25 @@ public class E1Model extends Model {
       // Do nothing
     }
     else if (getT() < 0.6) {
-      oh.setLoc(0, hydro2.getY(), ((0.6 - getT())/0.1) * -1.25 * MAX_WITHDRAWAL + ((getT() - 0.5)/0.1) * oHClosestZ);
-      hydro2.setLoc(hydro2.getX(), hydro2.getY(), hydro2InitialZ);
+      oh.setLoc(((0.6 - getT())/0.1) * -1.25 * MAX_WITHDRAWAL + ((getT() - 0.5)/0.1) * oHClosestX, hydro2.getY(), 0);
+      hydro2.setLoc(hydro2InitialX, hydro2.getY(), hydro2.getZ());
     }
     else if (getT() < 0.75) {
-      oh.setLoc(0, hydro2.getY(), oHClosestZ + ((getT() - 0.6)/0.15) * SOrbitalView.RADIUS);
-      hydro2.setLoc(hydro2.getX(), hydro2.getY(),
-                    (((0.9 - getT())/0.3) * hydro2InitialZ) 
-                      + ((getT() - 0.6)/0.3) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestZ));
+      oh.setLoc(oHClosestX + ((getT() - 0.6)/0.15) * SOrbitalView.RADIUS, hydro2.getY(), 0);
+      hydro2.setLoc((((0.9 - getT())/0.3) * hydro2InitialX) 
+              + ((getT() - 0.6)/0.3) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestX), hydro2.getY(),
+                    hydro2.getZ());
     }
     else if (getT() < 0.9) {
-      oh.setLoc(0, hydro2.getY(), oHClosestZ + ((0.9 - getT())/0.15) * SOrbitalView.RADIUS);
-      hydro2.setLoc(hydro2.getX(), hydro2.getY(),
-                    (((0.9 - getT())/0.3) * hydro2InitialZ) 
-                      + ((getT() - 0.6)/0.3) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestZ));
+      oh.setLoc(oHClosestX + ((0.9 - getT())/0.15) * SOrbitalView.RADIUS, hydro2.getY(), 0);
+      hydro2.setLoc((((0.9 - getT())/0.3) * hydro2InitialX) 
+              + ((getT() - 0.6)/0.3) * (Atom.S_TO_SP3_BOND_LENGTH + oHClosestX), hydro2.getY(),
+              hydro2.getZ());
     }
     else {
-      double hohZ = ((getT() - 0.9)/0.1) * -(MAX_WITHDRAWAL/1.5) + ((1.0 - getT())/0.1) * oHClosestZ;
-      oh.setLoc(0, hydro2.getY(), hohZ);
-      hydro2.setLoc(hydro2.getX(), hydro2.getY(), hohZ + Atom.S_TO_SP3_BOND_LENGTH);
+      double hohX = ((getT() - 0.9)/0.1) * -(MAX_WITHDRAWAL/1.5) + ((1.0 - getT())/0.1) * oHClosestX;
+      oh.setLoc(hohX, hydro2.getY(), 0);
+      hydro2.setLoc(hohX + Atom.S_TO_SP3_BOND_LENGTH, hydro2.getY(), hydro2.getZ());
     }
     
     // Update the Bonds
