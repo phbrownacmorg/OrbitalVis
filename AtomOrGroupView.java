@@ -100,26 +100,24 @@ public abstract class AtomOrGroupView extends Drawable {
 //    g.setFont(f); // reset the font
 //  }
   
-  public void initDraw2D(GL2 gl, TextRenderer tr) {
-	  tr.begin3DRendering();
-	  tr.setColor(textColor);
-	  super.initDraw2D(gl, tr);
-  }
-  
-  public void endDraw2D(GL2 gl, TextRenderer tr) {
-	  super.endDraw2D(gl, tr);
-	  tr.end3DRendering();
-  }
+   public void draw2D(GL2 gl, TextRenderer tr) {
+	   this.initDraw(gl);
 
-  public void draw2D(GL2 gl, TextRenderer tr) {
-	  if (text.equals("C")) {
-		  this.initDraw2D(gl, tr);
+	   // Text-specific transformations
+	   this.unwindRotationsForFrame(gl, frame);
+	   gl.glRotated(-90, 0, 1, 0);
+	   gl.glTranslated(-frame.getX() * View2D.Z_OFFSET_FACTOR, 0, 0);
+	   gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
+			   View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
 
-		  tr.draw3D(text, (float)frame.getZ(), (float)frame.getY(), 0.0f, 1.0f);
-		  System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
+	   tr.begin3DRendering();
+	   tr.setColor(textColor);
+	   // Eventually this is likely to be inadequate, as the geometry gets fancier
+	   tr.draw3D(text, 0, 0, 0, 1.0f);
+	   //System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
+	   tr.end3DRendering();
 
-		  this.endDraw2D(gl, tr);
-	  }
+	   this.endDraw(gl);
   }
   
 }

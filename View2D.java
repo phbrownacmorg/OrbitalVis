@@ -16,13 +16,15 @@ import com.jogamp.opengl.util.awt.TextRenderer;
  */
 
 public class View2D extends View {
-	private static double X_SCALE = 1.0/6.0;
-	private static double Y_SCALE = X_SCALE;
-	private static double Z_SCALE = X_SCALE;
+	public static double X_SCALE = 3.0;
+	public static double Y_SCALE = X_SCALE;
+	public static double Z_SCALE = X_SCALE;
 	private static int X_OFF = 365;
 	private static int Y_OFF = 170;
+	public static float Z_OFFSET_FACTOR = 0.3f;
   
-	public static int FONT_SIZE = 12; // 24.0f
+	public static int FONT_SIZE = 96; // 24.0f
+	public static double FONT_SCALING_FACTOR = 1.0/FONT_SIZE;
   
 //  private double near = NEAR;          // Distance to the near clipping plane
 //  private double far = FAR;            // Distance to the far clipping plane
@@ -35,6 +37,10 @@ public class View2D extends View {
   
   public View2D(Model m, Properties props) {
 	  super(m, props);
+	  // Intrinsic to a View2D that the eyepoint is on the negative X-axis, looking towards the origin
+	  eye[0] = (float)(Math.sqrt(eye[0]*eye[0] + eye[1]*eye[1] + eye[2]*eye[2]));
+	  eye[1] = 0; eye[2] = 0;
+	  
 	  this.drawList = m.createDrawList(true);
 	  this.perspective = false;
   }
@@ -61,7 +67,6 @@ public class View2D extends View {
 	  gl.glScaled(X_SCALE, Y_SCALE, Z_SCALE);
 	  gl.glRotated(H_ROTATE_BASE, UP[0], UP[1], UP[2]);
 	  
-
 	  ShapeBuilder.axes(gl);
 	  //System.out.println("Drawing " + drawList.size() + " Drawables");
 	  for (Drawable d:drawList) {

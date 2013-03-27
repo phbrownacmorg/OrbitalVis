@@ -27,7 +27,7 @@ public class View implements GLEventListener, ConstantMgr
   private double far = FAR;            // Distance to the far clipping plane
   private double aspect = -1;          // Aspect ratio of the viewing frustum
   private double fovy = FOVY;          // Vertical field of view, in degrees
-  private float[] eye = {VP/2.f, VP/4.f, VP, 1};  // Eye point, in model coordinates
+  protected float[] eye = {VP/2.f, VP/4.f, VP, 1};  // Eye point, in model coordinates
    
   private double hAngle = 0;  // Angle of rotation of the model about 
                              //   the up vector, in degrees
