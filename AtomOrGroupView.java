@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.font.TextAttribute;
 //import java.awt.geom.Rectangle2D;
 import java.util.Hashtable;
-
 import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.awt.TextRenderer; 
 
@@ -109,7 +108,7 @@ public abstract class AtomOrGroupView extends Drawable {
 	   gl.glTranslated(-frame.getX() * View2D.Z_OFFSET_FACTOR, 0, 0);
 	   gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
 			   View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
-
+	   
 	   tr.begin3DRendering();
 	   tr.setColor(textColor);
 	   // Eventually this is likely to be inadequate, as the geometry gets fancier
@@ -117,6 +116,33 @@ public abstract class AtomOrGroupView extends Drawable {
 	   //System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
 	   tr.end3DRendering();
 
+	   //Renders charge 60% smaller than parent text, moved up 44% to emulate superscripting
+	   AtomOrGroup.Charge charge = frame.getCharge();
+	   String chargeString = "";
+	    // Don't do anything for a neutral charge
+	   if (charge != AtomOrGroup.Charge.NEUTRAL) {
+		   this.endDraw(gl);
+		   return;
+	   }
+	   else if (charge == AtomOrGroup.Charge.MINUS) {
+		   chargeString = "-";
+	   }
+	   else if (charge == AtomOrGroup.Charge.PART_MINUS) {
+		   chargeString = "\u03B4-";
+	   }
+	   else if (charge == AtomOrGroup.Charge.PART_PLUS) {
+		   chargeString = "\u03B4+";
+	   }
+	   else if (charge == AtomOrGroup.Charge.PLUS) {
+		   chargeString = "+";
+	   }
+	    
+	   gl.glTranslated(3,4,0);
+	   tr.begin3DRendering();
+	   tr.setColor(textColor);
+	   tr.draw3D(chargeString, 0, 0, 0, 1.0f);
+	   tr.end3DRendering();
+	    
 	   this.endDraw(gl);
   }
   
