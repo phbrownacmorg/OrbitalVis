@@ -16,7 +16,7 @@ import com.jogamp.opengl.util.awt.TextRenderer;
  */
 
 public class View2D extends View {
-	public static double X_SCALE = 3.0;
+	public static double X_SCALE = 1.0;
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
 	private static int X_OFF = 365;
@@ -34,6 +34,7 @@ public class View2D extends View {
 
 //  private ArrayList<Drawable> drawList;
   private TextRenderer tr;
+  private TextRenderer superTR;
   
   public View2D(Model m, Properties props) {
 	  super(m, props);
@@ -49,6 +50,7 @@ public class View2D extends View {
 	  super.init(drawable);
 	  gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	  this.tr = new TextRenderer(new java.awt.Font("SansSerif", java.awt.Font.BOLD, FONT_SIZE));
+	  this.superTR = new TextRenderer(new java.awt.Font("SansSerif", java.awt.Font.BOLD, Math.round(FONT_SIZE * .6f)));
   }
   
   /**
@@ -70,7 +72,7 @@ public class View2D extends View {
 	  ShapeBuilder.axes(gl);
 	  //System.out.println("Drawing " + drawList.size() + " Drawables");
 	  for (Drawable d:drawList) {
-		  d.draw2D(gl, this.tr);
+		  d.draw2D(gl, this.tr, this.superTR);
 	  }	
 	  gl.glPopMatrix();
   }

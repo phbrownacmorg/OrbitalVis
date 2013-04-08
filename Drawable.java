@@ -63,5 +63,5 @@ public class Drawable {
   
   public void draw2D(java.awt.Graphics2D g) { }
   
-  public void draw2D(GL2 gl, TextRenderer tr) { }
+  public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) { }
 }

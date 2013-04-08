@@ -2,7 +2,7 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.font.TextAttribute;
-//import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Hashtable;
 import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.awt.TextRenderer; 
@@ -99,7 +99,7 @@ public abstract class AtomOrGroupView extends Drawable {
 //    g.setFont(f); // reset the font
 //  }
   
-   public void draw2D(GL2 gl, TextRenderer tr) {
+   public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) {
 	   this.initDraw(gl);
 
 	   // Text-specific transformations
@@ -108,6 +108,8 @@ public abstract class AtomOrGroupView extends Drawable {
 	   gl.glTranslated(-frame.getX() * View2D.Z_OFFSET_FACTOR, 0, 0);
 	   gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
 			   View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
+	   Rectangle2D bounds = tr.getBounds(text);
+	   gl.glTranslated(-bounds.getWidth()/2.0, bounds.getY()/2.0, 0);
 	   
 	   tr.begin3DRendering();
 	   tr.setColor(textColor);
@@ -116,15 +118,17 @@ public abstract class AtomOrGroupView extends Drawable {
 	   //System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
 	   tr.end3DRendering();
 
+	   this.drawChargeString(gl, tr, superTR);
+	    
+	   this.endDraw(gl);
+  }
+
+   public void drawChargeString(GL2 gl, TextRenderer tr, TextRenderer supertr) {
 	   //Renders charge 60% smaller than parent text, moved up 44% to emulate superscripting
 	   AtomOrGroup.Charge charge = frame.getCharge();
 	   String chargeString = "";
 	    // Don't do anything for a neutral charge
-	   if (charge == AtomOrGroup.Charge.NEUTRAL) {
-		   this.endDraw(gl);
-		   return;
-	   }
-	   else if (charge == AtomOrGroup.Charge.MINUS) {
+	   if (charge == AtomOrGroup.Charge.MINUS) {
 		   chargeString = "-";
 	   }
 	   else if (charge == AtomOrGroup.Charge.PART_MINUS) {
@@ -136,14 +140,20 @@ public abstract class AtomOrGroupView extends Drawable {
 	   else if (charge == AtomOrGroup.Charge.PLUS) {
 		   chargeString = "+";
 	   }
-	    
-	   gl.glTranslated(130,50,0);
-	   tr.begin3DRendering();
-	   tr.setColor(textColor);
-	   tr.draw3D(chargeString, 0, 0, 0, 1.0f);
-	   tr.end3DRendering();
-	    
-	   this.endDraw(gl);
-  }
-  
+	   // If neutral, leave charge string as empty
+	   
+	   if (chargeString.length() > 0) {
+		   Rectangle2D bounds = tr.getBounds(text);
+		   // 1.1 is an experimentally determined fudge factor
+		   gl.glTranslated(bounds.getWidth() * 1.1, -bounds.getY() * .44, 0);
+		   TextRenderer trToUse = tr;
+		   if (chargeString.length() == 2) {
+			   trToUse = supertr;
+		   }
+		   trToUse.begin3DRendering();
+		   trToUse.setColor(textColor);
+		   trToUse.draw3D(chargeString, 0, 0, 0, 1.0f);
+		   trToUse.end3DRendering();
+	   }
+   }
 }

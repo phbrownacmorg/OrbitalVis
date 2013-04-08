@@ -10,5 +10,5 @@ markHydrogens: false
 # default is 350 170
 2DOffsets: 475 170
 
-# default is 25 100 100
-#2DScales: -25 110 110
+# default is 1 1 1
+2DScales: 3 3 3

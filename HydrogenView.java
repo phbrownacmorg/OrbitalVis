@@ -15,12 +15,12 @@ import javax.media.opengl.*;
 
 public class HydrogenView extends AtomView {
   private SOrbitalView sorb;
-  private int numDots;
+  //private int numDots;
   
   public HydrogenView(Atom atom) {
     super(atom, "H", H_WHITE);
     sorb = new SOrbitalView();
-    numDots = 0;
+    //numDots = 0;
   }
   
   public void draw(GL2 gl) {
