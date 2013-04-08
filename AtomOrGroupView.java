@@ -120,7 +120,7 @@ public abstract class AtomOrGroupView extends Drawable {
 	   AtomOrGroup.Charge charge = frame.getCharge();
 	   String chargeString = "";
 	    // Don't do anything for a neutral charge
-	   if (charge != AtomOrGroup.Charge.NEUTRAL) {
+	   if (charge == AtomOrGroup.Charge.NEUTRAL) {
 		   this.endDraw(gl);
 		   return;
 	   }
@@ -137,7 +137,7 @@ public abstract class AtomOrGroupView extends Drawable {
 		   chargeString = "+";
 	   }
 	    
-	   gl.glTranslated(3,4,0);
+	   gl.glTranslated(130,50,0);
 	   tr.begin3DRendering();
 	   tr.setColor(textColor);
 	   tr.draw3D(chargeString, 0, 0, 0, 1.0f);
