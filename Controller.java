@@ -65,16 +65,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     
     // Must be parsed before the models are created
     try {
-      String spec[] = props.getProperty("2DOffsets", "350 170").split(" ");
-      int offX = Integer.parseInt(spec[0]);
-      int offY = Integer.parseInt(spec[1]);
-      View2D.setOffsets(offX, offY);
-    } catch (NumberFormatException e) {
-      System.out.println("Ignoring 2DOffsets specification, due to the following:");
-      System.out.println(e);
-    }
-
-    try {
     	String defaultSpec = String.format("%f %f %f", View2D.X_SCALE, View2D.Y_SCALE, View2D.Z_SCALE);
       String spec[] = props.getProperty("2DScales", defaultSpec).split(" ");
       double sx = Double.parseDouble(spec[0]);

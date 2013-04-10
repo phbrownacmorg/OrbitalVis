@@ -90,6 +90,6 @@ public class RefFrame {
   
   public String toString() {
 	  // So what about the rotation?
-	  return pt.toString();
+	  return pt.toString() + String.format(" rot: (%f %f %f) parent: %s", rx, ry, rz, parent);
   }
 }

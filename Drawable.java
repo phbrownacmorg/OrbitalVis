@@ -29,12 +29,12 @@ public class Drawable {
   }
   
   protected void unwindRotationsForFrame(GL2 gl, RefFrame thisFrame) {
-	    gl.glRotated(thisFrame.getRotX(), 1.0, 0.0, 0.0);
-	    gl.glRotated(thisFrame.getRotY(), 0.0, 1.0, 0.0);
-	    gl.glRotated(thisFrame.getRotZ(), 0.0, 0.0, 1.0);
-	    if (thisFrame.getParent() != null) {
-	    	unwindRotationsForFrame(gl, thisFrame.getParent());
-	    }
+	  gl.glRotated(-thisFrame.getRotX(), 1.0, 0.0, 0.0);
+	  gl.glRotated(-thisFrame.getRotY(), 0.0, 1.0, 0.0);
+	  gl.glRotated(-thisFrame.getRotZ(), 0.0, 0.0, 1.0);
+	  if (thisFrame.getParent() != null) {
+		  unwindRotationsForFrame(gl, thisFrame.getParent());
+	  }
   }
 	  
   protected void initXfmForFrame(GL2 gl, RefFrame thisFrame) {

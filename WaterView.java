@@ -23,7 +23,7 @@ public class WaterView extends AtomOrGroupView {
   private SP3AtomView oxyView;
   
   public WaterView(Water frame, HydrogenView h1view, HydrogenView h2view, SP3AtomView oview, String text) {
-    super(frame, text);
+    super(frame, text, AtomView.O_RED);
     this.h1View = h1view;
     this.h2View = h2view;
     oxyView = oview;

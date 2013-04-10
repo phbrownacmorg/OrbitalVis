@@ -19,8 +19,6 @@ public class View2D extends View {
 	public static double X_SCALE = 1.0;
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
-	private static int X_OFF = 365;
-	private static int Y_OFF = 170;
 	public static float Z_OFFSET_FACTOR = 0.3f;
   
 	public static int FONT_SIZE = 96; // 24.0f
@@ -38,6 +36,16 @@ public class View2D extends View {
   
   public View2D(Model m, Properties props) {
 	  super(m, props);
+	  
+	  if (props.containsKey("ZOff")) {
+		  try {
+			  Z_OFFSET_FACTOR = Float.parseFloat(props.getProperty("ZOff"));
+		  } catch (NumberFormatException e) {
+			  System.out.println("Ignoring ZOff specification, due to the following:");
+			  System.out.println(e);
+		  }
+	  }
+	  
 	  // Intrinsic to a View2D that the eyepoint is on the negative X-axis, looking towards the origin
 	  eye[0] = (float)(Math.sqrt(eye[0]*eye[0] + eye[1]*eye[1] + eye[2]*eye[2]));
 	  eye[1] = 0; eye[2] = 0;
@@ -79,12 +87,6 @@ public class View2D extends View {
     
   public static void setFontSize(int newFontSize) {
     FONT_SIZE = newFontSize;
-  }
-  
-  public static void setOffsets(int offX, int offY) {
-    X_OFF = offX;
-    Y_OFF = offY;
-    //System.out.println("2D offsets set to " + X_OFF + " and " + Y_OFF);
   }
   
   public static void setScales(double sx, double sy, double sz) {

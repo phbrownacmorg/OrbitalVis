@@ -34,6 +34,7 @@ public abstract class AtomOrGroupView extends Drawable {
     if (textColor.equals(Color.WHITE)) { // White text won't show up
     	textColor = Color.DARK_GRAY;
     }
+    this.textColor = new java.awt.Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue());
 
     map = new Hashtable<TextAttribute, Object>();
     map.put(TextAttribute.SIZE, new Float(View2D.FONT_SIZE*1.1f));
