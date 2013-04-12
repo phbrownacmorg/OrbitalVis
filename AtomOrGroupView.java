@@ -106,7 +106,7 @@ public abstract class AtomOrGroupView extends Drawable {
 	   // Text-specific transformations
 	   this.unwindRotationsForFrame(gl, frame);
 	   gl.glRotated(-90, 0, 1, 0);
-	   gl.glTranslated(-frame.getX() * View2D.Z_OFFSET_FACTOR, 0, 0);
+	   gl.glTranslated(-frame.getX() * View2D.Z_OFFSET_FACTOR, -frame.getY()*View2D.Y_OFFSET_FACTOR, 0);
 	   gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
 			   View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
 	   Rectangle2D bounds = tr.getBounds(text);

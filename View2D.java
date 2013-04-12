@@ -20,6 +20,7 @@ public class View2D extends View {
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
 	public static float Z_OFFSET_FACTOR = 0.3f;
+	public static float Y_OFFSET_FACTOR = 0f;
   
 	public static int FONT_SIZE = 96; // 24.0f
 	public static double FONT_SCALING_FACTOR = 1.0/FONT_SIZE;
@@ -42,6 +43,14 @@ public class View2D extends View {
 			  Z_OFFSET_FACTOR = Float.parseFloat(props.getProperty("ZOff"));
 		  } catch (NumberFormatException e) {
 			  System.out.println("Ignoring ZOff specification, due to the following:");
+			  System.out.println(e);
+		  }
+	  }
+	  if (props.containsKey("YOff")) {
+		  try {
+			  Y_OFFSET_FACTOR = Float.parseFloat(props.getProperty("YOff"));
+		  } catch (NumberFormatException e) {
+			  System.out.println("Ignoring YOff specification, due to the following:");
 			  System.out.println(e);
 		  }
 	  }

@@ -23,5 +23,8 @@ markHydrogens: false
 # Default is 0.3
 ZOff: 0
 
+# Default is 0
+YOff: .3
+
 # default is 24.0
 #fontSize: 20.0
