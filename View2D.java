@@ -19,8 +19,8 @@ public class View2D extends View {
 	public static double X_SCALE = 1.0;
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
-	public static float Z_OFFSET_FACTOR = 0.3f;
-	public static float Y_OFFSET_FACTOR = 0f;
+	public static float Z_OFFSET_FACTOR[] = {0f, 0f};
+	public static float Y_OFFSET_FACTOR[] = {0f, 0f};;
   
 	public static int FONT_SIZE = 96; // 24.0f
 	public static double FONT_SCALING_FACTOR = 1.0/FONT_SIZE;
@@ -37,24 +37,26 @@ public class View2D extends View {
   
   public View2D(Model m, Properties props) {
 	  super(m, props);
-	  
-	  if (props.containsKey("ZOff")) {
-		  try {
-			  Z_OFFSET_FACTOR = Float.parseFloat(props.getProperty("ZOff"));
-		  } catch (NumberFormatException e) {
-			  System.out.println("Ignoring ZOff specification, due to the following:");
-			  System.out.println(e);
-		  }
-	  }
-	  if (props.containsKey("YOff")) {
-		  try {
-			  Y_OFFSET_FACTOR = Float.parseFloat(props.getProperty("YOff"));
-		  } catch (NumberFormatException e) {
-			  System.out.println("Ignoring YOff specification, due to the following:");
-			  System.out.println(e);
-		  }
+
+	  try {
+		  Z_OFFSET_FACTOR = readMultiDimProp(props, "ZOff", 2);
+		  System.out.println(Z_OFFSET_FACTOR);
+	  } catch (NumberFormatException e) {
+		  System.out.println("Ignoring ZOff specification, due to the following:");
+		  System.out.println(e);
+	  } catch (Exception e) {
+		  System.out.println(e);
 	  }
 	  
+	  try {
+		  Y_OFFSET_FACTOR = readMultiDimProp(props, "YOff", 2);
+	  } catch (NumberFormatException e) {
+		  System.out.println("Ignoring YOff specification, due to the following:");
+		  System.out.println(e);
+	  } catch (Exception e) {
+		  System.out.println(e);
+	  }
+	  	  
 	  // Intrinsic to a View2D that the eyepoint is on the negative X-axis, looking towards the origin
 	  eye[0] = (float)(Math.sqrt(eye[0]*eye[0] + eye[1]*eye[1] + eye[2]*eye[2]));
 	  eye[1] = 0; eye[2] = 0;
@@ -63,6 +65,21 @@ public class View2D extends View {
 	  this.perspective = false;
   }
 
+  public float[] readMultiDimProp(Properties props, String propName, int dims) throws Exception {
+	  float[] result = new float[2];
+	  if (props.containsKey(propName)) {
+		  String[] offsetStrings = props.getProperty(propName).split("\\s");
+		  if (offsetStrings.length != dims) {
+			  throw new Exception("Wrong number of coordinates: ignoring spec" + propName);
+		  }
+		  for (int i = 0; i < dims; i++) {
+			  result[i] = Float.parseFloat(offsetStrings[i]);
+		  }
+	  }
+	  return result;
+  }
+  
+  
   public void init(GLAutoDrawable drawable) {
 	  super.init(drawable);
 	  gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
