@@ -21,10 +21,10 @@ public class EA2AModel extends Model {
   // Atoms/groups
   private SP3Atom bottom_carb;  // Bottom carbon in double bond
   private SP3Atom top_carb;     // Top carbon in double bond
-  private Atom bottom_H;
-  private Atom top_H;
-  private Methyl ch3a;
-  private Methyl ch3b;
+  private Atom bottom_H;		// H attached directly to bottom C
+  private Atom top_H;			// H attached directly to top C
+  private Methyl ch3a;			// Methyl on the bottom C
+  private Methyl ch3b;			// Methyl on the top C
   
   private Atom new_H;           // H from the HCl
   private SP3Atom cl;
@@ -52,9 +52,11 @@ public class EA2AModel extends Model {
     top_carb.setP0Divergence(1);
     top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
     ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
-    cl = new SP3Atom(new Point3D(), new_H);  // theory test -M
-    new_H = new Atom(new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))),
-                     AtomOrGroup.Charge.MINUS, top_carb);
+    cl = new SP3Atom(new Point3D(0, -Atom.SP3_SP3_BOND_LENGTH, 
+    		2 * Atom.S_TO_SP3_BOND_LENGTH + 0.8), bottom_carb);  // theory test -M
+    cl.setRot(0, 180, 0);
+    new_H = new Atom(new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH + 0.8),
+                     AtomOrGroup.Charge.NEUTRAL, top_carb);
     setHydrogenLocations();
     
     // Create the Bonds
@@ -74,7 +76,7 @@ public class EA2AModel extends Model {
     // Top carbon on orbital 1
     Point3D orb1Vec = bottom_carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
     top_carb.setLoc(orb1Vec.x(), orb1Vec.y(), orb1Vec.z());
-    top_carb.setRot(180 + 2 * rotation, 0, 180);
+    top_carb.setRot(180 + 2 * rotation, 0, 180);  // Need the 180 around Z
     
     // Hydrogen on orbital 2 (orbital 3 on the top carbon)
     Point3D orb2Vec = bottom_carb.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
@@ -166,8 +168,8 @@ public class EA2AModel extends Model {
     double insideOutness = 0.5 + insideOutnessOffset;
     //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
     double divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));
-    bottom_carb.setInsideOutness(insideOutness);
-    bottom_carb.setP0Divergence(divergence);
+    //bottom_carb.setInsideOutness(insideOutness);
+    //bottom_carb.setP0Divergence(divergence);
     top_carb.setInsideOutness(insideOutness);
     top_carb.setP0Divergence(divergence);
 

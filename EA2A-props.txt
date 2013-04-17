@@ -12,4 +12,4 @@ canvasLayout: vertical
 #2DScales: -35 100 100
 
 #fov: 26 Previous, for horizontal layout pre-ethyl group
-fov: 40
+fov: 45

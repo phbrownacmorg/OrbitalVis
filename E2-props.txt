@@ -18,4 +18,13 @@ markHydrogens: false
 2DOffsets: 475 170
 
 # default is 25 100 100
-#2DScales: -25 50 100
+2DScales: 3 3 3
+
+# Default is 0.0 0.0
+YOff: 0.15 0.7
+
+# Default is 0.3 0.0
+ZOff: 0.0 0.0
+
+# default is 24.0
+#fontSize: 20.0

@@ -6,10 +6,15 @@ canvasLayout: vertical
 
 # default is 350 170
 #2DOffsets: 370 170
-2DOffsets: 240 350
+#2DOffsets: 240 350
 
 # default is 25 100 100
-#2DScales: -35 100 100
+2DScales: 1.5 1.5 1.5
+
+# Default is 96
+fontSize: 70
+
+ZOff: -0.7 0.5
 
 #fov: 26 Previous, for horizontal layout pre-ethyl group
 fov: 40
