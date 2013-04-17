@@ -25,3 +25,6 @@ fov: 45
 
 # move eyepoint down some: default is 10 2.5 2.5
 #eye: 10 1.9 2.5
+
+# default is 0.0 0.0
+YOff: 0.0 -0.3

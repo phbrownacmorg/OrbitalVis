@@ -92,4 +92,6 @@ public class RefFrame {
 	  // So what about the rotation?
 	  return pt.toString() + String.format(" rot: (%f %f %f) parent: %s", rx, ry, rz, parent);
   }
+
+  public Point3D getLoc() {return pt;}
 }

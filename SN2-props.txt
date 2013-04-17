@@ -12,3 +12,6 @@ markHydrogens: false
 
 # default is 1 1 1
 2DScales: 3 3 3
+
+#default is 0.0 0.0
+YOff: 0.0 0.0

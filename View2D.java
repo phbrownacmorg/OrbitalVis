@@ -19,7 +19,7 @@ public class View2D extends View {
 	public static double X_SCALE = 1.0;
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
-	public static float Z_OFFSET_FACTOR[] = {0f, 0f};
+	public static float Z_OFFSET_FACTOR[] = {0.3f, 0f};
 	public static float Y_OFFSET_FACTOR[] = {0f, 0f};;
   
 	public static int FONT_SIZE = 96; // 24.0f

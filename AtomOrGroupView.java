@@ -104,11 +104,20 @@ public abstract class AtomOrGroupView extends Drawable {
 	   this.initDraw(gl);
 
 	   // Text-specific transformations
+	  
 	   this.unwindRotationsForFrame(gl, frame);
 	   gl.glRotated(-90, 0, 1, 0);
 	   //if(text=="CH3")
-		   gl.glTranslated(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
-				   		   frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);
+	   float xLoc;
+	   if(frame.getParent()==null)
+		   xLoc=(float)(frame.getLoc().z());
+	   else
+		   xLoc=(float)(frame.getParent().getLoc().z());
+	 //System.out.println(text+" at: "+xLoc);
+		if(xLoc>0){gl.glTranslated(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
+				   		   frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);}
+		else{gl.glTranslated(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
+		   		   -frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);}
 	   //else
 		   //gl.glTranslated(-frame.getX() * View2D.Z_OFFSET_FACTOR, -frame.getY()*View2D.Y_OFFSET_FACTOR, 0);
 	   gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
