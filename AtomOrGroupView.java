@@ -128,7 +128,7 @@ public abstract class AtomOrGroupView extends Drawable {
 				View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
 		Rectangle2D bounds = tr.getBounds(text);
 		gl.glTranslated(-bounds.getWidth()/2.0, bounds.getY()/2.0, 0);
-
+		
 		tr.begin3DRendering();
 		tr.setColor(textColor);
 		// Eventually this is likely to be inadequate, as the geometry gets fancier
