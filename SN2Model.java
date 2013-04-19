@@ -63,19 +63,19 @@ public class SN2Model extends Model {
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
-    if (twoD) { // Add the bonds as well
-      result.add(new BondView(carb_oh));
-      result.add(new BondView(carb_hydro1));
-      result.add(new BondView(carb_hydro2));
-      result.add(new BondView(carb_hydro3));
-      result.add(new BondView(carb_chlor));
-    }
     result.add(oh.createView(HydroxideView.TEXT_HO));
     result.add(carb.createView("C", AtomView.C_BLACK));
     result.add(hydro1.createView());
     result.add(hydro2.createView());
     result.add(hydro3.createView());
     result.add(chlor.createView("Cl", AtomView.CL_GREEN));
+    if (twoD) { // Add the bonds as well
+        result.add(new BondView(carb_oh));
+        result.add(new BondView(carb_hydro1));
+        result.add(new BondView(carb_hydro2));
+        result.add(new BondView(carb_hydro3));
+        result.add(new BondView(carb_chlor));
+    }
     return result;
   }
   

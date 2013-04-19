@@ -8,10 +8,13 @@ markHydrogens: false
 # canvasLayout: horizontal
 
 # default is 350 170
-2DOffsets: 475 170
+#2DOffsets: 475 170
 
 # default is 1 1 1
 2DScales: 3 3 3
+
+# default is 0 0
+ZOff: 0.2 0.0
 
 #default is 0.0 0.0
 YOff: 0.0 0.0

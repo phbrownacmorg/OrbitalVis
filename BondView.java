@@ -9,6 +9,10 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
 //import java.awt.image.BufferedImage;
 
+import javax.media.opengl.*;
+
+import com.jogamp.opengl.util.awt.TextRenderer;
+
 /**
  * Class to display a Bond.  Since bonds aren't represented explicitly in the 3D view,
  * this class only overrides the draw2D() method of Drawable.
@@ -110,6 +114,45 @@ public class BondView extends Drawable {
     }
     g.draw(new Line2D.Double(dist * ONE_MINUS_LINE_SCALE_FACTOR, 2, 
                              dist * LINE_SCALE_FACTOR, 2));
+  }
+  
+  
+  public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) {
+	  double colors[] = new double[4];
+	  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
+	  
+	  this.initDraw(gl); // Frame1's tranformation
+	  gl.glBegin(GL.GL_LINES);
+	  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
+	  if (bond.getState() == Bond.State.FULL) {
+		// Draw a regular bond
+		  int dir = bond.getDepthDir();
+		  switch (dir) {
+		  	case 0: // Draw a line
+		  		gl.glVertex3d(bond.getStart3D().getX(), bond.getStart3D().getY(), bond.getStart3D().getZ());
+		  	    gl.glVertex3d(bond.getEnd3D().getX(), bond.getEnd3D().getY(), bond.getEnd3D().getZ());
+		  		break;
+		  	case 1: // Draw a dashed wedge
+		  		break;
+		  	case -1: // Draw a wedge
+		  		break;
+		  }
+	  }
+	  else if (bond.getState() == Bond.State.PARTIAL) {
+		  // Draw a dashed line for the bond
+          // All partial bonds are assumed to lie in the plane of the screen.
+	      //    This is mainly because I don't really know how to handle a partial
+	      //    bond that isn't in the plane of the screen.
+	  }
+	  else if ((bond.getState() == Bond.State.DOUBLE) || (bond.getState() == Bond.State.FULL_PARTIAL)) {
+		  // Draw a double line for the bond
+		  // Double lines are assumed to lie in the plane of the screen.
+	  }
+	  // If the bond's state is BROKEN, naturally, do nothing
+	  gl.glEnd();
+	  this.endDraw(gl);
+	  // Restore the previous color
+	  gl.glColor4dv(colors, 0);
   }
   
 //  public void draw2D(Graphics2D g) {
