@@ -110,7 +110,32 @@ public class View2D extends View {
 	  }	
 	  gl.glPopMatrix();
   }
-    
+  
+  public static Point3D ptFor2D(RefFrame frame) {
+	  Point3D result = new Point3D(frame.getLoc());
+	  
+	  float xLoc;
+	  
+	  if(frame.getParent()==null)
+		  xLoc=(float)(frame.getLoc().z());
+	  else
+		  xLoc=(float)(frame.getParent().getLoc().z());
+	  //System.out.println(text+" at: "+xLoc);
+
+	  if(xLoc>0) {
+		  result = result.translate(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
+				  frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);
+	  }
+	  else {
+		  result = result.translate(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
+				  -frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);
+	  }
+	  
+	  System.out.println("View2D.ptFor3D("+frame+") => "+result);
+	  
+	  return result;
+  }
+  
   public static void setFontSize(int newFontSize) {
     FONT_SIZE = newFontSize;
   }

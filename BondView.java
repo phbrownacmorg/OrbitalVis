@@ -124,6 +124,8 @@ public class BondView extends Drawable {
 	  this.initDraw(gl); // Frame1's tranformation
 	  gl.glBegin(GL.GL_LINES);
 	  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
+	  
+	  
 	  if (bond.getState() == Bond.State.FULL) {
 		// Draw a regular bond
 		  int dir = bond.getDepthDir();
