@@ -14,7 +14,8 @@ canvasLayout: vertical
 # Default is 96
 fontSize: 70
 
-ZOff: -0.7 0.5
+ZOff: -0.6 -0.2
+YOff: 0.0 -0.3
 
 #fov: 26 Previous, for horizontal layout pre-ethyl group
 fov: 40

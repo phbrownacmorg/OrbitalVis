@@ -15,7 +15,7 @@ markHydrogens: false
 
 # default is 0 0
 #ZOff: 0.2 0.0
-ZOff: 20 0.0
+ZOff: 0.3 0.0
 
 #default is 0.0 0.0
 YOff: 0.0 0.0
