@@ -28,7 +28,6 @@ public class Bond {
   }
   
   public AtomOrGroup getStart3D() { return frame1; }
-  public AtomOrGroup getEnd3D() { return frame2; }
 //  public Point2D getStart() { return frame1.getPt2D(); }
 //  public Point2D getEnd()   { return frame2.getPt2D(); }
   
@@ -37,7 +36,6 @@ public class Bond {
   
   public int getDepthDir() {
     int result = 0;
-    // What about nested frames?  Ignore that until we find we can't any more...
     double diff = frame2.getX() - frame1.getX();
     if (Math.abs(diff) > DEPTH_EPSILON) {
       result = (int)(Math.signum(diff));

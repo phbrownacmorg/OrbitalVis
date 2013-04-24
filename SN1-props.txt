@@ -7,8 +7,6 @@ markHydrogens: false
 # default is horizontal
 canvasLayout: vertical
 
-#near: 1
-
 # default is 350 170
 #2DOffsets: 370 170
 #2DOffsets: 240 350
