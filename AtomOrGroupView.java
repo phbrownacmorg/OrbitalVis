@@ -108,37 +108,31 @@ public abstract class AtomOrGroupView extends Drawable {
 		this.unwindRotationsForFrame(gl, frame);
 		gl.glRotated(-90, 0, 1, 0);
 		//if(text=="CH3")
-		Point3D p = View2D.ptFor2D(frame);
-//		float xLoc;
-//		if(frame.getParent()==null)
-//			xLoc=(float)(frame.getLoc().z());
-//		else
-//			xLoc=(float)(frame.getParent().getLoc().z());
-//		//System.out.println(text+" at: "+xLoc);
-//		if(xLoc>0) {
-//			gl.glTranslated(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
-//					frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);
-//			}
-//		else {
-//			gl.glTranslated(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
-//				-frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);
-//		}
+		float xLoc;
+		if(frame.getParent()==null)
+			xLoc=(float)(frame.getLoc().z());
+		else
+			xLoc=(float)(frame.getParent().getLoc().z());
+		//System.out.println(text+" at: "+xLoc);
+		if(xLoc>0) {
+			gl.glTranslated(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
+					frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);
+			}
+		else {
+			gl.glTranslated(frame.getX() * (-View2D.Z_OFFSET_FACTOR[0] + View2D.Y_OFFSET_FACTOR[0]), 
+				-frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]), 0);
+		}
 		//else
 		//gl.glTranslated(-frame.getX() * View2D.Z_OFFSET_FACTOR, -frame.getY()*View2D.Y_OFFSET_FACTOR, 0);
-		
-		// !!!!!!!!!!!!!!! THIS IS NOT BEING APPLIED TO P !!!!!!!!!!!!!!!!!!!!!!!!!!!
 		gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
 				View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
-		//p.scale()
-		
 		Rectangle2D bounds = tr.getBounds(text);
-		// !!!!!!!!!!!!!!! THIS IS ALSO NOT BEING APPLIED TO P !!!!!!!!!!!!!!!!!!!!!!
 		gl.glTranslated(-bounds.getWidth()/2.0, bounds.getY()/2.0, 0);
 		
 		tr.begin3DRendering();
 		tr.setColor(textColor);
 		// Eventually this is likely to be inadequate, as the geometry gets fancier
-		tr.draw3D(text, (float)(p.x()), (float)(p.y()), (float)(p.z()), 1.0f);
+		tr.draw3D(text, 0, 0, 0, 1.0f);
 		//System.out.println("AOGView "+this+" drawing text '"+text+"' at "+frame.toString());
 		tr.end3DRendering();
 

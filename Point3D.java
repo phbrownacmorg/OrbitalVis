@@ -1,5 +1,5 @@
 /**
- * Class to represent a point in 3D.  Instances of this class are immutable.
+ * Class to represent a point in 3D.  This class is immutable.
  *
  * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
  *
@@ -15,14 +15,6 @@ public class Point3D {
   
   Point3D() { 
     this(0, 0, 0);
-  }
-  
-  /**
-   * Copy constructor
-   * @param pt  Point3D to copy
-   */
-  Point3D(Point3D pt) {
-	  this(pt.x(), pt.y(), pt.z());
   }
   
   Point3D(double x, double y, double z) {
@@ -55,11 +47,6 @@ public class Point3D {
   public Point3D scale(double scalar) {
     Point3D result = new Point3D(elt[0] * scalar, elt[1] * scalar, elt[2] * scalar);
     return result;
-  }
-  
-  public Point3D translate(double x, double y, double z) {
-	  Point3D result = new Point3D(elt[0] + x, elt[1] + y, elt[2] + z);
-	  return result;
   }
   
   public String toString() {
