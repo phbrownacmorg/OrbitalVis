@@ -101,38 +101,15 @@ public abstract class AtomOrGroupView extends Drawable {
 	//  }
 
 	public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) {
-		this.initDraw(gl);
+		this.initDraw2D(gl);
 
 		// Text-specific transformations
-
-		this.unwindRotationsForFrame(gl, frame);
-		gl.glRotated(-90, 0, 1, 0);
-		//if(text=="CH3")
-		
-		//Point3D p = View2D.ptFor2D(frame);
-		
-//		float xLoc;
-//		if(frame.getParent()==null)
-//			xLoc=(float)(frame.getLoc().z());
-//		else
-//			xLoc=(float)(frame.getParent().getLoc().z());
-//		//System.out.println(text+" at: "+xLoc);
-//		if(xLoc>0) {
-			gl.glTranslated(frame.getX() * -View2D.Z_OFFSET_FACTOR[0] + frame.getY() * View2D.Y_OFFSET_FACTOR[0], 
-					frame.getX() * View2D.Z_OFFSET_FACTOR[1] + frame.getY() * View2D.Y_OFFSET_FACTOR[1], 0);
-//			}
-//		else {
-//			gl.glTranslated(frame.getX() * -View2D.Z_OFFSET_FACTOR[0] + frame.getY() * View2D.Y_OFFSET_FACTOR[0], 
-//					frame.getX() * View2D.Z_OFFSET_FACTOR[1] + frame.getY() * View2D.Y_OFFSET_FACTOR[1], 0);
-//		}
-		//else
-		//gl.glTranslated(-frame.getX() * View2D.Z_OFFSET_FACTOR, -frame.getY()*View2D.Y_OFFSET_FACTOR, 0);
-		
 		gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
 				View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
+		gl.glRotated(-90, 0, 1, 0);
 				
 		Rectangle2D bounds = tr.getBounds(text);
-		// This is not being applied to p--and it *shouldn't* be.
+		// This is not being applied to p--and it *shouldn't* be, because it's really text-specific.
 		gl.glTranslated(-bounds.getWidth()/2.0, bounds.getY()/2.0, 0);
 		
 		tr.begin3DRendering();

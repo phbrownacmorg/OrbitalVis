@@ -55,6 +55,15 @@ public class Drawable {
     initXfm(gl);
   }
   
+  public void initDraw2D(GL2 gl) {
+	  System.out.println(String.format("Drawable::initDraw2D(): offsets: (%f %f), (%f %f)", View2D.Z_OFFSET_FACTOR[0], View2D.Z_OFFSET_FACTOR[1], View2D.Y_OFFSET_FACTOR[0], View2D.Y_OFFSET_FACTOR[1]));
+	  this.initXfm(gl);
+	  this.unwindRotationsForFrame(gl, this.frame);
+	  gl.glTranslated(0,
+				this.frame.getX() * View2D.Z_OFFSET_FACTOR[1] + this.frame.getY() * View2D.Y_OFFSET_FACTOR[1],
+				this.frame.getX() * -View2D.Z_OFFSET_FACTOR[0] + this.frame.getY() * View2D.Y_OFFSET_FACTOR[0]); 
+  }
+  
   public void endDraw(GL2 gl) {
     endXfm(gl);
   }

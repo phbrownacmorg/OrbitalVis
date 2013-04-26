@@ -119,20 +119,22 @@ public class BondView extends Drawable {
 	  double colors[] = new double[4];
 	  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
 	  
-	  this.initDraw(gl); // Frame1's transformation
+	  this.initDraw2D(gl); // Frame1's transformation
 	  gl.glBegin(GL2.GL_LINES);
 	  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
 	  
-	  Point3D startPt = View2D.ptFor2D(bond.getStart3D());
-	  Point3D endPt = View2D.ptFor2D(bond.getEnd3D());
+	  RefFrame start = bond.getStart3D();
+	  RefFrame end = bond.getEnd3D();
 	  
 	  if (bond.getState() == Bond.State.FULL) {
 		// Draw a regular bond
 		  int dir = bond.getDepthDir();
 		  switch (dir) {
 		  	case 0: // Draw a line
-		  		gl.glVertex3d(startPt.x(), startPt.y(), startPt.z());
-		  	    gl.glVertex3d(endPt.x(), endPt.y(), endPt.z());
+		  		gl.glVertex3d(0, 0, 0); // We have made the 3D transform handle this one
+		  	    gl.glVertex3d(end.getX()-start.getX(), 
+		  	    			end.getY()-start.getY(), 
+		  	    			end.getZ()-start.getZ());
 		  		break;
 		  	case 1: // Draw a dashed wedge
 		  		break;

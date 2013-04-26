@@ -134,7 +134,7 @@ public class View2D extends View {
 //				  -frame.getY() * (View2D.Z_OFFSET_FACTOR[1] + View2D.Y_OFFSET_FACTOR[1]) * View2D.Y_SCALE, 0);
 //	  }
 	  
-	  System.out.println("View2D.ptFor3D("+frame+") => "+result);
+	  //System.out.println("View2D.ptFor3D("+frame+") => "+result);
 	  
 	  return result;
   }
