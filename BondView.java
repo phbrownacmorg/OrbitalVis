@@ -8,10 +8,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
 //import java.awt.image.BufferedImage;
-
-import javax.media.opengl.*;
-
-import com.jogamp.opengl.util.awt.TextRenderer;
+import javax.media.opengl.GL2;
+import com.jogamp.opengl.util.awt.TextRenderer; 
 
 /**
  * Class to display a Bond.  Since bonds aren't represented explicitly in the 3D view,
@@ -51,7 +49,7 @@ public class BondView extends Drawable {
   /**
    * Pattern to draw rear-facing wedges.
    */
-  private static Paint pattern = new java.awt.GradientPaint(0, 0, BOND_COLOR, 0.05f, 0, Color.WHITE, true);
+  //private static Paint pattern = new java.awt.GradientPaint(0, 0, BOND_COLOR, 0.05f, 0, Color.WHITE, true);
 
   private Bond bond;
   
@@ -122,7 +120,7 @@ public class BondView extends Drawable {
 	  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
 	  
 	  this.initDraw(gl); // Frame1's transformation
-	  gl.glBegin(GL.GL_LINES);
+	  gl.glBegin(GL2.GL_LINES);
 	  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
 	  
 	  Point3D startPt = View2D.ptFor2D(bond.getStart3D());

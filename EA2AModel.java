@@ -53,9 +53,9 @@ public class EA2AModel extends Model {
     top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
     ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, top_carb);
     cl = new SP3Atom(new Point3D(0, -Atom.SP3_SP3_BOND_LENGTH, 
-    		zSign * (2 * Atom.S_TO_SP3_BOND_LENGTH + 0.8)), bottom_carb);  // theory test -M
-    //cl.setRot(0, 180, 0);
-    new_H = new Atom(new Point3D(0, 0, zSign * Atom.S_TO_SP3_BOND_LENGTH + 0.8),
+    		2 * Atom.S_TO_SP3_BOND_LENGTH + 0.8), bottom_carb);  // theory test -M
+    cl.setRot(0, 180, 0);
+    new_H = new Atom(new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH + 0.8),
                      AtomOrGroup.Charge.NEUTRAL, top_carb);
     setHydrogenLocations();
     
@@ -71,13 +71,12 @@ public class EA2AModel extends Model {
   
   private void setHydrogenLocations() {
 //    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double bottomRot = -bottom_carb.getXRotation();
-    double topRot = -top_carb.getXRotation();
+    double rotation = -bottom_carb.getXRotation();
 
     // Top carbon on orbital 1
     Point3D orb1Vec = bottom_carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
     top_carb.setLoc(orb1Vec.x(), orb1Vec.y(), orb1Vec.z());
-    //top_carb.setRot(180 + 2 * bottomRot, 0, 180);  // Need the 180 around Z
+    top_carb.setRot(180 + 2 * rotation, 0, 180);  // Need the 180 around Z
     
     // Hydrogen on orbital 2 (orbital 3 on the top carbon)
     Point3D orb2Vec = bottom_carb.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
@@ -88,7 +87,7 @@ public class EA2AModel extends Model {
     // Methyl on orbital 3 (orbital 2 on the top)
     orb3Vec = bottom_carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
     ch3a.setLoc(orb3Vec.x(), orb3Vec.y(), orb3Vec.z());
-    ch3a.setRot(0, 180 - bottomRot, 150); //(0, 180 - rotation, 90 - 120);
+    ch3a.setRot(0, 180 - rotation, 150); //(0, 180 - rotation, 90 - 120);
     
     // Action of top carbon and its methyl group is altogether more complex
     // First, the position
@@ -133,7 +132,7 @@ public class EA2AModel extends Model {
     //    is that the progression in the Z rotation shouldn't be linear, because the
     //    vertical (in world space) movement of top_carb's orbital 2 isn't linear.  It's
     //    some funky trig thing, and I haven't yet figured it out.
-    ch3b.setRot(0, 180 - bottomRot, 30);
+    ch3b.setRot(0, 180 - rotation, 30);
     //ch3b.setRot(0, -270 + 2*orbRotX, -60 + orbRotX);
   }
 
@@ -164,21 +163,13 @@ public class EA2AModel extends Model {
   public void setT(double newT) {
     super.setT(newT);
     
-    // Bottom carbon
-    // Set the angles between the carbon's orbitals, and the proportion of its center orbital
+    // Set the angles betwen the carbon's orbitals, and the proportion of its center orbital
     double insideOutnessOffset = -zSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
     double insideOutness = 0.5 + insideOutnessOffset;
     //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
     double divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));
-    bottom_carb.setInsideOutness(insideOutness);
-    bottom_carb.setP0Divergence(divergence);
-    
-    // Top carbon
-    // Set the angles between the carbon's orbitals, and the proportion of its center orbital
-    insideOutnessOffset = -zSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
-    insideOutness = 0.5 + insideOutnessOffset;
-    //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
-    divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));   
+    //bottom_carb.setInsideOutness(insideOutness);
+    //bottom_carb.setP0Divergence(divergence);
     top_carb.setInsideOutness(insideOutness);
     top_carb.setP0Divergence(divergence);
 
@@ -186,7 +177,7 @@ public class EA2AModel extends Model {
     setHydrogenLocations();
     
     // The new_H moves in
-    new_H.setLoc(0, 0, zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - 2*getT()))));
+    new_H.setLoc(0, 0, (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
    // cl.setLoc(0, 0, );
     
     // Update the Bonds

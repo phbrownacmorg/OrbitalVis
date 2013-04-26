@@ -1,5 +1,5 @@
 /**
- * Class to represent a point in 3D.  Instances of this class are immutable.
+ * Class to represent a point in 3D.  This class is immutable.
  *
  * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
  *
@@ -17,10 +17,6 @@ public class Point3D {
     this(0, 0, 0);
   }
   
-  /**
-   * Copy constructor
-   * @param pt  Point3D to copy
-   */
   Point3D(Point3D pt) {
 	  this(pt.x(), pt.y(), pt.z());
   }
