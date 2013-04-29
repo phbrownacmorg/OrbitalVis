@@ -44,4 +44,8 @@ public class Bond {
     return result;
   }
   
+  public double getLength() {
+	  return frame1.getLoc().distanceTo(frame2.getLoc()); 
+  }
+  
 }

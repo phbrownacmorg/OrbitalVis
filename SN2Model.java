@@ -23,9 +23,9 @@ public class SN2Model extends Model {
   private SP3Atom chlor;
   
   // bonds
-  private Bond carb_oh;
-  private Bond carb_hydro1, carb_hydro2, carb_hydro3;
-  private Bond carb_chlor;
+  private SP3Bond carb_oh;
+  private SP3Bond carb_hydro1, carb_hydro2, carb_hydro3;
+  private SP3Bond carb_chlor;
 
   public SN2Model(boolean markH) {
     oh = new Hydroxide(new Point3D(0, 0, -(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
@@ -43,11 +43,11 @@ public class SN2Model extends Model {
     //chlor.setRot(90, 90, 0); // Rotates about Y, then about X
     
     // Create the Bonds
-    carb_oh = new Bond(carb, oh, Bond.State.BROKEN);
-    carb_hydro1 = new Bond(carb, hydro1, Bond.State.FULL);
-    carb_hydro2 = new Bond(carb, hydro2, Bond.State.FULL);
-    carb_hydro3 = new Bond(carb, hydro3, Bond.State.FULL);
-    carb_chlor = new Bond(carb, chlor, Bond.State.FULL);
+    carb_oh = new SP3Bond(carb, 0, oh, Bond.State.BROKEN);
+    carb_hydro1 = new SP3Bond(carb, 1, hydro1, Bond.State.FULL);
+    carb_hydro2 = new SP3Bond(carb, 2, hydro2, Bond.State.FULL);
+    carb_hydro3 = new SP3Bond(carb, 3, hydro3, Bond.State.FULL);
+    carb_chlor = new SP3Bond(carb, 0, chlor, Bond.State.FULL);
   }
   
   private void setHydrogenLocations() {
@@ -64,11 +64,11 @@ public class SN2Model extends Model {
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
-      result.add(new BondView(carb_oh));
-      result.add(new BondView(carb_hydro1));
-      result.add(new BondView(carb_hydro2));
-      result.add(new BondView(carb_hydro3));
-      result.add(new BondView(carb_chlor));
+      result.add(new SP3BondView(carb_oh));
+      result.add(new SP3BondView(carb_hydro1));
+      result.add(new SP3BondView(carb_hydro2));
+      result.add(new SP3BondView(carb_hydro3));
+      result.add(new SP3BondView(carb_chlor));
     }
     result.add(oh.createView(HydroxideView.TEXT_HO));
     result.add(carb.createView("C", AtomView.C_BLACK));

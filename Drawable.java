@@ -36,15 +36,19 @@ public class Drawable {
 		  unwindRotationsForFrame(gl, thisFrame.getParent());
 	  }
   }
-	  
+
+  protected void applyRotationsForFrame(GL2 gl, RefFrame thisFrame) {
+	  gl.glRotated(thisFrame.getRotZ(), 0.0, 0.0, 1.0);
+	  gl.glRotated(thisFrame.getRotY(), 0.0, 1.0, 0.0);
+	  gl.glRotated(thisFrame.getRotX(), 1.0, 0.0, 0.0);
+  }
+  
   protected void initXfmForFrame(GL2 gl, RefFrame thisFrame) {
     if (thisFrame.getParent() != null) {
       initXfmForFrame(gl, thisFrame.getParent());
     }
     gl.glTranslated(thisFrame.getX(), thisFrame.getY(), thisFrame.getZ());
-    gl.glRotated(thisFrame.getRotZ(), 0.0, 0.0, 1.0);
-    gl.glRotated(thisFrame.getRotY(), 0.0, 1.0, 0.0);
-    gl.glRotated(thisFrame.getRotX(), 1.0, 0.0, 0.0);
+    this.applyRotationsForFrame(gl, thisFrame);
   }
   
   public void endXfm(GL2 gl) {
@@ -55,13 +59,15 @@ public class Drawable {
     initXfm(gl);
   }
   
-  public void initDraw2D(GL2 gl) {
-	  System.out.println(String.format("Drawable::initDraw2D(): offsets: (%f %f), (%f %f)", View2D.Z_OFFSET_FACTOR[0], View2D.Z_OFFSET_FACTOR[1], View2D.Y_OFFSET_FACTOR[0], View2D.Y_OFFSET_FACTOR[1]));
-	  this.initXfm(gl);
-	  this.unwindRotationsForFrame(gl, this.frame);
+  public void apply2DOffsets(GL2 gl) {
 	  gl.glTranslated(0,
 				this.frame.getX() * View2D.Z_OFFSET_FACTOR[1] + this.frame.getY() * View2D.Y_OFFSET_FACTOR[1],
 				this.frame.getX() * -View2D.Z_OFFSET_FACTOR[0] + this.frame.getY() * View2D.Y_OFFSET_FACTOR[0]); 
+  }
+  
+  public void initDraw2D(GL2 gl) {
+	  System.out.println(String.format("Drawable::initDraw2D(): offsets: (%f %f), (%f %f)", View2D.Z_OFFSET_FACTOR[0], View2D.Z_OFFSET_FACTOR[1], View2D.Y_OFFSET_FACTOR[0], View2D.Y_OFFSET_FACTOR[1]));
+	  this.initXfm(gl);
   }
   
   public void endDraw(GL2 gl) {

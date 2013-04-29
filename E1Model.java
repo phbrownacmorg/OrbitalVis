@@ -61,7 +61,7 @@ public class E1Model extends Model {
     
     // Create the Bonds
     hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-    carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
+    carb1_carb2 = new Bond(carb2, carb1, Bond.State.FULL);
     carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
     carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
     carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);

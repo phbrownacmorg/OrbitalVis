@@ -33,9 +33,9 @@ public class SN1Model extends Model {
   private SP3Atom chlor;
   
   // bonds
-  private Bond carb_water;
-  private Bond carb_hydro, carb_ethyl, carb_methyl;
-  private Bond carb_chlor;
+  private SP3Bond carb_water;
+  private SP3Bond carb_hydro, carb_ethyl, carb_methyl;
+  private SP3Bond carb_chlor;
 
   public SN1Model(int zSign) {
     this.zSign = zSign;
@@ -57,11 +57,11 @@ public class SN1Model extends Model {
     chlor.setRot(0, 180, 0);
     
     // Create the Bonds
-    carb_water = new Bond(carb, water, Bond.State.BROKEN);
-    carb_hydro = new Bond(carb, hydro, Bond.State.FULL);
-    carb_ethyl = new Bond(carb, ethyl, Bond.State.FULL);
-    carb_methyl = new Bond(carb, ch3, Bond.State.FULL);
-    carb_chlor = new Bond(carb, chlor, Bond.State.FULL);
+    carb_water = new SP3Bond(carb, 0, water, Bond.State.BROKEN);
+    carb_hydro = new SP3Bond(carb, 3, hydro, Bond.State.FULL);
+    carb_ethyl = new SP3Bond(carb, 1, ethyl, Bond.State.FULL);
+    carb_methyl = new SP3Bond(carb, 2, ch3, Bond.State.FULL);
+    carb_chlor = new SP3Bond(carb, 0, chlor, Bond.State.FULL);
   }
   
   private void setHydrogenLocations() {

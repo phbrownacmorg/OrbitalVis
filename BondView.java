@@ -51,7 +51,7 @@ public class BondView extends Drawable {
    */
   //private static Paint pattern = new java.awt.GradientPaint(0, 0, BOND_COLOR, 0.05f, 0, Color.WHITE, true);
 
-  private Bond bond;
+  protected Bond bond;
   
   /**
    * This is the actual stroke object for drawing partial bonds.
@@ -120,18 +120,25 @@ public class BondView extends Drawable {
 	  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
 	  
 	  this.initDraw2D(gl); // Frame1's transformation
-	  gl.glBegin(GL2.GL_LINES);
-	  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
-	  
+	  this.apply2DOffsets(gl);
 	  RefFrame start = bond.getStart3D();
 	  RefFrame end = bond.getEnd3D();
+	  
+//	  if (end.getParent() == start) {
+//		  this.applyRotationsForFrame(gl, end);
+//	  } 
+	  
+	  gl.glBegin(GL2.GL_LINES);
+	  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
 	  
 	  if (bond.getState() == Bond.State.FULL) {
 		// Draw a regular bond
 		  int dir = bond.getDepthDir();
 		  switch (dir) {
 		  	case 0: // Draw a line
+//		  		ShapeBuilder.axes(gl);
 		  		gl.glVertex3d(0, 0, 0); // We have made the 3D transform handle this one
+//		  		gl.glVertex3d(0, 1, 0);
 		  	    gl.glVertex3d(end.getX()-start.getX(), 
 		  	    			end.getY()-start.getY(), 
 		  	    			end.getZ()-start.getZ());

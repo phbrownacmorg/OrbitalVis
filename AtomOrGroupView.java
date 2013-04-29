@@ -103,6 +103,8 @@ public abstract class AtomOrGroupView extends Drawable {
 	public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) {
 		this.initDraw2D(gl);
 
+		this.unwindRotationsForFrame(gl, this.frame);
+		this.apply2DOffsets(gl);
 		// Text-specific transformations
 		gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
 				View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
