@@ -26,8 +26,8 @@ public class AcylModel extends Model {
   private SP3Atom oxy;
   
   // bonds
-  private Bond carb_nucleophile;
-  private Bond carb_ethyl, carb_ch3, carb_oxy;
+  private SP3Bond carb_nucleophile;
+  private SP3Bond carb_ethyl, carb_ch3, carb_oxy;
 
   public AcylModel(int zSign) {
     this.zSign = zSign;
@@ -48,10 +48,10 @@ public class AcylModel extends Model {
     setHydrogenLocations();
     
     // Create the Bonds
-    carb_nucleophile = new Bond(carb, nucleophile, Bond.State.BROKEN);
-    carb_ethyl = new Bond(carb, ethyl, Bond.State.FULL);
-    carb_ch3 = new Bond(carb, ch3, Bond.State.FULL);
-    carb_oxy = new Bond(carb, oxy, Bond.State.DOUBLE);
+    carb_nucleophile = new SP3Bond(carb, 0, nucleophile, Bond.State.BROKEN);
+    carb_ethyl = new SP3Bond(carb, 2, ethyl, Bond.State.FULL);
+    carb_ch3 = new SP3Bond(carb, 3, ch3, Bond.State.FULL);
+    carb_oxy = new SP3Bond(carb, 1, oxy, Bond.State.DOUBLE);
   }
   
   private void setHydrogenLocations() {
@@ -77,10 +77,10 @@ public class AcylModel extends Model {
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
-      result.add(new BondView(carb_nucleophile));
-      result.add(new BondView(carb_ethyl));
-      result.add(new BondView(carb_ch3));
-      result.add(new BondView(carb_oxy));
+      result.add(new SP3BondView(carb_nucleophile));
+      result.add(new SP3BondView(carb_ethyl));
+      result.add(new SP3BondView(carb_ch3));
+      result.add(new SP3BondView(carb_oxy));
     }
 
     // Draw the 3-D view back to front

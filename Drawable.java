@@ -66,7 +66,7 @@ public class Drawable {
   }
   
   public void initDraw2D(GL2 gl) {
-	  System.out.println(String.format("Drawable::initDraw2D(): offsets: (%f %f), (%f %f)", View2D.Z_OFFSET_FACTOR[0], View2D.Z_OFFSET_FACTOR[1], View2D.Y_OFFSET_FACTOR[0], View2D.Y_OFFSET_FACTOR[1]));
+	  //System.out.println(String.format("Drawable::initDraw2D(): offsets: (%f %f), (%f %f)", View2D.Z_OFFSET_FACTOR[0], View2D.Z_OFFSET_FACTOR[1], View2D.Y_OFFSET_FACTOR[0], View2D.Y_OFFSET_FACTOR[1]));
 	  this.initXfm(gl);
   }
   

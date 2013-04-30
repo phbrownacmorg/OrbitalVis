@@ -30,9 +30,9 @@ public class E1Model extends Model {
     
   // bonds
   private Bond hydro2_oh;
-  private Bond carb1_carb2;
-  private Bond carb1_meth1, carb1_hydro1, carb2_chlor, carb2_hydro3, carb2_meth2;
-  private Bond carb1_hydro2;
+  private SP3Bond carb1_carb2;
+  private SP3Bond carb1_meth1, carb1_hydro1, carb2_chlor, carb2_hydro3, carb2_meth2;
+  private SP3Bond carb1_hydro2;
 
   public E1Model() {
     
@@ -61,13 +61,13 @@ public class E1Model extends Model {
     
     // Create the Bonds
     hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-    carb1_carb2 = new Bond(carb2, carb1, Bond.State.FULL);
-    carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
-    carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
-    carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
-    carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
-    carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
-    carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
+    carb1_carb2 = new SP3Bond(carb1, 1, carb2, Bond.State.FULL);
+    carb1_meth1 = new SP3Bond(carb1, 3, meth1, Bond.State.FULL);
+    carb1_hydro1 = new SP3Bond(carb1, 2, hydro1, Bond.State.FULL);
+    carb1_hydro2 = new SP3Bond(carb1, 0, hydro2, Bond.State.FULL);
+    carb2_chlor = new SP3Bond(carb2, 0, chlor, Bond.State.FULL);
+    carb2_hydro3 = new SP3Bond(carb2, 3, hydro3, Bond.State.FULL);
+    carb2_meth2 = new SP3Bond(carb2, 2, meth2, Bond.State.FULL);
     
   }
   
@@ -111,13 +111,13 @@ public class E1Model extends Model {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
       result.add(new BondView(hydro2_oh));
-      result.add(new BondView(carb1_carb2));
-      result.add(new BondView(carb1_meth1));
-      result.add(new BondView(carb1_hydro1));
-      result.add(new BondView(carb1_hydro2));
-      result.add(new BondView(carb2_chlor));
-      result.add(new BondView(carb2_hydro3));
-      result.add(new BondView(carb2_meth2));
+      result.add(new SP3BondView(carb1_carb2));
+      result.add(new SP3BondView(carb1_meth1));
+      result.add(new SP3BondView(carb1_hydro1));
+      result.add(new SP3BondView(carb1_hydro2));
+      result.add(new SP3BondView(carb2_chlor));
+      result.add(new SP3BondView(carb2_hydro3));
+      result.add(new SP3BondView(carb2_meth2));
     }
     result.add(meth1.createView());
     result.add(meth2.createView());

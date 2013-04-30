@@ -120,6 +120,9 @@ public class SP3Atom extends Atom {
     // Then associate it with the appropriate orbital
     // [[FIX: FAILS IN CASE OF NESTED FRAMES]]
     if (i == 0) { // Orbital 0 lies along the z-axis
+    	if (insideOutness > 0.5) {
+    		result = new Point3D(0, 0, -1);
+    	}
       //result = result.transform(rotMatrix);
     }
     else if (i == 1) {
