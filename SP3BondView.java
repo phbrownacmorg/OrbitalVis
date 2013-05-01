@@ -16,16 +16,21 @@ public class SP3BondView extends BondView {
 		  
 		  this.initDraw2D(gl); // Frame1's transformation
 		  this.apply2DOffsets(gl);
-		  RefFrame start = bond.getStart3D();
-		  RefFrame end = bond.getEnd3D();
-		  
-//		  if (end.getParent() == start) {
-//			  this.applyRotationsForFrame(gl, end);
-//		  } 
-		  
+		  		  
 		  gl.glBegin(GL2.GL_LINES);
 		  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
 		  Point3D endPt = ((SP3Bond)(bond)).getBondVector();
+		  if (bond.getEnd3D() instanceof SP3Atom) {
+			  System.out.print(endPt.toString() + "->");
+		  }
+		  endPt = endPt.translate(0, 
+				                  endPt.x() * -View2D.Z_OFFSET_FACTOR[1] 
+						          + endPt.y() * -View2D.Y_OFFSET_FACTOR[1],
+				                  endPt.x() * -View2D.Z_OFFSET_FACTOR[0] 
+						          + endPt.y() * View2D.Y_OFFSET_FACTOR[0]);
+		  if (bond.getEnd3D() instanceof SP3Atom) {
+			  System.out.println(endPt.toString());
+		  }
 		  
 		  if (bond.getState() == Bond.State.FULL) {
 			// Draw a regular bond
@@ -34,12 +39,15 @@ public class SP3BondView extends BondView {
 			  	case 0: // Draw a line
 //			  		ShapeBuilder.axes(gl);
 			  		gl.glVertex3d(0, 0, 0); // Starting frame; we have made the 3D transform handle this one
-//			  		gl.glVertex3d(0, 1, 0);
 			  	    gl.glVertex3d(endPt.x(), endPt.y(), endPt.z());
 			  		break;
 			  	case 1: // Draw a dashed wedge
+			  		gl.glVertex3d(0, 0, 0); // Starting frame; we have made the 3D transform handle this one
+			  	    gl.glVertex3d(endPt.x(), endPt.y(), endPt.z());
 			  		break;
 			  	case -1: // Draw a wedge
+			  		gl.glVertex3d(0, 0, 0); // Starting frame; we have made the 3D transform handle this one
+			  	    gl.glVertex3d(endPt.x(), endPt.y(), endPt.z());
 			  		break;
 			  }
 		  }
@@ -48,10 +56,14 @@ public class SP3BondView extends BondView {
 	          // All partial bonds are assumed to lie in the plane of the screen.
 		      //    This is mainly because I don't really know how to handle a partial
 		      //    bond that isn't in the plane of the screen.
+			  gl.glVertex3d(0, 0, 0); // Starting frame; we have made the 3D transform handle this one
+			  gl.glVertex3d(endPt.x(), endPt.y(), endPt.z());
 		  }
 		  else if ((bond.getState() == Bond.State.DOUBLE) || (bond.getState() == Bond.State.FULL_PARTIAL)) {
 			  // Draw a double line for the bond
 			  // Double lines are assumed to lie in the plane of the screen.
+			  gl.glVertex3d(0, 0, 0); // Starting frame; we have made the 3D transform handle this one
+			  gl.glVertex3d(endPt.x(), endPt.y(), endPt.z());
 		  }
 		  // If the bond's state is BROKEN, naturally, do nothing
 		  gl.glEnd();

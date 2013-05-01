@@ -58,7 +58,7 @@ public class Point3D {
 	  return result;
   }
 	  
-	  public Point3D translate(double x, double y, double z) {
+  public Point3D translate(double x, double y, double z) {
 	  Point3D result = new Point3D(elt[0] + x, elt[1] + y, elt[2] + z);
 	  return result;
   }

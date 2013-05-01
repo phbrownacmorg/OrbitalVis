@@ -85,11 +85,11 @@ public class SN1Model extends Model {
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
-      result.add(new BondView(carb_water));
-      result.add(new BondView(carb_hydro));
-      result.add(new BondView(carb_ethyl));
-      result.add(new BondView(carb_methyl));
-      result.add(new BondView(carb_chlor));
+      result.add(new SP3BondView(carb_water));
+      result.add(new SP3BondView(carb_hydro));
+      result.add(new SP3BondView(carb_ethyl));
+      result.add(new SP3BondView(carb_methyl));
+      result.add(new SP3BondView(carb_chlor));
     }
     if (zSign < 0) {
       result.add(water.createView(WaterView.TEXT_H2O));

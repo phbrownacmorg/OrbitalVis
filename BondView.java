@@ -1,12 +1,12 @@
-import java.awt.BasicStroke;
+//import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.awt.Paint;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Path2D;
+//import java.awt.Graphics2D;
+//import java.awt.Stroke;
+//import java.awt.Paint;
+//import java.awt.geom.AffineTransform;
+//import java.awt.geom.Line2D;
+//import java.awt.geom.Point2D;
+//import java.awt.geom.Path2D;
 //import java.awt.image.BufferedImage;
 import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.awt.TextRenderer; 
@@ -56,63 +56,63 @@ public class BondView extends Drawable {
   /**
    * This is the actual stroke object for drawing partial bonds.
    */
-  private Stroke dashedStroke;
+  //private Stroke dashedStroke;
   
   /**
    * This is the path used for drawing wedges.
    */
-  private Path2D wedge;
+  //private Path2D wedge;
 
   public BondView(Bond bond) {
     super(bond.getStart3D());
     this.bond = bond;
-    dashedStroke = new BasicStroke(1, BasicStroke.CAP_SQUARE, 
-                                   BasicStroke.JOIN_MITER, 10, dashPattern, 0);
-    wedge = new Path2D.Double();
-    wedge.moveTo(0, 0);
-    wedge.lineTo(1, -.1);
-    wedge.lineTo(1, .1);
-    wedge.lineTo(0, 0);
+//    dashedStroke = new BasicStroke(1, BasicStroke.CAP_SQUARE, 
+//                                   BasicStroke.JOIN_MITER, 10, dashPattern, 0);
+//    wedge = new Path2D.Double();
+//    wedge.moveTo(0, 0);
+//    wedge.lineTo(1, -.1);
+//    wedge.lineTo(1, .1);
+//    wedge.lineTo(0, 0);
   }
     
-  private void drawLine(Graphics2D g, Point2D start, Point2D end) {
-    double startX = start.getX();
-    double startY = start.getY();
-    double endX = end.getX();
-    double endY = end.getY();
-    g.draw(new Line2D.Double(startX + (endX - startX)*ONE_MINUS_LINE_SCALE_FACTOR,
-                             startY + (endY - startY)*ONE_MINUS_LINE_SCALE_FACTOR,
-                             startX + (endX - startX)*LINE_SCALE_FACTOR,
-                             startY + (endY - startY)*LINE_SCALE_FACTOR));
-  }
-
-  private void drawWedge(Graphics2D g, Point2D start, Point2D end) {
-    double dist = start.distance(end);
-    double scale = dist * WEDGE_SCALE_FACTOR;
-    AffineTransform xfm = new AffineTransform();
-    xfm.setToIdentity();
-    xfm.rotate(end.getX() - start.getX(), end.getY() - start.getY(), start.getX(), start.getY());
-    xfm.translate(start.getX() + (dist * (1.0 - WEDGE_SCALE_FACTOR)/2.0), start.getY());
-    xfm.scale(scale, scale);
-    g.setTransform(xfm);
-    g.fill(wedge);
-  }
-  
-  private void drawDoubleLine(Graphics2D g, Point2D start, Point2D end, boolean dotOneLine) {
-    double dist = start.distance(end);
-    AffineTransform xfm = new AffineTransform();
-    xfm.setToIdentity();
-    xfm.rotate(end.getX() - start.getX(), end.getY() - start.getY(), start.getX(), start.getY());
-    xfm.translate(start.getX(), start.getY());
-    g.setTransform(xfm);
-    g.draw(new Line2D.Double(dist * ONE_MINUS_LINE_SCALE_FACTOR, -2, 
-                             dist * LINE_SCALE_FACTOR, -2));
-    if (dotOneLine) {
-      g.setStroke(dashedStroke);
-    }
-    g.draw(new Line2D.Double(dist * ONE_MINUS_LINE_SCALE_FACTOR, 2, 
-                             dist * LINE_SCALE_FACTOR, 2));
-  }
+//  private void drawLine(Graphics2D g, Point2D start, Point2D end) {
+//    double startX = start.getX();
+//    double startY = start.getY();
+//    double endX = end.getX();
+//    double endY = end.getY();
+//    g.draw(new Line2D.Double(startX + (endX - startX)*ONE_MINUS_LINE_SCALE_FACTOR,
+//                             startY + (endY - startY)*ONE_MINUS_LINE_SCALE_FACTOR,
+//                             startX + (endX - startX)*LINE_SCALE_FACTOR,
+//                             startY + (endY - startY)*LINE_SCALE_FACTOR));
+//  }
+//
+//  private void drawWedge(Graphics2D g, Point2D start, Point2D end) {
+//    double dist = start.distance(end);
+//    double scale = dist * WEDGE_SCALE_FACTOR;
+//    AffineTransform xfm = new AffineTransform();
+//    xfm.setToIdentity();
+//    xfm.rotate(end.getX() - start.getX(), end.getY() - start.getY(), start.getX(), start.getY());
+//    xfm.translate(start.getX() + (dist * (1.0 - WEDGE_SCALE_FACTOR)/2.0), start.getY());
+//    xfm.scale(scale, scale);
+//    g.setTransform(xfm);
+//    g.fill(wedge);
+//  }
+//  
+//  private void drawDoubleLine(Graphics2D g, Point2D start, Point2D end, boolean dotOneLine) {
+//    double dist = start.distance(end);
+//    AffineTransform xfm = new AffineTransform();
+//    xfm.setToIdentity();
+//    xfm.rotate(end.getX() - start.getX(), end.getY() - start.getY(), start.getX(), start.getY());
+//    xfm.translate(start.getX(), start.getY());
+//    g.setTransform(xfm);
+//    g.draw(new Line2D.Double(dist * ONE_MINUS_LINE_SCALE_FACTOR, -2, 
+//                             dist * LINE_SCALE_FACTOR, -2));
+//    if (dotOneLine) {
+//      g.setStroke(dashedStroke);
+//    }
+//    g.draw(new Line2D.Double(dist * ONE_MINUS_LINE_SCALE_FACTOR, 2, 
+//                             dist * LINE_SCALE_FACTOR, 2));
+//  }
   
   
   public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) {
