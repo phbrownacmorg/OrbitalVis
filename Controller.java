@@ -40,7 +40,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private Model model;
   private java.util.ListIterator<Model> iterator;
   private int cineStep; // Number of steps per cine step in the automatic loop
-  private Frame bigFrame;   //Actual top-level window
+  
   private Frame testFrame;   // Top-level window
   //private Canvas2D canvas2d;
   
@@ -49,8 +49,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private JSlider slider;
   private JButton bkwdButton;
   private JButton attackButton;
-  
-  private JComboBox chooser;
   
   private double userAngle; // Rotation angle set by the user with the mouse
   
@@ -128,23 +126,19 @@ public class Controller extends Animator implements ActionListener, ChangeListen
         
     try {  
       model = iterator.next();
-      bigFrame = new Frame("OrbitalVis");
       testFrame = new Frame(props.getProperty("title", 
                                               props.getProperty("model", "SN2")
                                                 + " Visualization"));
-      bigFrame.setSize(950, 730);
       testFrame.setSize( 950, 730 );
       
-      Box bigVbox = Box.createVerticalBox();
       Box vbox = Box.createVerticalBox();
-      bigFrame.add(bigVbox);
       testFrame.add(vbox);
       
       // Control box
       vbox.add(makeControlBox());
-      bigVbox.add(makeBigControlBox());
-      view = new View(model, props);
       
+      view = new View(model, props);
+
       //GLProfile profile = ;
       GLCapabilities glCaps = new GLCapabilities(null);
       System.out.println(glCaps);
@@ -157,7 +151,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       this.add(canvas);
 
       testFrame.addWindowListener(makeWindowListener());
-      bigFrame.addWindowListener(makeWindowListener());
+
       view2d = new View2D(model, props);
       //canvas2d = new Canvas2D(view2d);
       GLCanvas canvas2D = new GLCanvas(glCaps);
@@ -219,13 +213,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     controlBox.add(attackButton);
 
     return controlBox;
-  }
-  
-  private Box makeBigControlBox(){
-	  Box controlBox = Box.createHorizontalBox();
-	  //The strings really should be imported from somewhere
-	  String [] models = ["SN1", "SN2", "Acyl", "E1", "E2"]
-	  chooser = new JComboBox();
   }
   
   private java.util.List<Model> makeModels(Properties props) {
