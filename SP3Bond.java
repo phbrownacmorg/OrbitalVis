@@ -10,6 +10,7 @@ public class SP3Bond extends Bond {
 
 	public Point3D getBondVector() {
 		Point3D vec = ((SP3Atom)(this.getStart3D())).getOrbitalVector(orbital);
+//		if (this.getStart3D )
 		return vec.scale(this.getLength());
 	}
 	

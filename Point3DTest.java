@@ -16,6 +16,13 @@ import junit.framework.TestCase;
  */
 public class Point3DTest extends TestCase {
   
+	private Point3D z, p;
+	
+	protected void setUp() {
+		z = new Point3D(0, 0, 1);
+		p = new Point3D(1, 2, 3); 
+	}
+	
   /**
    * A test method.
    * (Replace "X" with a name describing the test.  You may write as
@@ -23,7 +30,6 @@ public class Point3DTest extends TestCase {
    * one will be called when running JUnit over this class.)
    */
   public void testXfm() {
-    Point3D z = new Point3D(0, 0, 1);
     Matrix rotX = Matrix.makeRotationMatrix(90, Matrix.Axis.X);
     Matrix rotY = Matrix.makeRotationMatrix(90, Matrix.Axis.Y);
     Matrix m = rotY.mult(rotX);
@@ -32,4 +38,16 @@ public class Point3DTest extends TestCase {
                  && Matrix.fpEquals(pt.z(), 0));
   }
   
+  public void testScale1() {
+	  p = p.scale(1);
+	  assertTrue(Matrix.fpEquals(p.x(), 1) && Matrix.fpEquals(p.y(), 2)
+			  && Matrix.fpEquals(p.z(), 3));
+  }
+  
+  public void testScale10000() {
+	  p = p.scale(10000);
+	  System.out.println(p);
+	  assertTrue(Matrix.fpEquals(p.x(), 10000) && Matrix.fpEquals(p.y(), 20000)
+			  && Matrix.fpEquals(p.z(), 30000));
+  }
 }

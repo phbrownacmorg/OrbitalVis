@@ -45,11 +45,13 @@ public class Bond {
   }
   
   public double getLength() {
-	  //return frame1.getLoc().distanceTo(frame2.getLoc());
-	  double dx = frame1.getX() - frame2.getX();
-	  double dy = frame1.getY() - frame2.getY();
-	  double dz = frame1.getZ() - frame2.getZ();
-	  return Math.sqrt(dx*dx + dy*dy + dz*dz);
+	  return frame1.getLoc().distanceTo(frame2.getLoc());
+//	  System.out.println(frame1.getLoc() + String.format(" ?= (%f, %f, %f)", frame1.getX(), frame1.getY(), frame1.getZ())); //" ?= (" ?= "')
+//	  System.out.println(frame2.getLoc() + String.format(" ?= (%f, %f, %f)", frame2.getX(), frame2.getY(), frame2.getZ())); //" ?= (" ?= "')
+//	  double dx = frame1.getX() - frame2.getX();
+//	  double dy = frame1.getY() - frame2.getY();
+//	  double dz = frame1.getZ() - frame2.getZ();
+//	  return Math.sqrt(dx*dx + dy*dy + dz*dz);
   }
   
 }
