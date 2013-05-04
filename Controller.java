@@ -6,6 +6,7 @@ import com.jogamp.opengl.util.Animator;
 
 import java.util.Properties;
 
+import java.awt.Component;
 //import java.awt.Canvas;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -49,6 +50,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private JSlider slider;
   private JButton bkwdButton;
   private JButton attackButton;
+  
+  private JDialog dialog;
   
   private double userAngle; // Rotation angle set by the user with the mouse
   
@@ -130,7 +133,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
                                               props.getProperty("model", "SN2")
                                                 + " Visualization"));
       testFrame.setSize( 950, 730 );
-      
+	  testFrame.setResizable(false);
+
       Box vbox = Box.createVerticalBox();
       testFrame.add(vbox);
       
@@ -158,6 +162,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       canvas2D.addGLEventListener(view2d);
       this.add(canvas2D);
       
+      this.makeDialog();
+      
       // add the canvases
       if (props.getProperty("canvasLayout", "horizontal").equals("vertical")) {
         Box canvasBox = Box.createHorizontalBox();
@@ -174,6 +180,29 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     {
       e.printStackTrace();
     }
+  }
+  
+  private void makeDialog(){
+	  dialog = new JDialog (testFrame, "OrbitalVis", true);
+	  dialog.setResizable(false);
+	  dialog.setSize(425, 365);
+	  dialog.setLocation(testFrame.getWidth()/2 - dialog.getWidth()/2, testFrame.getHeight()/2 - dialog.getHeight()/2);
+	  Box dBox = Box.createVerticalBox();
+	  JLabel words = new JLabel ("Welcome to OrbitalVis!"); words.setAlignmentX(Component.CENTER_ALIGNMENT);
+	  JLabel space = new JLabel (" ");
+	  JLabel space1 = new JLabel (" ");
+	  JLabel moreWords = new JLabel ("To begin, please choose a reaction:"); moreWords.setAlignmentX(Component.CENTER_ALIGNMENT);
+	  
+	  String [] reactions = {"SN1", "SN2", "Acyl", "E1", "E2", "EA2A"}; //These really should be brought in from somewhere else
+	  JComboBox chooser = new JComboBox (reactions);
+	  
+	  dBox.add(space1);
+	  dBox.add(words);
+	  dBox.add(space);
+	  dBox.add(moreWords);
+	  dBox.add(chooser);
+	  dialog.add(dBox);
+	  
   }
   
   private Box makeControlBox() {
@@ -251,6 +280,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
    */
   public boolean start() {
     testFrame.setVisible(true);
+    dialog.setVisible(true);
     return super.start();
   }
   
