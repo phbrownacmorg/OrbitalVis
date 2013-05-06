@@ -7,6 +7,7 @@ import com.jogamp.opengl.util.Animator;
 import java.util.Properties;
 
 import java.awt.Component;
+import java.awt.Dimension;
 //import java.awt.Canvas;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -193,14 +194,17 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 	  JLabel space1 = new JLabel (" ");
 	  JLabel moreWords = new JLabel ("To begin, please choose a reaction:"); moreWords.setAlignmentX(Component.CENTER_ALIGNMENT);
 	  
+	  
 	  String [] reactions = {"SN1", "SN2", "Acyl", "E1", "E2", "EA2A"}; //These really should be brought in from somewhere else
 	  JComboBox chooser = new JComboBox (reactions);
 	  
-	  dBox.add(space1);
+//	  dBox.add(space1);
 	  dBox.add(words);
-	  dBox.add(space);
+	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
+//	  dBox.add(space);
 	  dBox.add(moreWords);
 	  dBox.add(chooser);
+	  dBox.add(Box.createRigidArea(new Dimension(0, 200)));
 	  dialog.add(dBox);
 	  
   }
