@@ -5,7 +5,7 @@
 # default is SN2
 #model: SN1
 #model: Acyl
-model: E1
+#model: E1
 # How does E2 differ from E1? Intermediate carbo-cation (watch the charge on the right carbon)
 #model: E2
 #model: EA2A

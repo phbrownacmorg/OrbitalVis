@@ -20,17 +20,17 @@ public class SP3BondView extends BondView {
 		  gl.glBegin(GL2.GL_LINES);
 		  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
 		  Point3D endPt = ((SP3Bond)(bond)).getBondVector();
-		  if (bond.getEnd3D() instanceof SP3Atom) {
-			  System.out.print(endPt.toString() + "->");
-		  }
+//		  if (bond.getEnd3D() instanceof SP3Atom) {
+//			  System.out.print(endPt.toString() + "->");
+//		  }
 		  endPt = endPt.translate(0, 
 				                  endPt.x() * -View2D.Z_OFFSET_FACTOR[1] 
 						          + endPt.y() * -View2D.Y_OFFSET_FACTOR[1],
 				                  endPt.x() * -View2D.Z_OFFSET_FACTOR[0] 
 						          + endPt.y() * View2D.Y_OFFSET_FACTOR[0]);
-		  if (bond.getEnd3D() instanceof SP3Atom) {
-			  System.out.println(endPt.toString());
-		  }
+//		  if (bond.getEnd3D() instanceof SP3Atom) {
+//			  System.out.println(endPt.toString());
+//		  }
 		  
 		  if (bond.getState() == Bond.State.FULL) {
 			// Draw a regular bond

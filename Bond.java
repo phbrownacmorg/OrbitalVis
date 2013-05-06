@@ -45,7 +45,14 @@ public class Bond {
   }
   
   public double getLength() {
-	  return frame1.getLoc().distanceTo(frame2.getLoc());
+	  double result = 0;
+	  if (frame2.getParent() == frame1) {
+		  result = frame2.getLoc().distanceTo(new Point3D()); // frame1 is frame2's origin
+	  }
+	  else {
+		  result = frame1.getLoc().distanceTo(frame2.getLoc());
+	  }
+	  return result;
 //	  System.out.println(frame1.getLoc() + String.format(" ?= (%f, %f, %f)", frame1.getX(), frame1.getY(), frame1.getZ())); //" ?= (" ?= "')
 //	  System.out.println(frame2.getLoc() + String.format(" ?= (%f, %f, %f)", frame2.getX(), frame2.getY(), frame2.getZ())); //" ?= (" ?= "')
 //	  double dx = frame1.getX() - frame2.getX();
