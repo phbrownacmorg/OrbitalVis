@@ -49,7 +49,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   
   //private int indx = 0;
   private ArrayList <ImageIcon> images;
-  private ImageIcon picture;
+  //private ImageIcon picture;
+  private JLabel picLabel;
   
   private JButton rockButton;
   private JButton fwdButton;
@@ -199,23 +200,28 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 //	  JLabel space = new JLabel (" ");
 //	  JLabel space1 = new JLabel (" ");
 	  JLabel moreWords = new JLabel ("To begin, please choose a reaction:"); moreWords.setAlignmentX(Component.CENTER_ALIGNMENT);
-	  
+//	  JLabel test = new JLabel ("Test");
 	  
 	  String [] reactions = {"SN2", "SN1", "Acyl", "E1", "E2", "EA2A"}; //These really should be brought in from somewhere else
 	  chooser = new JComboBox (reactions);
 	  chooser.addActionListener(this);
 	  
 	  images = getReactionImages();
-	  JLabel picPanel = new JLabel(picture);
+	  picLabel = new JLabel (images.get(0));
+	  picLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	  picLabel.setAlignmentY(Component.TOP_ALIGNMENT);
 	  
 //	  dBox.add(space1);
 	  dBox.add(words);
 	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
 //	  dBox.add(space);
 	  dBox.add(moreWords);
+	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
 	  dBox.add(chooser);
-	  dBox.add(Box.createRigidArea(new Dimension(0, 200)));
-	  dBox.add(picPanel);
+	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
+	  dBox.add(picLabel);
+	  dBox.add(Box.createVerticalStrut(250));
+//	  dBox.add(test);
 	  dialog.add(dBox);
 	  
   }
@@ -276,7 +282,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   }
   
   private void updateLabel(int x){
-	  picture = images.get(x);
+	  picLabel.setIcon(images.get(x));
+//	  System.out.println("Chosen: " + chooser.getSelectedItem());
   }
   
   private java.util.List<Model> makeModels(Properties props) {
