@@ -4,6 +4,7 @@ import javax.media.opengl.GLCapabilities;
 //import javax.media.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 import java.awt.Component;
@@ -46,11 +47,16 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private Frame testFrame;   // Top-level window
   //private Canvas2D canvas2d;
   
+  //private int indx = 0;
+  private ArrayList <ImageIcon> images;
+  private ImageIcon picture;
+  
   private JButton rockButton;
   private JButton fwdButton;
   private JSlider slider;
   private JButton bkwdButton;
   private JButton attackButton;
+  private JComboBox chooser;
   
   private JDialog dialog;
   
@@ -186,17 +192,21 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private void makeDialog(){
 	  dialog = new JDialog (testFrame, "OrbitalVis", true);
 	  dialog.setResizable(false);
-	  dialog.setSize(425, 365);
+	  dialog.setSize(700, 500);
 	  dialog.setLocation(testFrame.getWidth()/2 - dialog.getWidth()/2, testFrame.getHeight()/2 - dialog.getHeight()/2);
 	  Box dBox = Box.createVerticalBox();
 	  JLabel words = new JLabel ("Welcome to OrbitalVis!"); words.setAlignmentX(Component.CENTER_ALIGNMENT);
-	  JLabel space = new JLabel (" ");
-	  JLabel space1 = new JLabel (" ");
+//	  JLabel space = new JLabel (" ");
+//	  JLabel space1 = new JLabel (" ");
 	  JLabel moreWords = new JLabel ("To begin, please choose a reaction:"); moreWords.setAlignmentX(Component.CENTER_ALIGNMENT);
 	  
 	  
-	  String [] reactions = {"SN1", "SN2", "Acyl", "E1", "E2", "EA2A"}; //These really should be brought in from somewhere else
-	  JComboBox chooser = new JComboBox (reactions);
+	  String [] reactions = {"SN2", "SN1", "Acyl", "E1", "E2", "EA2A"}; //These really should be brought in from somewhere else
+	  chooser = new JComboBox (reactions);
+	  chooser.addActionListener(this);
+	  
+	  images = getReactionImages();
+	  JLabel picPanel = new JLabel(picture);
 	  
 //	  dBox.add(space1);
 	  dBox.add(words);
@@ -205,8 +215,25 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 	  dBox.add(moreWords);
 	  dBox.add(chooser);
 	  dBox.add(Box.createRigidArea(new Dimension(0, 200)));
+	  dBox.add(picPanel);
 	  dialog.add(dBox);
 	  
+  }
+  
+  private ArrayList<ImageIcon> getReactionImages() {
+	  ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
+	  
+	  java.net.URL rxnURL = getClass().getResource("SN2.png");
+	  ImageIcon SN2 = new ImageIcon(rxnURL);
+	  rxnURL = getClass().getResource("SN1.jpg");
+	  ImageIcon SN1 = new ImageIcon(rxnURL);
+	  rxnURL = getClass().getResource("Acyl.jpg");
+	  ImageIcon Acyl = new ImageIcon(rxnURL);
+	  
+	  images.add(SN2);
+	  images.add(SN1);
+	  images.add(Acyl);
+	  return images;
   }
   
   private Box makeControlBox() {
@@ -246,6 +273,10 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     controlBox.add(attackButton);
 
     return controlBox;
+  }
+  
+  private void updateLabel(int x){
+	  picture = images.get(x);
   }
   
   private java.util.List<Model> makeModels(Properties props) {
@@ -316,8 +347,11 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     if (e.getSource() == rockButton) {
       toggleRocking();
     }
-    else {
+    else if (e.getSource() == attackButton){
       switchAttack();
+    }
+    else if (e.getSource() == chooser){
+    	updateLabel(chooser.getSelectedIndex());
     }
   }
   
