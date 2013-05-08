@@ -15,22 +15,25 @@ public class SP3BondView extends BondView {
 		  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
 		  
 		  this.initDraw2D(gl); // Frame1's transformation
-		  this.apply2DOffsets(gl);
+		  //this.apply2DOffsets(gl);
 		  		  
 		  gl.glBegin(GL2.GL_LINES);
 		  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());
+		  // Handle the extra offsets due to the bond start not necessarily being at the origin
+		  // NOTE that this will likely fail as soon as the nesting of frames gets deeper than 2
+		  Point3D startPt = ((SP3Bond)(bond)).getStart3D().getLoc();
 		  Point3D endPt = ((SP3Bond)(bond)).getBondVector();
-//		  if (bond.getEnd3D() instanceof SP3Atom) {
-//			  System.out.print(endPt.toString() + "->");
-//		  }
+		  if (bond.getEnd3D() instanceof SP3Atom) {
+			  System.out.print(endPt.toString() + "->");
+		  }
 		  endPt = endPt.translate(0, 
-				                  endPt.x() * -View2D.Z_OFFSET_FACTOR[1] 
-						          + endPt.y() * -View2D.Y_OFFSET_FACTOR[1],
-				                  endPt.x() * -View2D.Z_OFFSET_FACTOR[0] 
-						          + endPt.y() * View2D.Y_OFFSET_FACTOR[0]);
-//		  if (bond.getEnd3D() instanceof SP3Atom) {
-//			  System.out.println(endPt.toString());
-//		  }
+				                  (startPt.x() + endPt.x()) * View2D.Z_OFFSET_FACTOR[1] 
+						          + (startPt.y() + endPt.y()) * View2D.Y_OFFSET_FACTOR[1],
+				                  (startPt.x() + endPt.x()) * -View2D.Z_OFFSET_FACTOR[0] 
+						          + (startPt.y() + endPt.y()) * View2D.Y_OFFSET_FACTOR[0]);
+		  if (bond.getEnd3D() instanceof SP3Atom) {
+			  System.out.println(endPt.toString());
+		  }
 		  
 		  if (bond.getState() == Bond.State.FULL) {
 			// Draw a regular bond

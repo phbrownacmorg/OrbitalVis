@@ -11,6 +11,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class Point3D {
+	public static final Point3D ORIGIN = new Point3D();
+	
   double elt[] = new double[3];
   
   Point3D() { 

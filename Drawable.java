@@ -23,9 +23,9 @@ public class Drawable {
   
   protected RefFrame frame() { return frame; }
   
-  public void initXfm(GL2 gl) {
+  public void initXfm(GL2 gl, boolean twoD) {
     gl.glPushMatrix();
-    initXfmForFrame(gl, frame);
+    initXfmForFrame(gl, frame, twoD);
   }
   
   protected void unwindRotationsForFrame(GL2 gl, RefFrame thisFrame) {
@@ -43,12 +43,15 @@ public class Drawable {
 	  gl.glRotated(thisFrame.getRotX(), 1.0, 0.0, 0.0);
   }
   
-  protected void initXfmForFrame(GL2 gl, RefFrame thisFrame) {
+  protected void initXfmForFrame(GL2 gl, RefFrame thisFrame, boolean twoD) {
     if (thisFrame.getParent() != null) {
-      initXfmForFrame(gl, thisFrame.getParent());
+      initXfmForFrame(gl, thisFrame.getParent(), twoD);
     }
     gl.glTranslated(thisFrame.getX(), thisFrame.getY(), thisFrame.getZ());
     this.applyRotationsForFrame(gl, thisFrame);
+//    if (twoD && thisFrame.getLoc().distanceTo(Point3D.ORIGIN) > 0) {
+//      	this.apply2DOffsets(gl);
+//    }
   }
   
   public void endXfm(GL2 gl) {
@@ -56,7 +59,7 @@ public class Drawable {
   }
   
   public void initDraw(GL2 gl) {
-    initXfm(gl);
+    initXfm(gl, false);
   }
   
   public void apply2DOffsets(GL2 gl) {
@@ -67,7 +70,7 @@ public class Drawable {
   
   public void initDraw2D(GL2 gl) {
 	  //System.out.println(String.format("Drawable::initDraw2D(): offsets: (%f %f), (%f %f)", View2D.Z_OFFSET_FACTOR[0], View2D.Z_OFFSET_FACTOR[1], View2D.Y_OFFSET_FACTOR[0], View2D.Y_OFFSET_FACTOR[1]));
-	  this.initXfm(gl);
+	  this.initXfm(gl, true);
   }
   
   public void endDraw(GL2 gl) {

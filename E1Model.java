@@ -79,7 +79,7 @@ public class E1Model extends Model {
       + WITHDRAWAL_DISTANCE_FACTOR * Math.max(0, getT() - 0.1)
       + 5 * MAX_WITHDRAWAL * Math.max(0, getT() - 0.45);
     Point3D carb2orb0Vec = carb2.getOrbitalVector(0).scale(scalingFactor);
-    System.out.println("Scaling factor: " + scalingFactor + " " + carb2orb0Vec);
+    //System.out.println("Scaling factor: " + scalingFactor + " " + carb2orb0Vec);
     chlor.setLoc(carb2orb0Vec.x(), carb2orb0Vec.y(), carb2orb0Vec.z());
     double rotation = -carb2.getXRotation();
       // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
