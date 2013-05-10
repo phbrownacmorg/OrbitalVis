@@ -54,9 +54,10 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   
   private JButton rockButton;
   private JButton fwdButton;
-  private JSlider slider;
+  private JSlider slider; private JSlider rockSlider;
   private JButton bkwdButton;
   private JButton attackButton;
+  private JButton goButton;
   private JComboBox chooser;
   
   private JDialog dialog;
@@ -169,7 +170,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       GLCanvas canvas2D = new GLCanvas(glCaps);
       canvas2D.addGLEventListener(view2d);
       this.add(canvas2D);
-      
+   
       this.makeDialog();
       
       // add the canvases
@@ -199,12 +200,18 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 	  JLabel words = new JLabel ("Welcome to OrbitalVis!"); words.setAlignmentX(Component.CENTER_ALIGNMENT);
 //	  JLabel space = new JLabel (" ");
 //	  JLabel space1 = new JLabel (" ");
+	  JLabel sliderText = new JLabel ("Smallest                                                                   Default                                                                   Greatest"); sliderText.setAlignmentX(Component.CENTER_ALIGNMENT);
 	  JLabel moreWords = new JLabel ("To begin, please choose a reaction:"); moreWords.setAlignmentX(Component.CENTER_ALIGNMENT);
-//	  JLabel test = new JLabel ("Test");
+	  JLabel choose = new JLabel ("Now, set a rock angle:"); choose.setAlignmentX(Component.CENTER_ALIGNMENT);
 	  
 	  String [] reactions = {"SN2", "SN1", "Acyl", "E1", "E2", "EA2A"}; //These really should be brought in from somewhere else
 	  chooser = new JComboBox (reactions);
 	  chooser.addActionListener(this);
+	  
+	  rockSlider = new JSlider();
+	  rockSlider.addChangeListener(this);
+	  
+	  goButton = new JButton("GO!"); goButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	  
 	  images = getReactionImages();
 	  picLabel = new JLabel (images.get(0));
@@ -212,6 +219,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 	  picLabel.setAlignmentY(Component.TOP_ALIGNMENT);
 	  
 //	  dBox.add(space1);
+	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
 	  dBox.add(words);
 	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
 //	  dBox.add(space);
@@ -220,8 +228,14 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 	  dBox.add(chooser);
 	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
 	  dBox.add(picLabel);
-	  dBox.add(Box.createVerticalStrut(250));
-//	  dBox.add(test);
+	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
+	  dBox.add(choose);
+	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
+	  dBox.add(rockSlider);
+	  dBox.add(sliderText);
+	  dBox.add(Box.createRigidArea(new Dimension(0,30)));
+	  dBox.add(goButton);
+	  dBox.add(Box.createRigidArea(new Dimension(0,50)));
 	  dialog.add(dBox);
 	  
   }
@@ -249,6 +263,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     ImageIcon leftArrowIcon = new ImageIcon(iconURL);
     iconURL = getClass().getResource("001_25.gif");
     ImageIcon rightArrowIcon = new ImageIcon(iconURL);
+    iconURL = getClass().getResource("settings.jpg");
+    ImageIcon settingsImage = new ImageIcon(iconURL);
     
     // Make button to toggle rocking
     rockButton = new JButton("Rock");
@@ -265,6 +281,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     fwdButton.addMouseListener(ma);
     bkwdButton.addMouseListener(ma);
     slider.addChangeListener(this);
+    
+    JButton settings = new JButton (settingsImage);
 
     // Make button to change attack side
     attackButton = new JButton("Attack other side");
@@ -272,6 +290,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     attackButton.setEnabled(iterator.hasNext());
     
     // add the buttons and the slider to the control box
+    controlBox.add(settings);
     controlBox.add( rockButton );
     controlBox.add( bkwdButton);
     controlBox.add(slider);
@@ -352,13 +371,16 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == rockButton) {
-      toggleRocking();
+    	toggleRocking();
     }
     else if (e.getSource() == attackButton){
-      switchAttack();
+    	switchAttack();
     }
     else if (e.getSource() == chooser){
     	updateLabel(chooser.getSelectedIndex());
+    }
+    else if (e.getSource() == goButton){
+    	
     }
   }
   
@@ -456,7 +478,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   }
   
   public void stateChanged(ChangeEvent e) {
-    model.setT(slider.getValue()/((double)(reactionSteps)));
+    if (e.getSource() == slider)
+	  model.setT(slider.getValue()/((double)(reactionSteps)));
     //canvas2d.repaint();
   }
   
