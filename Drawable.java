@@ -1,4 +1,5 @@
 import javax.media.opengl.*;
+
 import com.jogamp.opengl.util.awt.TextRenderer;
 
 /**
@@ -63,14 +64,13 @@ public class Drawable {
   }
   
   public void apply2DOffsets(GL2 gl) {
-	  gl.glTranslated(0,
-				this.frame.getX() * View2D.Z_OFFSET_FACTOR[1] + this.frame.getY() * View2D.Y_OFFSET_FACTOR[1],
-				this.frame.getX() * -View2D.Z_OFFSET_FACTOR[0] + this.frame.getY() * View2D.Y_OFFSET_FACTOR[0]); 
+	  gl.glMultMatrixd(View2D.SHEAR_MATRIX, 0);
   }
-  
+
   public void initDraw2D(GL2 gl) {
 	  //System.out.println(String.format("Drawable::initDraw2D(): offsets: (%f %f), (%f %f)", View2D.Z_OFFSET_FACTOR[0], View2D.Z_OFFSET_FACTOR[1], View2D.Y_OFFSET_FACTOR[0], View2D.Y_OFFSET_FACTOR[1]));
 	  this.initXfm(gl, true);
+	  //this.apply2DOffsets(gl);
   }
   
   public void endDraw(GL2 gl) {

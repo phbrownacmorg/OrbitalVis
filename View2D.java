@@ -20,7 +20,23 @@ public class View2D extends View {
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
 	public static float Z_OFFSET_FACTOR[] = {0.3f, 0f};
-	public static float Y_OFFSET_FACTOR[] = {0f, 0f};;
+	public static float Y_OFFSET_FACTOR[] = {0f, 0f};
+	
+	public static double[] makeShearMatrix() {
+		double[] result = new double[16];
+		
+		result[0] = result[10] = result[15] = 1;
+		result[5] = 1 - Y_OFFSET_FACTOR[1];
+//		result[7] = Y_OFFSET_FACTOR[0];
+//		result[2] = Z_OFFSET_FACTOR[1];
+//		result[3] = -Z_OFFSET_FACTOR[0];
+		result[9] = Y_OFFSET_FACTOR[0];
+		result[4] = Z_OFFSET_FACTOR[1];
+		result[8] = -Z_OFFSET_FACTOR[0];
+		return result;
+	}
+	
+	public static double[] SHEAR_MATRIX = makeShearMatrix(); 
   
 	public static int FONT_SIZE = 96; // 24.0f
 	public static double FONT_SCALING_FACTOR = 1.0/FONT_SIZE;
@@ -40,6 +56,7 @@ public class View2D extends View {
 
 	  try {
 		  Z_OFFSET_FACTOR = readMultiDimProp(props, "ZOff", 2);
+		  SHEAR_MATRIX = makeShearMatrix();
 		  System.out.println(Z_OFFSET_FACTOR);
 	  } catch (NumberFormatException e) {
 		  System.out.println("Ignoring ZOff specification, due to the following:");
@@ -50,6 +67,7 @@ public class View2D extends View {
 	  
 	  try {
 		  Y_OFFSET_FACTOR = readMultiDimProp(props, "YOff", 2);
+		  SHEAR_MATRIX = makeShearMatrix();
 	  } catch (NumberFormatException e) {
 		  System.out.println("Ignoring YOff specification, due to the following:");
 		  System.out.println(e);

@@ -100,16 +100,23 @@ public abstract class AtomOrGroupView extends Drawable {
 	//    g.setFont(f); // reset the font
 	//  }
 
+	public void apply2DOffsets(GL2 gl) {
+		gl.glTranslated(0,
+				this.frame.getX() * View2D.Z_OFFSET_FACTOR[1] + this.frame.getY() * View2D.Y_OFFSET_FACTOR[1],
+				this.frame.getX() * -View2D.Z_OFFSET_FACTOR[0] + this.frame.getY() * View2D.Y_OFFSET_FACTOR[0]); 
+	}	
+	  
 	public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) {
 		this.initDraw2D(gl);
 
 		this.unwindRotationsForFrame(gl, this.frame);
 		this.apply2DOffsets(gl);
+
 		// Text-specific transformations
 		gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
 				View2D.FONT_SCALING_FACTOR / View2D.Z_SCALE);
 		gl.glRotated(-90, 0, 1, 0);
-				
+		
 		Rectangle2D bounds = tr.getBounds(text);
 		// This is not being applied to p--and it *shouldn't* be, because it's really text-specific.
 		gl.glTranslated(-bounds.getWidth()/2.0, bounds.getY()/2.0, 0);

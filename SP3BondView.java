@@ -15,7 +15,8 @@ public class SP3BondView extends BondView {
 		  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
 		  
 		  this.initDraw2D(gl); // Frame1's transformation
-		  //this.apply2DOffsets(gl);
+		  this.apply2DOffsets(gl);
+		  
 		  		  
 		  gl.glBegin(GL2.GL_LINES);
 		  gl.glColor3i(BOND_COLOR.getRed(), BOND_COLOR.getGreen(), BOND_COLOR.getBlue());

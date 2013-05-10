@@ -113,8 +113,7 @@ public class BondView extends Drawable {
 //    g.draw(new Line2D.Double(dist * ONE_MINUS_LINE_SCALE_FACTOR, 2, 
 //                             dist * LINE_SCALE_FACTOR, 2));
 //  }
-  
-  
+
   public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) {
 	  double colors[] = new double[4];
 	  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
