@@ -99,8 +99,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     }
 
     cineStep = 0;
-    //java.util.List<Model> modelList = makeModels(props);
-    //iterator = modelList.listIterator();
+    java.util.List<Model> modelList = makeModels(props);
+    iterator = modelList.listIterator();
 
     reactionSteps = 100;
     if (props.containsKey("reactionSteps")) {
@@ -237,7 +237,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 	  dBox.add(goButton);
 	  dBox.add(Box.createRigidArea(new Dimension(0,50)));
 	  dialog.add(dBox);
-	  dialog.setVisible(true);
 	  
   }
   
@@ -306,25 +305,25 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 //	  System.out.println("Chosen: " + chooser.getSelectedItem());
   }
   
-  private java.util.List<Model> makeModels(Model mod, Properties props) {
+  private java.util.List<Model> makeModels(Properties props) {
     java.util.List<Model> result = new java.util.ArrayList<Model>();
- //   String modelName = mod.toString();
-    if (mod  instanceof AcylModel ) {
+    String modelName = props.getProperty("model", "SN2");
+    if (modelName.equals("Acyl")) {
       result.add(new AcylModel(Model.LEFT_SIDE_ATTACK));
       result.add(new AcylModel(Model.RIGHT_SIDE_ATTACK));
     }
-    if (mod  instanceof EA2AModel ) {
+    if (modelName.equals("EA2A")) {
       result.add(new EA2AModel(Model.LEFT_SIDE_ATTACK));
       result.add(new EA2AModel(Model.RIGHT_SIDE_ATTACK));
     }
-    else if (mod  instanceof SN1Model ) {
+    else if (modelName.equals("SN1")) {
       result.add(new SN1Model(Model.LEFT_SIDE_ATTACK));
       result.add(new SN1Model(Model.RIGHT_SIDE_ATTACK));
     }
-    else if (mod  instanceof E2Model ) {
+    else if (modelName.equals("E2")) {
       result.add(new E2Model());
     }
-    else if (mod  instanceof E1Model ) {
+    else if (modelName.equals("E1")) {
       result.add(new E1Model());
     }
     else {
@@ -342,7 +341,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
    */
   public boolean start() {
     testFrame.setVisible(true);
-    //dialog.setVisible(true);
+    dialog.setVisible(true);
     return super.start();
   }
   
@@ -379,15 +378,10 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     }
     else if (e.getSource() == chooser){
     	updateLabel(chooser.getSelectedIndex());
-    	updateModel((String)chooser.getSelectedItem());
     }
     else if (e.getSource() == goButton){
     	
     }
-  }
-  
-  private void updateModel(String mod){
-	  
   }
   
   /**
