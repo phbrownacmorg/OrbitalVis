@@ -31,6 +31,25 @@ public abstract class Model implements ConstantMgr {
     return t;
   }
   
+  public String toString(){
+	  String model = new String();
+	  if (this instanceof SN2Model)
+		  model = "SN2";
+	  else if (this instanceof SN1Model)
+		  model = "SN1";
+	  else if (this instanceof E1Model)
+		  model = "E1";
+	  else if (this instanceof E2Model)
+		  model = "E2";
+	  else if (this instanceof AcylModel)
+		  model = "Acyl";
+	  else if (this instanceof EA2AModel)
+		  model = "EA2A";
+	  else
+		  model = "Model not recognized";
+	  return model;
+  }
+  
   /**
    * Set t, clamping the parameter to the interval [0, 1].
    */

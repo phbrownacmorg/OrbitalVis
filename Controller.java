@@ -58,6 +58,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private JButton bkwdButton;
   private JButton attackButton;
   private JButton goButton;
+  private JButton settings;
   private JComboBox chooser;
   
   private JDialog dialog;
@@ -141,6 +142,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       testFrame = new Frame(props.getProperty("title", 
                                               props.getProperty("model", "SN2")
                                                 + " Visualization"));
+      System.out.println("Model: " + model.toString());
       testFrame.setSize( 950, 730 );
 	  testFrame.setResizable(false);
 
@@ -212,6 +214,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 	  rockSlider.addChangeListener(this);
 	  
 	  goButton = new JButton("GO!"); goButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+	  goButton.addActionListener(this);
 	  
 	  images = getReactionImages();
 	  picLabel = new JLabel (images.get(0));
@@ -282,7 +285,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     bkwdButton.addMouseListener(ma);
     slider.addChangeListener(this);
     
-    JButton settings = new JButton (settingsImage);
+    settings = new JButton (settingsImage);
+    settings.addActionListener(this);
 
     // Make button to change attack side
     attackButton = new JButton("Attack other side");
@@ -294,10 +298,14 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     controlBox.add( rockButton );
     controlBox.add( bkwdButton);
     controlBox.add(slider);
-    controlBox.add( fwdButton );
+    controlBox.add(fwdButton);
     controlBox.add(attackButton);
 
     return controlBox;
+  }
+  
+  private void updateModel(){
+	  
   }
   
   private void updateLabel(int x){
@@ -327,14 +335,36 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       result.add(new E1Model());
     }
     else {
-      boolean markHydrogens = true;
-      if (props.containsKey("markHydrogens")) {
-        markHydrogens = Boolean.parseBoolean(props.getProperty("markHydrogens"));
-      }
-      result.add(new SN2Model(markHydrogens));
+      result.add(new SN2Model());
     }
     return result;
   }
+  
+  private java.util.List<Model> makeModels(String modelName) {
+	    java.util.List<Model> result = new java.util.ArrayList<Model>();
+	    if (modelName.equals("Acyl")) {
+	      result.add(new AcylModel(Model.LEFT_SIDE_ATTACK));
+	      result.add(new AcylModel(Model.RIGHT_SIDE_ATTACK));
+	    }
+	    if (modelName.equals("EA2A")) {
+	      result.add(new EA2AModel(Model.LEFT_SIDE_ATTACK));
+	      result.add(new EA2AModel(Model.RIGHT_SIDE_ATTACK));
+	    }
+	    else if (modelName.equals("SN1")) {
+	      result.add(new SN1Model(Model.LEFT_SIDE_ATTACK));
+	      result.add(new SN1Model(Model.RIGHT_SIDE_ATTACK));
+	    }
+	    else if (modelName.equals("E2")) {
+	      result.add(new E2Model());
+	    }
+	    else if (modelName.equals("E1")) {
+	      result.add(new E1Model());
+	    }
+	    else {
+	      result.add(new SN2Model());
+	    }
+	    return result;
+	  }
   
   /**
    * Start drawing.
@@ -378,9 +408,16 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     }
     else if (e.getSource() == chooser){
     	updateLabel(chooser.getSelectedIndex());
+    	java.util.List<Model> modelList = makeModels((String)chooser.getSelectedItem());
+        iterator = modelList.listIterator();
     }
     else if (e.getSource() == goButton){
+    	updateModel();
+    	dialog.setVisible(false);
     	
+    }
+    else if (e.getSource() == settings){
+    	dialog.setVisible(true);
     }
   }
   
@@ -478,8 +515,12 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   }
   
   public void stateChanged(ChangeEvent e) {
-    if (e.getSource() == slider)
+    if (e.getSource() == slider){
 	  model.setT(slider.getValue()/((double)(reactionSteps)));
+    }
+    else if (e.getSource() == rockSlider){
+    	
+    }
     //canvas2d.repaint();
   }
   

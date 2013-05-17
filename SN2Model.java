@@ -27,7 +27,7 @@ public class SN2Model extends Model {
   private Bond carb_hydro1, carb_hydro2, carb_hydro3;
   private Bond carb_chlor;
 
-  public SN2Model(boolean markH) {
+  public SN2Model() {
     oh = new Hydroxide(new Point3D(0, 0, -(2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
                          AtomOrGroup.Charge.MINUS);
     
