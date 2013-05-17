@@ -44,7 +44,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private java.util.ListIterator<Model> iterator;
   private int cineStep; // Number of steps per cine step in the automatic loop
   
-  private Frame testFrame;   // Top-level window
+  private JFrame testFrame;   // Top-level window
   //private Canvas2D canvas2d;
   
   //private int indx = 0;
@@ -70,12 +70,15 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private double rockingAngle; // Angle through which the scene rocks
   private int animSteps; // Number of times the scene is drawn to progress through a complete cycle of rocking
   
+  private Properties props;
+  
   /**
    * Create a Controller.
    */
-  private Controller(Properties props) {
+  private Controller(Properties properties) {
     super();
     
+    this.props = properties;
     // Must be parsed before the models are created
     try {
     	String defaultSpec = String.format("%f %f %f", View2D.X_SCALE, View2D.Y_SCALE, View2D.Z_SCALE);
@@ -100,8 +103,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     }
 
     cineStep = 0;
-    java.util.List<Model> modelList = makeModels(props);
-    iterator = modelList.listIterator();
 
     reactionSteps = 100;
     if (props.containsKey("reactionSteps")) {
@@ -136,61 +137,19 @@ public class Controller extends Animator implements ActionListener, ChangeListen
         System.out.println(e);
       }
     }
-        
-    try {  
-      model = iterator.next();
-      testFrame = new Frame(props.getProperty("title", 
-                                              props.getProperty("model", "SN2")
-                                                + " Visualization"));
-      System.out.println("Model: " + model.toString());
-      testFrame.setSize( 950, 730 );
-	  testFrame.setResizable(false);
 
-      Box vbox = Box.createVerticalBox();
-      testFrame.add(vbox);
+    String modelName = props.getProperty("model", "SN2");
+    testFrame = new JFrame(props.getProperty("title", modelName
+    		+ " Visualization"));
+    testFrame.setSize( 950, 730 );
+    testFrame.setResizable(false);
+    
+    updateModel(modelName);
+    
+    testFrame.addWindowListener(makeWindowListener());
+
+    this.makeDialog();
       
-      // Control box
-      vbox.add(makeControlBox());
-      
-      view = new View(model, props);
-
-      //GLProfile profile = ;
-      GLCapabilities glCaps = new GLCapabilities(null);
-      System.out.println(glCaps);
-      
-      GLCanvas canvas = new GLCanvas( glCaps );
-
-      canvas.addGLEventListener(view);
-      canvas.addMouseMotionListener(makeMouseListener());
-      canvas.addKeyListener(makeKeyListener());
-      this.add(canvas);
-
-      testFrame.addWindowListener(makeWindowListener());
-
-      view2d = new View2D(model, props);
-      //canvas2d = new Canvas2D(view2d);
-      GLCanvas canvas2D = new GLCanvas(glCaps);
-      canvas2D.addGLEventListener(view2d);
-      this.add(canvas2D);
-   
-      this.makeDialog();
-      
-      // add the canvases
-      if (props.getProperty("canvasLayout", "horizontal").equals("vertical")) {
-        Box canvasBox = Box.createHorizontalBox();
-        canvasBox.add(canvas);
-        canvasBox.add(canvas2D);
-        vbox.add(canvasBox);
-      }
-      else {
-        vbox.add(canvas);
-        vbox.add(canvas2D);
-      }
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
   }
   
   private void makeDialog(){
@@ -304,8 +263,61 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     return controlBox;
   }
   
-  private void updateModel(){
+  private void updateModel(String modelName) {
+	  System.out.println("Updating model: " + modelName);
+	  System.out.flush();
+	  java.util.List<Model> modelList = makeModels(modelName);
+	  iterator = modelList.listIterator();
 	  
+	  try {
+		  // Nuke anything that was there before
+		  testFrame.getContentPane().removeAll();
+		  
+		  model = iterator.next();
+	        
+		  System.out.println("Model: " + model.toString());
+		  
+		  Box vbox = Box.createVerticalBox();
+		  testFrame.add(vbox);
+
+		  // Control box
+		  vbox.add(makeControlBox());
+
+		  view = new View(model, props);
+
+		  //GLProfile profile = ;
+		  GLCapabilities glCaps = new GLCapabilities(null);
+		  System.out.println(glCaps);
+
+		  GLCanvas canvas = new GLCanvas( glCaps );
+
+		  canvas.addGLEventListener(view);
+		  canvas.addMouseMotionListener(makeMouseListener());
+		  canvas.addKeyListener(makeKeyListener());
+		  this.add(canvas);
+
+		  view2d = new View2D(model, props);
+		  //canvas2d = new Canvas2D(view2d);
+		  GLCanvas canvas2D = new GLCanvas(glCaps);
+		  canvas2D.addGLEventListener(view2d);
+		  this.add(canvas2D);
+		  // add the canvases
+		  if (props.getProperty("canvasLayout", "horizontal").equals("vertical")) {
+			  Box canvasBox = Box.createHorizontalBox();
+			  canvasBox.add(canvas);
+			  canvasBox.add(canvas2D);
+			  vbox.add(canvasBox);
+		  }
+		  else {
+			  vbox.add(canvas);
+			  vbox.add(canvas2D);
+		  }
+	  }
+	  catch( Exception e )
+	  {
+		  e.printStackTrace();
+	  }
+
   }
   
   private void updateLabel(int x){
@@ -406,13 +418,15 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     else if (e.getSource() == attackButton){
     	switchAttack();
     }
-    else if (e.getSource() == chooser){
+    else if (e.getSource() == chooser) {
+    	System.out.println("Responding to chooser");
     	updateLabel(chooser.getSelectedIndex());
-    	java.util.List<Model> modelList = makeModels((String)chooser.getSelectedItem());
-        iterator = modelList.listIterator();
+    	//java.util.List<Model> modelList = makeModels((String)chooser.getSelectedItem());
+        //iterator = modelList.listIterator();
     }
-    else if (e.getSource() == goButton){
-    	updateModel();
+    else if (e.getSource() == goButton) {
+    	System.out.println("Responding to GO");
+    	updateModel((String)chooser.getSelectedItem());
     	dialog.setVisible(false);
     	
     }
