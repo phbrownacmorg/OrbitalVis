@@ -118,8 +118,9 @@ public class BondView extends Drawable {
 	  double colors[] = new double[4];
 	  gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
 	  
+//	  gl.glPushMatrix();
+//	  this.apply2DOffsets(gl);
 	  this.initDraw2D(gl); // Frame1's transformation
-	  this.apply2DOffsets(gl);
 	  RefFrame start = bond.getStart3D();
 	  RefFrame end = bond.getEnd3D();
 	  
@@ -161,6 +162,7 @@ public class BondView extends Drawable {
 	  // If the bond's state is BROKEN, naturally, do nothing
 	  gl.glEnd();
 	  this.endDraw(gl);
+//	  gl.glPopMatrix();
 	  // Restore the previous color
 	  gl.glColor4dv(colors, 0);
   }

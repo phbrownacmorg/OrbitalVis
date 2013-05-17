@@ -107,10 +107,12 @@ public abstract class AtomOrGroupView extends Drawable {
 	}	
 	  
 	public void draw2D(GL2 gl, TextRenderer tr, TextRenderer superTR) {
+		//gl.glPushMatrix();
+		//this.apply2DOffsets(gl);
 		this.initDraw2D(gl);
 
 		this.unwindRotationsForFrame(gl, this.frame);
-		this.apply2DOffsets(gl);
+		
 
 		// Text-specific transformations
 		gl.glScaled(View2D.FONT_SCALING_FACTOR / View2D.X_SCALE, View2D.FONT_SCALING_FACTOR / View2D.Y_SCALE, 
@@ -132,6 +134,7 @@ public abstract class AtomOrGroupView extends Drawable {
 		this.drawChargeString(gl, tr, superTR);
 
 		this.endDraw(gl);
+//		gl.glPopMatrix();
 	}
 
 	public void drawChargeString(GL2 gl, TextRenderer tr, TextRenderer supertr) {

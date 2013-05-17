@@ -26,6 +26,9 @@ public class Drawable {
   
   public void initXfm(GL2 gl, boolean twoD) {
     gl.glPushMatrix();
+    if (twoD) {
+    	this.apply2DOffsets(gl);
+    }
     initXfmForFrame(gl, frame, twoD);
   }
   
