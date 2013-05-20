@@ -4,13 +4,13 @@ import javax.media.opengl.GLCapabilities;
 //import javax.media.opengl.GLProfile;
 import com.jogamp.opengl.util.Animator;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Properties;
 
-import java.awt.Component;
-import java.awt.Dimension;
+//import java.awt.Component;
+//import java.awt.Dimension;
 //import java.awt.Canvas;
-import java.awt.Frame;
+//import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.event.ChangeEvent;
@@ -48,20 +48,21 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   //private Canvas2D canvas2d;
   
   //private int indx = 0;
-  private ArrayList <ImageIcon> images;
+  //private ArrayList <ImageIcon> images;
   //private ImageIcon picture;
-  private JLabel picLabel;
+  //private JLabel picLabel;
   
   private JButton rockButton;
   private JButton fwdButton;
-  private JSlider slider; private JSlider rockSlider;
+  private JSlider slider; //private JSlider rockSlider;
   private JButton bkwdButton;
   private JButton attackButton;
-  private JButton goButton;
+  //private JButton goButton;
   private JButton settings;
-  private JComboBox chooser;
+  //private JComboBox chooser;
   
-  private JDialog dialog;
+  //private JDialog dialog;
+  private SettingsDialog dialog;
   
   private double userAngle; // Rotation angle set by the user with the mouse
   
@@ -71,6 +72,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private int animSteps; // Number of times the scene is drawn to progress through a complete cycle of rocking
   
   private Properties props;
+  public static Controller controller;
   
   /**
    * Create a Controller.
@@ -148,75 +150,10 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     
     testFrame.addWindowListener(makeWindowListener());
 
-    this.makeDialog();
+    dialog = new SettingsDialog(testFrame, "OrbitalVis", true);
       
   }
   
-  private void makeDialog(){
-	  dialog = new JDialog (testFrame, "OrbitalVis", true);
-	  dialog.setResizable(false);
-	  dialog.setSize(700, 500);
-	  dialog.setLocation(testFrame.getWidth()/2 - dialog.getWidth()/2, testFrame.getHeight()/2 - dialog.getHeight()/2);
-	  Box dBox = Box.createVerticalBox();
-	  JLabel words = new JLabel ("Welcome to OrbitalVis!"); words.setAlignmentX(Component.CENTER_ALIGNMENT);
-//	  JLabel space = new JLabel (" ");
-//	  JLabel space1 = new JLabel (" ");
-	  JLabel sliderText = new JLabel ("Smallest                                                                   Default                                                                   Greatest"); sliderText.setAlignmentX(Component.CENTER_ALIGNMENT);
-	  JLabel moreWords = new JLabel ("To begin, please choose a reaction:"); moreWords.setAlignmentX(Component.CENTER_ALIGNMENT);
-	  JLabel choose = new JLabel ("Now, set a rock angle:"); choose.setAlignmentX(Component.CENTER_ALIGNMENT);
-	  
-	  String [] reactions = {"SN2", "SN1", "Acyl", "E1", "E2", "EA2A"}; //These really should be brought in from somewhere else
-	  chooser = new JComboBox (reactions);
-	  chooser.addActionListener(this);
-	  
-	  rockSlider = new JSlider();
-	  rockSlider.addChangeListener(this);
-	  
-	  goButton = new JButton("GO!"); goButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-	  goButton.addActionListener(this);
-	  
-	  images = getReactionImages();
-	  picLabel = new JLabel (images.get(0));
-	  picLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-	  picLabel.setAlignmentY(Component.TOP_ALIGNMENT);
-	  
-//	  dBox.add(space1);
-	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
-	  dBox.add(words);
-	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
-//	  dBox.add(space);
-	  dBox.add(moreWords);
-	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
-	  dBox.add(chooser);
-	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
-	  dBox.add(picLabel);
-	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
-	  dBox.add(choose);
-	  dBox.add(Box.createRigidArea(new Dimension(0,20)));
-	  dBox.add(rockSlider);
-	  dBox.add(sliderText);
-	  dBox.add(Box.createRigidArea(new Dimension(0,30)));
-	  dBox.add(goButton);
-	  dBox.add(Box.createRigidArea(new Dimension(0,50)));
-	  dialog.add(dBox);
-	  
-  }
-  
-  private ArrayList<ImageIcon> getReactionImages() {
-	  ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
-	  
-	  java.net.URL rxnURL = getClass().getResource("SN2.png");
-	  ImageIcon SN2 = new ImageIcon(rxnURL);
-	  rxnURL = getClass().getResource("SN1.jpg");
-	  ImageIcon SN1 = new ImageIcon(rxnURL);
-	  rxnURL = getClass().getResource("Acyl.jpg");
-	  ImageIcon Acyl = new ImageIcon(rxnURL);
-	  
-	  images.add(SN2);
-	  images.add(SN1);
-	  images.add(Acyl);
-	  return images;
-  }
   
   private Box makeControlBox() {
     Box controlBox = Box.createHorizontalBox();
@@ -263,67 +200,64 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     return controlBox;
   }
   
-  private void updateModel(String modelName) {
+  public void updateModel(String modelName) {
 	  System.out.println("Updating model: " + modelName);
-	  System.out.flush();
+	  //System.out.flush();
 	  java.util.List<Model> modelList = makeModels(modelName);
 	  iterator = modelList.listIterator();
-	  
+
 	  try {
-		  // Nuke anything that was there before
-		  testFrame.getContentPane().removeAll();
-		  
-		  model = iterator.next();
-	        
-		  System.out.println("Model: " + model.toString());
-		  
-		  Box vbox = Box.createVerticalBox();
-		  testFrame.add(vbox);
+	      
+	      props.load(new java.io.FileReader(modelName + "-props.txt"));
+	    } catch (java.io.IOException e) {
+	      System.out.println(e);}
+	  // Nuke anything that was there before
+	  testFrame.getContentPane().removeAll();
 
-		  // Control box
-		  vbox.add(makeControlBox());
+	  model = iterator.next();
 
-		  view = new View(model, props);
+	  System.out.println("Model: " + model.toString());
 
-		  //GLProfile profile = ;
-		  GLCapabilities glCaps = new GLCapabilities(null);
-		  System.out.println(glCaps);
+	  Box vbox = Box.createVerticalBox();
+	  testFrame.add(vbox);
 
-		  GLCanvas canvas = new GLCanvas( glCaps );
+	  // Control box
+	  vbox.add(makeControlBox());
 
-		  canvas.addGLEventListener(view);
-		  canvas.addMouseMotionListener(makeMouseListener());
-		  canvas.addKeyListener(makeKeyListener());
-		  this.add(canvas);
+	  view = new View(model, props);
 
-		  view2d = new View2D(model, props);
-		  //canvas2d = new Canvas2D(view2d);
-		  GLCanvas canvas2D = new GLCanvas(glCaps);
-		  canvas2D.addGLEventListener(view2d);
-		  this.add(canvas2D);
-		  // add the canvases
-		  if (props.getProperty("canvasLayout", "horizontal").equals("vertical")) {
-			  Box canvasBox = Box.createHorizontalBox();
-			  canvasBox.add(canvas);
-			  canvasBox.add(canvas2D);
-			  vbox.add(canvasBox);
-		  }
-		  else {
-			  vbox.add(canvas);
-			  vbox.add(canvas2D);
-		  }
+	  //GLProfile profile = ;
+	  GLCapabilities glCaps = new GLCapabilities(null);
+	  System.out.println(glCaps);
+
+	  GLCanvas canvas = new GLCanvas( glCaps );
+
+	  canvas.addGLEventListener(view);
+	  canvas.addMouseMotionListener(makeMouseListener());
+	  canvas.addKeyListener(makeKeyListener());
+	  this.add(canvas);
+
+	  view2d = new View2D(model, props);
+	  //canvas2d = new Canvas2D(view2d);
+	  GLCanvas canvas2D = new GLCanvas(glCaps);
+	  canvas2D.addGLEventListener(view2d);
+	  this.add(canvas2D);
+	  // add the canvases
+	  if (props.getProperty("canvasLayout", "horizontal").equals("vertical")) {
+		  Box canvasBox = Box.createHorizontalBox();
+		  canvasBox.add(canvas);
+		  canvasBox.add(canvas2D);
+		  vbox.add(canvasBox);
 	  }
-	  catch( Exception e )
-	  {
-		  e.printStackTrace();
+	  else {
+		  vbox.add(canvas);
+		  vbox.add(canvas2D);
 	  }
+
 
   }
   
-  private void updateLabel(int x){
-	  picLabel.setIcon(images.get(x));
-//	  System.out.println("Chosen: " + chooser.getSelectedItem());
-  }
+ 
   
   private java.util.List<Model> makeModels(Properties props) {
     java.util.List<Model> result = new java.util.ArrayList<Model>();
@@ -417,18 +351,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     }
     else if (e.getSource() == attackButton){
     	switchAttack();
-    }
-    else if (e.getSource() == chooser) {
-    	System.out.println("Responding to chooser");
-    	updateLabel(chooser.getSelectedIndex());
-    	//java.util.List<Model> modelList = makeModels((String)chooser.getSelectedItem());
-        //iterator = modelList.listIterator();
-    }
-    else if (e.getSource() == goButton) {
-    	System.out.println("Responding to GO");
-    	updateModel((String)chooser.getSelectedItem());
-    	dialog.setVisible(false);
-    	
     }
     else if (e.getSource() == settings){
     	dialog.setVisible(true);
@@ -532,9 +454,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     if (e.getSource() == slider){
 	  model.setT(slider.getValue()/((double)(reactionSteps)));
     }
-    else if (e.getSource() == rockSlider){
-    	
-    }
     //canvas2d.repaint();
   }
   
@@ -563,6 +482,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     // display
     super.display();
   }
+  
     
   /**
    * Run the whole thing.  The Properties object is used to override defaults
@@ -577,7 +497,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     } catch (java.io.IOException e) {
       System.out.println(e);
     }
-    Controller controller = new Controller(props);
+    controller = new Controller(props);
     controller.start();
   }
 }
