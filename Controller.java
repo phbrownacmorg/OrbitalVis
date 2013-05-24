@@ -45,7 +45,9 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private int cineStep; // Number of steps per cine step in the automatic loop
   
   private JFrame testFrame;   // Top-level window
-  //private Canvas2D canvas2d;
+  private Box viewBox;
+  private GLCanvas canvas3D = null;
+  private GLCanvas canvas2D = null;
   
   //private int indx = 0;
   //private ArrayList <ImageIcon> images;
@@ -72,90 +74,56 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private int animSteps; // Number of times the scene is drawn to progress through a complete cycle of rocking
   
   private Properties props;
-  public static Controller controller;
+  //public static Controller controller;
   
   /**
    * Create a Controller.
    */
-  private Controller(Properties properties) {
+  private Controller() {
     super();
     
-    this.props = properties;
-    // Must be parsed before the models are created
-    try {
-    	String defaultSpec = String.format("%f %f %f", View2D.X_SCALE, View2D.Y_SCALE, View2D.Z_SCALE);
-      String spec[] = props.getProperty("2DScales", defaultSpec).split(" ");
-      double sx = Double.parseDouble(spec[0]);
-      double sy = Double.parseDouble(spec[1]);
-      double sz = Double.parseDouble(spec[2]);
-      View2D.setScales(sx, sy, sz);
-    } catch (NumberFormatException e) {
-      System.out.println("Ignoring 2DScales specification, due to the following:");
-      System.out.println(e);
-    }
-
-    if (props.containsKey("fontSize")) {
-      try {
-        int newFontSize = Integer.parseInt(props.getProperty("fontSize"));
-        View2D.setFontSize(newFontSize);
-      } catch (NumberFormatException e) {
-        System.out.println("Ignoring fontSize specification, due to the following:");
-        System.out.println(e);
-      }
-    }
-
-    cineStep = 0;
-
-    reactionSteps = 100;
-    if (props.containsKey("reactionSteps")) {
-      try {
-        this.reactionSteps = Integer.parseInt(props.getProperty("reactionSteps"));
-      } catch (NumberFormatException e) {
-        System.out.println("Ignoring reactionSteps specification, due to the following:");
-        System.out.println(e);
-      }
-    }
+    this.props = initProperties("");
     
-    userAngle = 0;
-    animT = 0;
-    rocking = false;
-    
-    rockingAngle = 10;
-    if (props.containsKey("rockingAngle")) {
-      try {
-        this.rockingAngle = Double.parseDouble(props.getProperty("rockingAngle"));
-      } catch (NumberFormatException e) {
-        System.out.println("Ignoring rockingAngle specification, due to the following:");
-        System.out.println(e);
-      }
-    }
-    
-    animSteps = 50;
-    if (props.containsKey("rockingSteps")) {
-      try {
-        this.animSteps = Integer.parseInt(props.getProperty("rockingSteps"));
-      } catch (NumberFormatException e) {
-        System.out.println("Ignoring animSteps specification, due to the following:");
-        System.out.println(e);
-      }
-    }
-
     String modelName = props.getProperty("model", "SN2");
     testFrame = new JFrame(props.getProperty("title", modelName
     		+ " Visualization"));
     testFrame.setSize( 950, 730 );
     testFrame.setResizable(false);
     
+    Box vbox = Box.createVerticalBox();
+    testFrame.add(vbox);
+    
+    // Control box
+    vbox.add(makeControlBox());
+    
+    viewBox = Box.createVerticalBox();
+    vbox.add(viewBox);
+    
     updateModel(modelName);
     
     testFrame.addWindowListener(makeWindowListener());
 
-    dialog = new SettingsDialog(testFrame, "OrbitalVis", true);
+    dialog = new SettingsDialog(this);
       
+  }
+  
+  private Properties initProperties(String modelName) {
+	  Properties props = new Properties();
+	  try {
+		  props.load(new java.io.FileReader("generic-props.txt"));
+		  if (modelName.length() == 0) {
+			  modelName = props.getProperty("model", "SN2");
+		  }
+	      props.load(new java.io.FileReader(modelName + "-props.txt"));
+	  } catch (java.io.IOException e) {
+	      System.out.println(e);
+	  }
+	  return props;
   }
   
   
   private Box makeControlBox() {
+	  System.out.println("Creating a control box");
     Box controlBox = Box.createHorizontalBox();
     
     java.net.URL iconURL = getClass().getResource("001_27.gif");
@@ -173,7 +141,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     fwdButton = new JButton(rightArrowIcon);
     bkwdButton = new JButton(leftArrowIcon);
     slider = new JSlider(JSlider.HORIZONTAL, 0, reactionSteps, 0);
-    slider.setMajorTickSpacing(reactionSteps/2);
     slider.setPaintTicks(true);
     
     MouseAdapter ma = makeButtonListener();
@@ -187,7 +154,6 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     // Make button to change attack side
     attackButton = new JButton("Attack other side");
     attackButton.addActionListener(this);
-    attackButton.setEnabled(iterator.hasNext());
     
     // add the buttons and the slider to the control box
     controlBox.add(settings);
@@ -196,33 +162,109 @@ public class Controller extends Animator implements ActionListener, ChangeListen
     controlBox.add(slider);
     controlBox.add(fwdButton);
     controlBox.add(attackButton);
-
+  
+    System.out.println("Made control box");
     return controlBox;
+  }
+  
+  private void updateControls() {
+	  slider.setValue(0);
+	  slider.setMaximum(reactionSteps);
+	  slider.setMajorTickSpacing(reactionSteps/2);
+	  if (iterator != null) {
+		  attackButton.setEnabled(iterator.hasNext());
+	  }
+  }
+  
+  public java.awt.Frame getFrame() { return testFrame; }
+  
+  private void parsePreModelProps() {
+	    // Must be parsed before the models are created
+	    try {
+	    	String defaultSpec = String.format("%f %f %f", View2D.X_SCALE, View2D.Y_SCALE, View2D.Z_SCALE);
+	      String spec[] = props.getProperty("2DScales", defaultSpec).split(" ");
+	      double sx = Double.parseDouble(spec[0]);
+	      double sy = Double.parseDouble(spec[1]);
+	      double sz = Double.parseDouble(spec[2]);
+	      View2D.setScales(sx, sy, sz);
+	    } catch (NumberFormatException e) {
+	      System.out.println("Ignoring 2DScales specification, due to the following:");
+	      System.out.println(e);
+	    }
+
+	    if (props.containsKey("fontSize")) {
+	      try {
+	        int newFontSize = Integer.parseInt(props.getProperty("fontSize"));
+	        View2D.setFontSize(newFontSize);
+	      } catch (NumberFormatException e) {
+	        System.out.println("Ignoring fontSize specification, due to the following:");
+	        System.out.println(e);
+	      }
+	    }
+
+	    cineStep = 0;
+
+	    reactionSteps = 100;
+	    if (props.containsKey("reactionSteps")) {
+	      try {
+	        this.reactionSteps = Integer.parseInt(props.getProperty("reactionSteps"));
+	      } catch (NumberFormatException e) {
+	        System.out.println("Ignoring reactionSteps specification, due to the following:");
+	        System.out.println(e);
+	      }
+	    }
+	    
+	    userAngle = 0;
+	    animT = 0;
+	    rocking = false;
+
+	    rockingAngle = 10;
+	    if (props.containsKey("rockingAngle")) {
+	    	try {
+	    		this.rockingAngle = Double.parseDouble(props.getProperty("rockingAngle"));
+	    	} catch (NumberFormatException e) {
+	    		System.out.println("Ignoring rockingAngle specification, due to the following:");
+	    		System.out.println(e);
+	    	}
+	    }
+
+	    animSteps = 50;
+	    if (props.containsKey("rockingSteps")) {
+	    	try {
+	    		this.animSteps = Integer.parseInt(props.getProperty("rockingSteps"));
+	    	} catch (NumberFormatException e) {
+	    		System.out.println("Ignoring animSteps specification, due to the following:");
+	    		System.out.println(e);
+	    	}
+	    }
+
   }
   
   public void updateModel(String modelName) {
 	  System.out.println("Updating model: " + modelName);
 	  //System.out.flush();
+	  
+	  this.props = initProperties(modelName);
+	  this.parsePreModelProps();
+	  
+	  // TODO: Reset title on testFrame
+	  	  
 	  java.util.List<Model> modelList = makeModels(modelName);
 	  iterator = modelList.listIterator();
-
-	  try {
-	      
-	      props.load(new java.io.FileReader(modelName + "-props.txt"));
-	    } catch (java.io.IOException e) {
-	      System.out.println(e);}
+	  
 	  // Nuke anything that was there before
-	  testFrame.getContentPane().removeAll();
+	  viewBox.removeAll();
+	  if (canvas3D != null) {
+		  this.remove(canvas3D);
+	  }
+	  if (canvas2D != null) {
+		  this.remove(canvas2D);
+	  }
 
 	  model = iterator.next();
-
 	  System.out.println("Model: " + model.toString());
+	  updateControls();
 
-	  Box vbox = Box.createVerticalBox();
-	  testFrame.add(vbox);
-
-	  // Control box
-	  vbox.add(makeControlBox());
 
 	  view = new View(model, props);
 
@@ -230,61 +272,34 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 	  GLCapabilities glCaps = new GLCapabilities(null);
 	  System.out.println(glCaps);
 
-	  GLCanvas canvas = new GLCanvas( glCaps );
+	  canvas3D = new GLCanvas( glCaps );
 
-	  canvas.addGLEventListener(view);
-	  canvas.addMouseMotionListener(makeMouseListener());
-	  canvas.addKeyListener(makeKeyListener());
-	  this.add(canvas);
+	  canvas3D.addGLEventListener(view);
+	  canvas3D.addMouseMotionListener(makeMouseListener());
+	  canvas3D.addKeyListener(makeKeyListener());
+	  this.add(canvas3D);
 
 	  view2d = new View2D(model, props);
 	  //canvas2d = new Canvas2D(view2d);
-	  GLCanvas canvas2D = new GLCanvas(glCaps);
+	  glCaps = new GLCapabilities(null);
+	  canvas2D = new GLCanvas(glCaps);
 	  canvas2D.addGLEventListener(view2d);
 	  this.add(canvas2D);
 	  // add the canvases
 	  if (props.getProperty("canvasLayout", "horizontal").equals("vertical")) {
 		  Box canvasBox = Box.createHorizontalBox();
-		  canvasBox.add(canvas);
+		  canvasBox.add(canvas3D);
 		  canvasBox.add(canvas2D);
-		  vbox.add(canvasBox);
+		  viewBox.add(canvasBox);
 	  }
 	  else {
-		  vbox.add(canvas);
-		  vbox.add(canvas2D);
+		  viewBox.add(canvas3D);
+		  viewBox.add(canvas2D);
 	  }
 
 
   }
   
- 
-  
-  private java.util.List<Model> makeModels(Properties props) {
-    java.util.List<Model> result = new java.util.ArrayList<Model>();
-    String modelName = props.getProperty("model", "SN2");
-    if (modelName.equals("Acyl")) {
-      result.add(new AcylModel(Model.LEFT_SIDE_ATTACK));
-      result.add(new AcylModel(Model.RIGHT_SIDE_ATTACK));
-    }
-    if (modelName.equals("EA2A")) {
-      result.add(new EA2AModel(Model.LEFT_SIDE_ATTACK));
-      result.add(new EA2AModel(Model.RIGHT_SIDE_ATTACK));
-    }
-    else if (modelName.equals("SN1")) {
-      result.add(new SN1Model(Model.LEFT_SIDE_ATTACK));
-      result.add(new SN1Model(Model.RIGHT_SIDE_ATTACK));
-    }
-    else if (modelName.equals("E2")) {
-      result.add(new E2Model());
-    }
-    else if (modelName.equals("E1")) {
-      result.add(new E1Model());
-    }
-    else {
-      result.add(new SN2Model());
-    }
-    return result;
-  }
   
   private java.util.List<Model> makeModels(String modelName) {
 	    java.util.List<Model> result = new java.util.ArrayList<Model>();
@@ -489,15 +504,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
    * without necessarily having to recompile.
    */
   public static void main( String[] args ) {
-    Properties props = new Properties();
-    try {
-      props.load(new java.io.FileReader("generic-props.txt"));
-      String modelFile = props.getProperty("model", "SN2");
-      props.load(new java.io.FileReader(modelFile + "-props.txt"));
-    } catch (java.io.IOException e) {
-      System.out.println(e);
-    }
-    controller = new Controller(props);
+    Controller controller = new Controller();
     controller.start();
   }
 }

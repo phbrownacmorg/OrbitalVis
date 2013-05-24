@@ -32,12 +32,15 @@ public class SettingsDialog extends JDialog implements ActionListener,
 	private JButton goButton;
 	private JComboBox chooser;
 	private String model;
+	private Controller c;
 	
-	public SettingsDialog(Frame arg0, String arg1, boolean arg2) {
-		super(arg0, arg1, arg2);
+	public SettingsDialog(Controller c) {
+		super(c.getFrame());
+		Frame frame = c.getFrame();
+		this.c = c;
 		this.setResizable(false);
 		this.setSize(700, 500);
-		this.setLocation(arg0.getWidth()/2 - this.getWidth()/2, arg0.getHeight()/2 - this.getHeight()/2);
+		this.setLocation(frame.getWidth()/2 - this.getWidth()/2, frame.getHeight()/2 - this.getHeight()/2);
 		Box dBox = Box.createVerticalBox();
 		JLabel words = new JLabel ("Welcome to OrbitalVis!"); words.setAlignmentX(Component.CENTER_ALIGNMENT);
 		//		  JLabel space = new JLabel (" ");
@@ -121,7 +124,7 @@ public class SettingsDialog extends JDialog implements ActionListener,
 
 	    else if (e.getSource() == goButton) {
 	    	System.out.println("Responding to GO");
-	    	//Controller.controller.updateModel(model);
+	    	c.updateModel(model);
 	    	this.setVisible(false);
 	    }
 	}
