@@ -16,7 +16,7 @@ public interface ConstantMgr {
 	public static final float[] UP = {0, 1, 0};      // Up vector, in model coordinates
 	
 	// Static amount of rotation about the up vector, in degrees
-	public static final double H_ROTATE_BASE = 90; 
+	public static final double H_ROTATE_BASE = 0; 
 
   /**
    * Distance to the far clipping plane.

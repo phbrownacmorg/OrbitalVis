@@ -3,10 +3,10 @@
 #---------- Which model? -----------------------------
 
 # default is SN2
-#model: EA2A
+model: EA2A
 #model: Acyl
 #model: SN1
-model: E1
+#model: E1
 # How does E2 differ from E1?
 #model: E2
 
@@ -16,7 +16,8 @@ model: E1
 #orthogonal
 
 # default is 15, 7.5, 30
-eye: 10 2.5 2.5
+eye: -2.5 2.5 10
+#eye: 10 2.5 2.5
 #eye: 20 5 5
 #eye: 30 7.5 7.5
 #eye: 15 7.5 30

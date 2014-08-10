@@ -29,17 +29,17 @@ public class POrbitalView extends Drawable {
     // Scale the thing correctly
     gl.glPushMatrix();
     
-    // Make one cone
+    // Make one cone (the front one about the +X axis)
     gl.glPushMatrix();
     double proportion = orbital.proportion();
-    gl.glScaled(proportion, proportion, proportion);
+    gl.glScaled(1.0 - proportion, 1.0 - proportion, 1.0 - proportion);
     makeHalfOrbital(gl);
     gl.glPopMatrix();
     
-    // Make the other cone
+    // Make the back cone (the one about the -X axis)
     gl.glPushMatrix();
     gl.glRotated(180.0, 0.0, 0.0, 0.0); // Why in the world does this work?  There's no axis!
-    gl.glScaled(1.0 - proportion, 1.0 - proportion, 1.0 - proportion);
+    gl.glScaled(proportion, proportion, proportion);
     makeHalfOrbital(gl);
     gl.glPopMatrix();
 
@@ -58,10 +58,10 @@ public class POrbitalView extends Drawable {
 //                         tanAngle);
 //    }
     //gl.glScaled(tanAngle, tanAngle, 1.0);
-    gl.glRotated(90, 0, 1, 0);
+    gl.glRotated(-90, 0, 1, 0);  // Rotate about the Y axis to put the cone about the +X axis
     gl.glScaled(tanAngleX, tanAngleY, 1.0);
-    gl.glTranslated(0, 0, -1);
-    ShapeBuilder.cone(gl);
+    gl.glTranslated(0, 0, -1);  // Translate the tip of the cone to the XZ plane
+    ShapeBuilder.cone(gl);  // Create the cone around the +Z axis
     gl.glScaled(1, 1, (tanAngleY + 0.27)/2);
     gl.glRotated(-90, 1.0, 0.0, 0.0);
     ShapeBuilder.hemisphere(gl);

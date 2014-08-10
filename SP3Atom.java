@@ -2,10 +2,10 @@
 
 /**
  * A class to represent a atom with SP3 hybridization.  The class is composed of four POrbital objects.
- * Orbital 0 lies along the atom's Z axis.  
- * Orbital 1 is in the YZ plane.  When the atom's insideOutness == 0.5, it lies along the atom's +Y axis.  
- * Orbital 2 points on the +X side of the YZ plane.  When insideOutness == 0.5, it lies in the XY plane.
- * Orbital 3 points on the -X side of the YZ plane.  When insideOutness == 0.5, it lies in the XY plane.
+ * Orbital 0 lies along the atom's X axis.  
+ * Orbital 1 is in the XY plane.  When the atom's insideOutness == 0.5, it lies along the atom's -Y axis.  
+ * Orbital 2 points on the -Z side of the XY plane.  When insideOutness == 0.5, it lies in the YZ plane.
+ * Orbital 3 points on the +Z side of the XY plane.  When insideOutness == 0.5, it lies in the YZ plane.
  *
  * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
  *
@@ -75,7 +75,7 @@ public class SP3Atom extends Atom {
    * @return Unit vector as a Point3D
    */
   public Point3D getAbsOrbitalVector(int i) {
-    Point3D result = new Point3D(1, 0, 0);  // Unit vector along the z-axis
+    Point3D result = new Point3D(1, 0, 0);  // Unit vector along the x-axis
     
     // Transform it by the atom's own rotations
     // Then associate it with the appropriate orbital
@@ -119,7 +119,7 @@ public class SP3Atom extends Atom {
     // Transform it by the atom's own rotations
     // Then associate it with the appropriate orbital
     // [[FIX: FAILS IN CASE OF NESTED FRAMES]]
-    if (i == 0) { // Orbital 0 lies along the z-axis
+    if (i == 0) { // Orbital 0 lies along the x-axis
       //result = result.transform(rotMatrix);
     }
     else if (i == 1) {

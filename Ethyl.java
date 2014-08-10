@@ -21,22 +21,21 @@ public class Ethyl extends AtomOrGroup {
     
     carbon = new SP3Atom();
     
-    Point3D methLoc = new Point3D(0, 0, Atom.SP3_SP3_BOND_LENGTH);
-    Matrix rotMatrix = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
-    methLoc = methLoc.transform(rotMatrix);
-    methyl = new Methyl(methLoc, AtomOrGroup.Charge.NEUTRAL);
-    methyl.setRot(180 - 109.5, 0, 180);
+    // Hang the methyl on the carbon's orbital 1
+    Point3D loc = carbon.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
     
-    Point3D hLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
-    hLoc = hLoc.transform(rotMatrix);
-
-    Matrix rotZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
-    Point3D hLoc2 = hLoc.transform(rotZ);
-    hydro1 = new Atom(hLoc2);
+    //Point3D methLoc = new Point3D(Atom.SP3_SP3_BOND_LENGTH, 0, 0);
+    //Matrix rotMatrix = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
+    //methLoc = methLoc.transform(rotMatrix);
+    methyl = new Methyl(loc, AtomOrGroup.Charge.NEUTRAL);
+    methyl.setRot(180, 0, -(180 - 109.5));
     
-    rotZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-    Point3D hLoc3 = hLoc.transform(rotZ);
-    hydro2 = new Atom(hLoc3);   
+    // Hang hydrogens on the remaining orbitals
+    loc = carbon.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    hydro1 = new Atom(loc);
+    
+    loc = carbon.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
+    hydro2 = new Atom(loc);   
   }
   
   public Ethyl(Point3D pt, AtomOrGroup.Charge charge) {

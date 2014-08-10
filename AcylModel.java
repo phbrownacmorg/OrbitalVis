@@ -30,9 +30,10 @@ public class AcylModel extends Model {
   private Bond carb_ethyl, carb_ch3, carb_oxy;
 
   public AcylModel(int zSign) {
-    this.zSign = zSign;
+    this.zSign = -zSign;
     
-    nucleophile = new Atom(new Point3D(0, 0, zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT())))),
+    nucleophile = new Atom(new Point3D(zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 
+    									0, 0),
                            AtomOrGroup.Charge.MINUS);
     
     carb = new SP3Atom();
@@ -61,17 +62,17 @@ public class AcylModel extends Model {
     // Oxygen on orbital 1
     Point3D orb1Vec = carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
     oxy.setLoc(orb1Vec.x(), orb1Vec.y(), orb1Vec.z());
-    oxy.setRot(180 + 2 * rotation, 0, 180);
+    oxy.setRot(0, 0, 180);
     
     // Ethyl on orbital 2
     Point3D orb2Vec = carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
     ethyl.setLoc(orb2Vec.x(), orb2Vec.y(), orb2Vec.z());
-    ethyl.setRot(0, 180 + rotation, 210); // (X up, Y right)
+    ethyl.setRot(-60, 0, 180 + rotation); // (X up, Y right)
     
     // Methyl on orbital 3
     Point3D orb3Vec = carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
     ch3.setLoc(orb3Vec.x(), orb3Vec.y(), orb3Vec.z());
-    ch3.setRot(0, 180 - rotation, 150);
+    ch3.setRot(-120, 0, 180 - rotation);
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
@@ -109,7 +110,7 @@ public class AcylModel extends Model {
     setHydrogenLocations();
     
     // The nucleophile moves in
-    nucleophile.setLoc(0, 0, zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))));
+    nucleophile.setLoc(-zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 0, 0);
     
     // Update the Bonds
     if (getT() < 0.3) {

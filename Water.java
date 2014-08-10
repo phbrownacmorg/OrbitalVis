@@ -18,22 +18,13 @@ public class Water extends AtomOrGroup {
   public Water(Point3D pt, AtomOrGroup.Charge charge) {
     super(pt, charge);
     
-    // FIX: Hydrogens are colocated
-    Point3D hydroLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
-    Matrix rX = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
-    Matrix rZ = Matrix.makeRotationMatrix(120, Matrix.Axis.Z);
-    Matrix rotMatrix = rZ.mult(rX);
-    hydroLoc = hydroLoc.transform(rotMatrix);
+    oxygen = new SP3Atom();
+    
+    Point3D hydroLoc = oxygen.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
     h1 = new Atom(hydroLoc);
     
-    hydroLoc = new Point3D(0, 0, Atom.S_TO_SP3_BOND_LENGTH);
-    rX = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
-    rZ = Matrix.makeRotationMatrix(-120, Matrix.Axis.Z);
-    rotMatrix = rZ.mult(rX);
-    hydroLoc = hydroLoc.transform(rotMatrix);
+    hydroLoc = oxygen.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
     h2 = new Atom(hydroLoc);
-
-    oxygen = new SP3Atom();
   }
   
   public WaterView createView(String text) {

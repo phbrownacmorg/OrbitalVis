@@ -232,7 +232,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       result.add(new AcylModel(Model.LEFT_SIDE_ATTACK));
       result.add(new AcylModel(Model.RIGHT_SIDE_ATTACK));
     }
-    if (modelName.equals("EA2A")) {
+    else if (modelName.equals("EA2A")) {
       result.add(new EA2AModel(Model.LEFT_SIDE_ATTACK));
       result.add(new EA2AModel(Model.RIGHT_SIDE_ATTACK));
     }

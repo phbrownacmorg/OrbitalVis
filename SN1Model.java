@@ -39,7 +39,7 @@ public class SN1Model extends Model {
 
   public SN1Model(int zSign) {
     this.zSign = zSign;
-    water = new Water(new Point3D(0, 0,  zSign * (Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL)), 
+    water = new Water(new Point3D(zSign * (Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL), 0, 0), 
                        AtomOrGroup.Charge.NEUTRAL);
                        // zSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
     if (zSign > 0) {
@@ -53,7 +53,7 @@ public class SN1Model extends Model {
     ch3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
     setHydrogenLocations();
     
-    chlor = new SP3Atom(new Point3D(0, 0, Atom.SP3_SP3_BOND_LENGTH + getT() * MAX_WITHDRAWAL)); 
+    chlor = new SP3Atom(new Point3D(Atom.SP3_SP3_BOND_LENGTH + getT() * MAX_WITHDRAWAL, 0, 0)); 
     chlor.setRot(0, 180, 0);
     
     // Create the Bonds
@@ -70,12 +70,13 @@ public class SN1Model extends Model {
     // Hang the ethyl on orbital 1
     Point3D orb1Vec = carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
     ethyl.setLoc(carb.getX() + orb1Vec.x(), carb.getY() + orb1Vec.y(), carb.getZ() + orb1Vec.z());
-    ethyl.setRot(180 + rotation, 0, 0);
+    ethyl.setRot(0, 0, 180 + rotation);
 
     // Set methyl on orbital 2
     Point3D orb2Vec = carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
     ch3.setLoc(carb.getX() + orb2Vec.x(), carb.getY() + orb2Vec.y(), carb.getZ() + orb2Vec.z());
-    ch3.setRot(0, 180 + rotation, -90 + 120); // (X up, Y right)
+    //ch3.setRot(0, 180 + rotation, -90 + 120); // (X up, Y right)
+    ch3.setRot(120, 0, 180 + rotation);  // I'd like to figure out how to rotate +Y upwards, but...
     
     // Hydrogen on orbital 3
     Point3D orb3Vec = carb.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
@@ -127,19 +128,19 @@ public class SN1Model extends Model {
     
     // The chlorine moves away, breaking its bond at t=0.35 // t=0.4
     if (getT() < 0.35) {
-      chlor.setLoc(0, 0, Atom.SP3_SP3_BOND_LENGTH + Math.max(0, getT() - 0.05) * (0.1/0.3));
+      chlor.setLoc(Atom.SP3_SP3_BOND_LENGTH + Math.max(0, getT() - 0.05) * (0.1/0.3), 0, 0);
     }
     else {
-      chlor.setLoc(0, 0, Atom.SP3_SP3_BOND_LENGTH + 0.1 + Math.pow(Math.max(0, getT() - 0.35) * (MAX_WITHDRAWAL/0.65), 2));
+      chlor.setLoc(Atom.SP3_SP3_BOND_LENGTH + 0.1 + Math.pow(Math.max(0, getT() - 0.35) * (MAX_WITHDRAWAL/0.65), 2), 0, 0);
     }
     
     // The hydroxyl moves in, forming its bond at t=0.65 //t=0.6
     //water.setLoc(0, 0, zSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT()))));
     if (getT() > 0.65) {
-      water.setLoc(0, 0, zSign * (Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.95 - getT())) * (0.1/0.3)));
+      water.setLoc(zSign * (Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.95 - getT())) * (0.1/0.3)), 0, 0);
     }
     else {
-      water.setLoc(0, 0, zSign * (Atom.SP3_SP3_BOND_LENGTH + 0.1 + Math.pow(Math.max(0, (0.65 - getT())) * (MAX_WITHDRAWAL/0.65), 2)));
+      water.setLoc(zSign * (Atom.SP3_SP3_BOND_LENGTH + 0.1 + Math.pow(Math.max(0, (0.65 - getT())) * (MAX_WITHDRAWAL/0.65), 2)), 0, 0);
     }
     
     // Update the Bonds
