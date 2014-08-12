@@ -3,11 +3,11 @@
 #---------- Which model? -----------------------------
 
 # default is SN2
-model: EA2A
+#model: EA2A
 #model: Acyl
 #model: SN1
 #model: E1
-# How does E2 differ from E1?
+# How does E2 differ from E1?  A: E1 has two stages, E2 only one.
 #model: E2
 
 #---------- Projection properties -----------------
@@ -53,3 +53,5 @@ rockingAngle: 15
 #  the scene is drawn)
 #rockingSteps: 100
 
+2DScales: 3 3 3
+2DFontSize: 96

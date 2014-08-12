@@ -26,7 +26,7 @@ public class AcylModel extends Model {
   private SP3Atom oxy;
   
   // bonds
-  private Bond carb_nucleophile;
+  private Bond nucleophile_carb;
   private Bond carb_ethyl, carb_ch3, carb_oxy;
 
   public AcylModel(int zSign) {
@@ -41,15 +41,15 @@ public class AcylModel extends Model {
     carb.setP0Divergence(1);
     carb.setRot(0, 0, 180);
     
-    ethyl = new Ethyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb);
-    ch3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb);
+    ethyl = new Ethyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb, -0.7, -0.6);
+    ch3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb, 0.5, -0.1);
     oxy = new SP3Atom(new Point3D(), carb);
     oxy.setInsideOutness(0.5);
     oxy.setP0Divergence(1);
     setHydrogenLocations();
     
     // Create the Bonds
-    carb_nucleophile = new Bond(carb, nucleophile, Bond.State.BROKEN);
+    nucleophile_carb = new Bond(nucleophile, carb, Bond.State.BROKEN);
     carb_ethyl = new Bond(carb, ethyl, Bond.State.FULL);
     carb_ch3 = new Bond(carb, ch3, Bond.State.FULL);
     carb_oxy = new Bond(carb, oxy, Bond.State.DOUBLE);
@@ -78,18 +78,19 @@ public class AcylModel extends Model {
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
-      result.add(new BondView(carb_nucleophile));
-      result.add(new BondView(carb_ethyl));
-      result.add(new BondView(carb_ch3));
-      result.add(new BondView(carb_oxy));
+    	result.add(new BondView(carb_ethyl));
+        result.add(new BondView(nucleophile_carb));
+        result.add(new BondView(carb_oxy));
+        result.add(new BondView(carb_ch3));
     }
 
     // Draw the 3-D view back to front
-    result.add(ch3.createView());
+    result.add(ethyl.createView());
     result.add(nucleophile.createView());
     result.add(carb.createView("C", AtomView.C_BLACK));
     result.add(oxy.createView("O", AtomView.O_RED));
-    result.add(ethyl.createView());
+    result.add(ch3.createView());
+
     return result;
   }
   
@@ -114,19 +115,19 @@ public class AcylModel extends Model {
     
     // Update the Bonds
     if (getT() < 0.3) {
-      carb_nucleophile.setState(Bond.State.BROKEN);
+      nucleophile_carb.setState(Bond.State.BROKEN);
       nucleophile.setCharge(AtomOrGroup.Charge.MINUS);
       oxy.setCharge(AtomOrGroup.Charge.NEUTRAL);
       carb_oxy.setState(Bond.State.DOUBLE);
     }
     else if (getT() > 0.5) {
-      carb_nucleophile.setState(Bond.State.FULL);
+      nucleophile_carb.setState(Bond.State.FULL);
       nucleophile.setCharge(AtomOrGroup.Charge.NEUTRAL);
       oxy.setCharge(AtomOrGroup.Charge.MINUS);
       carb_oxy.setState(Bond.State.FULL);
     }
     else {
-      carb_nucleophile.setState(Bond.State.PARTIAL);
+      nucleophile_carb.setState(Bond.State.PARTIAL);
       nucleophile.setCharge(AtomOrGroup.Charge.PART_MINUS);
       oxy.setCharge(AtomOrGroup.Charge.PART_MINUS);
       carb_oxy.setState(Bond.State.FULL_PARTIAL);

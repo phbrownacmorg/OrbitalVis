@@ -151,7 +151,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
 
       //GLProfile profile = ;
       GLCapabilities glCaps = new GLCapabilities(null);
-      System.out.println(glCaps);
+//      System.out.println(glCaps);
       
       GLCanvas canvas = new GLCanvas( glCaps );
 

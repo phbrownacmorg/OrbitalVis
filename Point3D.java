@@ -1,3 +1,5 @@
+
+
 /**
  * Class to represent a point in 3D.  This class is immutable.
  *
@@ -34,6 +36,10 @@ public class Point3D {
     return Math.sqrt(dx*dx + dy*dy + dz*dz);
   }
   
+  /*
+   * Returns a Point3D which is the result of left-multiplying this Point3D by the given Matrix
+   * (i.e., the Matrix is on the left).
+   */
   public Point3D transform(Matrix m) {
     Point3D result = new Point3D();
     for (int i = 0; i < 3; i++) {
@@ -49,7 +55,32 @@ public class Point3D {
     return result;
   }
   
+  public Point3D translate(double tx, double ty, double tz) {
+	  Point3D result = new Point3D(elt[0] + tx, elt[1] + ty, elt[2] + tz);
+	  return result;
+  }
+  
+  /*
+   * Return the normalized right-hand cross product of the current point (considered
+   * as a vector) with the +Z basis vector.  If the current point is in fact on the
+   * Z-axis, return the zero vector instead.
+   */
+  public Point3D crossWithZ() {
+	  Point3D result;
+	  double x = this.y();
+	  double y = -this.x();
+	  double len = Math.sqrt(x*x + y*y);
+	  if (len > 0) {
+		  result = new Point3D(x/len, y/len, 0);
+	  }
+	  else {
+		  result = new Point3D();
+	  }
+	  return result;
+  }
+  
   public String toString() {
 	  return "("+this.x()+","+this.y()+","+this.z()+")";
   }
+  
 }

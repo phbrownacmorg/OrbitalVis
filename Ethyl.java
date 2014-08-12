@@ -16,8 +16,8 @@ public class Ethyl extends AtomOrGroup {
   private Atom hydro1;
   private Atom hydro2;
   
-  public Ethyl(Point3D pt, AtomOrGroup.Charge charge, RefFrame parent) {
-    super(pt, charge, parent);
+  public Ethyl(Point3D pt, AtomOrGroup.Charge charge, RefFrame parent, double tx, double ty) {
+    super(pt, charge, parent, tx, ty);
     
     carbon = new SP3Atom();
     
@@ -27,7 +27,7 @@ public class Ethyl extends AtomOrGroup {
     //Point3D methLoc = new Point3D(Atom.SP3_SP3_BOND_LENGTH, 0, 0);
     //Matrix rotMatrix = Matrix.makeRotationMatrix(109.5, Matrix.Axis.X);
     //methLoc = methLoc.transform(rotMatrix);
-    methyl = new Methyl(loc, AtomOrGroup.Charge.NEUTRAL);
+    methyl = new Methyl(loc, AtomOrGroup.Charge.NEUTRAL, 0, 0);
     methyl.setRot(180, 0, -(180 - 109.5));
     
     // Hang hydrogens on the remaining orbitals
@@ -38,8 +38,8 @@ public class Ethyl extends AtomOrGroup {
     hydro2 = new Atom(loc);   
   }
   
-  public Ethyl(Point3D pt, AtomOrGroup.Charge charge) {
-    this(pt, charge, null);
+  public Ethyl(Point3D pt, AtomOrGroup.Charge charge, double tx, double ty) {
+    this(pt, charge, null, tx, ty);
   }
   
   public EthylView createView() {

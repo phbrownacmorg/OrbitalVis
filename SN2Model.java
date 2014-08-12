@@ -34,8 +34,8 @@ public class SN2Model extends Model {
     carb = new SP3Atom();
     
     hydro1 = new Atom();
-    hydro2 = new Atom();
-    hydro3 = new Atom();
+    hydro2 = new Atom(new Point3D(), -0.2, 0.2);
+    hydro3 = new Atom(new Point3D(), 0.2, 0.2);
     setHydrogenLocations();
     
     chlor = new SP3Atom(new Point3D(2 * Atom.BOND_LENGTH + Math.max(0, getT() - 0.5), 0, 0)); 
@@ -70,12 +70,12 @@ public class SN2Model extends Model {
       result.add(new BondView(carb_hydro3));
       result.add(new BondView(carb_chlor));
     }
-    result.add(oh.createView(HydroxideView.TEXT_HO));
+    result.add(chlor.createView("Cl", AtomView.CL_GREEN));
+    result.add(hydro2.createView());
     result.add(carb.createView("C", AtomView.C_BLACK));
     result.add(hydro1.createView());
-    result.add(hydro2.createView());
     result.add(hydro3.createView());
-    result.add(chlor.createView("Cl", AtomView.CL_GREEN));
+    result.add(oh.createView(HydroxideView.TEXT_HO));
     return result;
   }
   

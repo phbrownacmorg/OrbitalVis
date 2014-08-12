@@ -18,25 +18,33 @@ public class Atom extends AtomOrGroup {
   public static final double SP3_SP3_BOND_LENGTH = 2 * BOND_LENGTH;
   
   public Atom(Point3D pt, AtomOrGroup.Charge initialCharge, RefFrame parent) {
-    super(pt, initialCharge, parent);
+	  this(pt, initialCharge, parent, 0, 0);
   }
   
   public Atom(Point3D pt, RefFrame parent) {
-    this(pt, AtomOrGroup.Charge.NEUTRAL, parent);
+	  this(pt, AtomOrGroup.Charge.NEUTRAL, parent);
   }
   
   public Atom() {
-    this(new Point3D());
+	  this(new Point3D());
   }
   
   public Atom(Point3D pt) {
-    super(pt, AtomOrGroup.Charge.NEUTRAL);
+	  this(pt, AtomOrGroup.Charge.NEUTRAL, null);
   }
   
+  public Atom(Point3D pt, double tx, double ty) {
+	  this(pt, AtomOrGroup.Charge.NEUTRAL, null, tx, ty);
+  }
+	  
   public Atom(Point3D pt, AtomOrGroup.Charge initialCharge) {
-    super(pt, initialCharge);
+	  this(pt, initialCharge, null, 0, 0);
   }
 
+  public Atom(Point3D pt, AtomOrGroup.Charge initialCharge, RefFrame parent, 
+		  	  double tx, double ty) {
+	  super(pt, initialCharge, parent, tx, ty);
+  }
   /**
    * Create a HydrogenView object to view this Atom as a hydrogen atom.
    * This isn't very clean from a design point of view, since not every

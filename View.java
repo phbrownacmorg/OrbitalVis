@@ -23,8 +23,8 @@ public class View implements GLEventListener, ConstantMgr
 {
   // The attributes have default values, so that we don't have to specify everything.
   protected boolean perspective = true;  // Use perspective projection if true
-  private double near = NEAR;          // Distance to the near clipping plane
-  private double far = FAR;            // Distance to the far clipping plane
+  protected double near = NEAR;          // Distance to the near clipping plane
+  protected double far = FAR;            // Distance to the far clipping plane
   private double aspect = -1;          // Aspect ratio of the viewing frustum
   private double fovy = FOVY;          // Vertical field of view, in degrees
   protected float[] eye = {-VP/2.f, VP/4.f, VP, 1};  // Eye point, in model coordinates
@@ -45,7 +45,7 @@ public class View implements GLEventListener, ConstantMgr
    */
   public View(Model model, Properties props) {
     drawList = model.createDrawList(false);
-    System.out.println("Created 3D drawlist");
+//    System.out.println("Created 3D drawlist");
 
     props.list(System.out);
     
@@ -116,8 +116,8 @@ public class View implements GLEventListener, ConstantMgr
   public void init(GLAutoDrawable drawable)
   {
 	GLCapabilitiesImmutable glCapsActual = drawable.getChosenGLCapabilities();
-	System.out.println("Actual glCaps: " + glCapsActual);
-	System.out.println("Alpha bits: " + glCapsActual.getAccumAlphaBits());
+//	System.out.println("Actual glCaps: " + glCapsActual);
+//	System.out.println("Alpha bits: " + glCapsActual.getAccumAlphaBits());
 	
     this.gl = (GL2)(drawable.getGL());
     this.glDrawable = drawable;
@@ -202,7 +202,7 @@ public class View implements GLEventListener, ConstantMgr
     gl.glPushMatrix();
     gl.glRotated(H_ROTATE_BASE + hAngle, UP[0], UP[1], UP[2]);
     
-    ShapeBuilder.axes(gl);
+//    ShapeBuilder.axes(gl);
     for (Drawable d:drawList) {
       d.draw(gl);
     }
@@ -217,7 +217,7 @@ public class View implements GLEventListener, ConstantMgr
    */
   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
   {
-	System.out.println("Reshaping");
+//	System.out.println("Reshaping");
 
 	canvasWidth = width;
     double aspectRatio = this.aspect;

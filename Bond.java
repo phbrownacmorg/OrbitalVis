@@ -28,6 +28,24 @@ public class Bond {
   }
   
   public AtomOrGroup getStart3D() { return frame1; }
+  public AtomOrGroup getEnd3D()   { return frame2; }
+  public Point3D getVectorFor2D() {
+	  Point3D result = null;
+	  if (frame2.getParent() == frame1) {
+		  result = frame2.getPtFor2D();
+//		  System.out.printf("frame2: %s%nvecFor2D: %s%n", frame2, result);
+	  }
+	  else {
+		  // This can be expected to fail when (a) one end of this Bond is nested inside
+		  // another frame, but (b) the end isn't nested in the beginning.
+//	  System.out.println("start: " + frame1);
+//	  System.out.println("end: " + frame2);
+		  result = new Point3D(frame2.getX2D() - frame1.getX2D(),
+				  frame2.getY2D() - frame1.getY2D(), frame2.getZ() - frame1.getZ());
+	  }
+//	  System.out.println("diff: " + result);
+	  return result;
+  }
 //  public Point2D getStart() { return frame1.getPt2D(); }
 //  public Point2D getEnd()   { return frame2.getPt2D(); }
   
@@ -36,7 +54,7 @@ public class Bond {
   
   public int getDepthDir() {
     int result = 0;
-    double diff = frame2.getX() - frame1.getX();
+    double diff = frame2.getZ() - frame1.getZ();
     if (Math.abs(diff) > DEPTH_EPSILON) {
       result = (int)(Math.signum(diff));
     }

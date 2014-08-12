@@ -16,14 +16,14 @@ public class Methyl extends AtomOrGroup {
   private Atom hydro1, hydro2, hydro3;
   private SP3Atom carb;
   
-  public Methyl(Point3D pt, AtomOrGroup.Charge charge, RefFrame parent) {
-    super(pt, charge, parent);
+  public Methyl(Point3D pt, AtomOrGroup.Charge charge, RefFrame parent, 
+		  		double tx, double ty) {
+    super(pt, charge, parent, tx, ty);
     makeMethylStuff();
   }
 
-  public Methyl(Point3D pt, AtomOrGroup.Charge charge) {
-    super(pt, charge);
-    makeMethylStuff();
+  public Methyl(Point3D pt, AtomOrGroup.Charge charge, double tx, double ty) {
+    this(pt, charge, null, tx, ty);
   }
   
   private void makeMethylStuff() {

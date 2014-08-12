@@ -10,6 +10,8 @@ canvasLayout: vertical
 
 # default is 25 100 100
 #2DScales: -35 100 100
+2DScales: 1 1 1
+2DFontSize: 48
 
 #fov: 26 Previous, for horizontal layout pre-ethyl group
-fov: 40
+fov: 50

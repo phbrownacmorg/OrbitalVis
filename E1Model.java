@@ -32,7 +32,7 @@ public class E1Model extends Model {
   private Bond hydro2_oh;
   private Bond carb1_carb2;
   private Bond carb1_meth1, carb1_hydro1, carb2_chlor, carb2_hydro3, carb2_meth2;
-  private Bond carb1_hydro2;
+  private Bond hydro2_carb1;
 
   public E1Model() {
     
@@ -42,17 +42,17 @@ public class E1Model extends Model {
     carb2 = new SP3Atom(new Point3D(Atom.BOND_LENGTH, 0, 0)); 
     carb2.setRot(0, 0, 180 + carbon1ZRot);  // 0 orbital interacts with the leaving Cl, and eventually forms the pi-bond.
     
-    hydro1 = new Atom(new Point3D(), carb1);
-    hydro2 = new Atom();
-    hydro3 = new Atom(new Point3D(), carb2);
+    Point3D orb0Vec = carb1.getAbsOrbitalLoc(0, Atom.S_TO_SP3_BOND_LENGTH);
+    hydro2 = new Atom(new Point3D(orb0Vec.x(), orb0Vec.y(), orb0Vec.z()));
+
+    hydro1 = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb1, -0.5, 0.3);
+    hydro3 = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb2, 0.5, -0.3);
     
     chlor = new SP3Atom(new Point3D(), carb2);
     
-    meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb1);
-    meth2 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb2);
+    meth1 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb1, -0.2, -0.3);
+    meth2 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb2, 0.2, 0.3);
     
-    Point3D orb0Vec = carb1.getAbsOrbitalVector(0).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    hydro2.setLoc(carb1.getX() + orb0Vec.x(), carb1.getY() + orb0Vec.y(), carb1.getZ() + orb0Vec.z());
     hydro2InitialX = hydro2.getX();
     oHClosestX = hydro2InitialX - 1.5*(Atom.S_TO_SP3_BOND_LENGTH);
     oh = new Hydroxide(new Point3D(-1.25 * MAX_WITHDRAWAL, hydro2.getY(), 0), AtomOrGroup.Charge.MINUS);
@@ -61,10 +61,10 @@ public class E1Model extends Model {
     
     // Create the Bonds
     hydro2_oh = new Bond(hydro2, oh, Bond.State.BROKEN);
-    carb1_carb2 = new Bond(carb1, carb2, Bond.State.FULL);
+    carb1_carb2 = new Bond(carb2, carb1, Bond.State.FULL);
     carb1_meth1 = new Bond(carb1, meth1, Bond.State.FULL);
     carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
-    carb1_hydro2 = new Bond(carb1, hydro2, Bond.State.FULL);
+    hydro2_carb1 = new Bond(hydro2, carb1, Bond.State.FULL);
     carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
     carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
     carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
@@ -81,14 +81,12 @@ public class E1Model extends Model {
     chlor.setLoc(carb2orb0Vec.x(), carb2orb0Vec.y(), carb2orb0Vec.z());
     double rotation = -carb2.getZRotation();
       // -109.5 * (1.0 - carb1.getInsideOutness()) - ((180.0 - 109.5) * carb1.getInsideOutness());
-    chlor.setRot(180, 0, 0);//(rotation, 0, 0);
+    chlor.setRot(0, 180, 0);
     
     // Set the CH3 that's bonded to carb1 (on orbital 3)
     Point3D carb1orb3Vec = carb1.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
     meth1.setLoc(carb1orb3Vec.x(), carb1orb3Vec.y(), carb1orb3Vec.z());
-//    double rotY = Math.toDegrees(Math.atan(carb1orb3Vec.x() / carb1orb3Vec.z()));
-//    double rotX = Math.toDegrees(Math.asin(carb1orb3Vec.y() / Atom.SP3_SP3_BOND_LENGTH));
-    meth1.setRot(0, 180 - carb1.getZRotation(), -30); //(rotX, rotY, 0);
+    meth1.setRot(60, 0, 180 -carb1.getZRotation()); //(rotX, rotY, 0);
 
     // Set the H that's on carb1's orbital 2
     Point3D carb1orb2Vec = carb1.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
@@ -99,7 +97,7 @@ public class E1Model extends Model {
     meth2.setLoc(carb2orb2Vec.x(), carb2orb2Vec.y(), carb2orb2Vec.z());
 //    rotY = Math.toDegrees(Math.atan(carb2orb2Vec.x() / carb2orb2Vec.z()));
 //    rotX = Math.toDegrees(Math.asin(carb2orb2Vec.y() / Atom.SP3_SP3_BOND_LENGTH));
-    meth2.setRot(0, 180 - rotation, 30); //(rotX, 180 + rotY, 0);
+    meth2.setRot(-60, 0, 180 + rotation); //(rotX, 180 + rotY, 0);
     
     // Set the H that's on carb2's orbital 3
     Point3D carb2orb3Vec = carb2.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
@@ -113,20 +111,20 @@ public class E1Model extends Model {
       result.add(new BondView(carb1_carb2));
       result.add(new BondView(carb1_meth1));
       result.add(new BondView(carb1_hydro1));
-      result.add(new BondView(carb1_hydro2));
+      result.add(new BondView(hydro2_carb1));
       result.add(new BondView(carb2_chlor));
       result.add(new BondView(carb2_hydro3));
       result.add(new BondView(carb2_meth2));
     }
-    //result.add(meth1.createView());
-    //result.add(meth2.createView());
-    result.add(oh.createView(HydroxideView.TEXT_HO));
-    result.add(carb1.createView("C", AtomView.C_BLACK));
-    result.add(carb2.createView("C", AtomView.C_BLACK));
     result.add(hydro1.createView());
+    result.add(meth2.createView());
+    result.add(chlor.createView("Cl", AtomView.CL_GREEN));
+    result.add(carb2.createView("C", AtomView.C_BLACK));
+    result.add(carb1.createView("C", AtomView.C_BLACK));
     result.add(hydro2.createView());
+    result.add(oh.createView(HydroxideView.TEXT_HO));
     result.add(hydro3.createView());
-    //result.add(chlor.createView("Cl", AtomView.CL_GREEN));
+    result.add(meth1.createView());
     return result;
   }
   
@@ -186,7 +184,7 @@ public class E1Model extends Model {
     if (getT() < 0.12) { // Initial state
       hydro2_oh.setState(Bond.State.BROKEN);
       carb1_carb2.setState(Bond.State.FULL);
-      carb1_hydro2.setState(Bond.State.FULL);
+      hydro2_carb1.setState(Bond.State.FULL);
       carb2_chlor.setState(Bond.State.FULL);
       oh.setCharge(AtomOrGroup.Charge.MINUS);
       chlor.setCharge(AtomOrGroup.Charge.NEUTRAL);
@@ -195,7 +193,7 @@ public class E1Model extends Model {
     else if (getT() < 0.46) { // Intermediate state 1
       hydro2_oh.setState(Bond.State.BROKEN);
       carb1_carb2.setState(Bond.State.FULL);
-      carb1_hydro2.setState(Bond.State.FULL);
+      hydro2_carb1.setState(Bond.State.FULL);
       carb2_chlor.setState(Bond.State.PARTIAL);
       oh.setCharge(AtomOrGroup.Charge.MINUS);
       chlor.setCharge(AtomOrGroup.Charge.PART_MINUS);
@@ -204,7 +202,7 @@ public class E1Model extends Model {
     else if (getT() < 0.7) { // Intermediate state 2
       hydro2_oh.setState(Bond.State.BROKEN);
       carb1_carb2.setState(Bond.State.FULL);
-      carb1_hydro2.setState(Bond.State.FULL);
+      hydro2_carb1.setState(Bond.State.FULL);
       carb2_chlor.setState(Bond.State.BROKEN);
       oh.setCharge(AtomOrGroup.Charge.MINUS);
       chlor.setCharge(AtomOrGroup.Charge.MINUS);
@@ -213,7 +211,7 @@ public class E1Model extends Model {
     else if (getT() < 0.91) { // Intermediate state 3
       hydro2_oh.setState(Bond.State.PARTIAL);
       carb1_carb2.setState(Bond.State.FULL_PARTIAL);
-      carb1_hydro2.setState(Bond.State.PARTIAL);
+      hydro2_carb1.setState(Bond.State.PARTIAL);
       carb2_chlor.setState(Bond.State.BROKEN);
       oh.setCharge(AtomOrGroup.Charge.PART_MINUS);
       chlor.setCharge(AtomOrGroup.Charge.MINUS);
@@ -222,7 +220,7 @@ public class E1Model extends Model {
     else { // Final state
       hydro2_oh.setState(Bond.State.FULL);
       carb1_carb2.setState(Bond.State.DOUBLE);
-      carb1_hydro2.setState(Bond.State.BROKEN);
+      hydro2_carb1.setState(Bond.State.BROKEN);
       carb2_chlor.setState(Bond.State.BROKEN);
       oh.setCharge(AtomOrGroup.Charge.NEUTRAL);
       chlor.setCharge(AtomOrGroup.Charge.MINUS);

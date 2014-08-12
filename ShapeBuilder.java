@@ -120,7 +120,7 @@ public class ShapeBuilder implements ConstantMgr {
     gl.glDisable(GL2.GL_LIGHTING);
     double colors[] = new double[4];
     gl.glGetDoublev(GL2.GL_CURRENT_COLOR, colors, 0);
-    
+    gl.glLineWidth(1);
     gl.glBegin(GL.GL_LINES);
     gl.glColor4fv(RED, 0);
     gl.glVertex3dv(v[0], 0);
@@ -137,6 +137,17 @@ public class ShapeBuilder implements ConstantMgr {
     gl.glColor4dv(colors, 0);
     //gl.glEnable(GL.GL_LIGHTING);
   }
+  
+  /**
+   * Draw a line between two Point3D's.
+   */
+  public static void line(GL2 gl, Point3D begin, Point3D end) {
+	  gl.glBegin(GL.GL_LINES);
+	  gl.glVertex3d(begin.x(), begin.y(), begin.z());
+	  gl.glVertex3d(end.x(), end.y(), end.z());
+	  gl.glEnd();
+  }
+  
   
   /**
    * Make a unit sphere, centered on the origin.

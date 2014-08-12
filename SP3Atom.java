@@ -25,7 +25,6 @@ public class SP3Atom extends Atom {
    * Holds the atom's own rotation matrix.  Logically, this should live in RefFrame.  For reasons of efficiency, 
    * however, it doesn't.
    */
-  private Matrix rotMatrix;
   
   public SP3Atom(Point3D pt, RefFrame parent) {
     super(pt, parent);
@@ -34,7 +33,6 @@ public class SP3Atom extends Atom {
     porb[1] = new POrbital(0, 0, -109.5);
     porb[2] = new POrbital(120, 0, -109.5);
     porb[3] = new POrbital(-120, 0, -109.5);
-    rotMatrix = Matrix.makeRotationMatrix(0, Matrix.Axis.X); // Identity matrix
   }
 
   public SP3Atom(Point3D pt) {
@@ -74,8 +72,8 @@ public class SP3Atom extends Atom {
    * @param i Index of the desired orbital
    * @return Unit vector as a Point3D
    */
-  public Point3D getAbsOrbitalVector(int i) {
-    Point3D result = new Point3D(1, 0, 0);  // Unit vector along the x-axis
+  public Point3D getAbsOrbitalLoc(int i, double scalingFactor) {
+    Point3D result = new Point3D(scalingFactor, 0, 0);  // Unit vector along the x-axis
     
     // Transform it by the atom's own rotations
     // Then associate it with the appropriate orbital
@@ -102,6 +100,18 @@ public class SP3Atom extends Atom {
       result = result.transform(m);
     }
 
+    result = result.translate(this.getX(), this.getY(), this.getZ());
+    RefFrame parent = this.getParent();
+    while (parent != null) {
+        Matrix mx = Matrix.makeRotationMatrix(parent.getRotX(), Matrix.Axis.X);
+        Matrix my = Matrix.makeRotationMatrix(parent.getRotY(), Matrix.Axis.Y);
+        Matrix mz = Matrix.makeRotationMatrix(parent.getRotZ(), Matrix.Axis.Z);
+        Matrix myz = my.mult(mz);
+        Matrix m = mx.mult(myz);
+        result = result.transform(m);
+    	result = result.translate(parent.getX(), parent.getY(), parent.getZ());
+    	parent = parent.getParent();
+    }
     return result;
   }
   
@@ -147,11 +157,6 @@ public class SP3Atom extends Atom {
   
   public void setRot(double rx, double ry, double rz) {
     super.setRot(rx, ry, rz);
-    Matrix mx = Matrix.makeRotationMatrix(rx, Matrix.Axis.X);
-    Matrix my = Matrix.makeRotationMatrix(ry, Matrix.Axis.Y);
-    Matrix mz = Matrix.makeRotationMatrix(rz, Matrix.Axis.Z);
-    Matrix myz = my.mult(mz);
-    rotMatrix = mx.mult(myz);
   }
   
   public double getP0DivergenceAngle() {

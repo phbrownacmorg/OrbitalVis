@@ -19,6 +19,7 @@ markHydrogens: false
 
 # default is 25 100 100
 #2DScales: -25 67 80
+2DScales: 2.5 2.5 2.5
 
 # default is 24.0
 #fontSize: 20.0

@@ -48,9 +48,9 @@ public class SN1Model extends Model {
     
     carb = new SP3Atom();
     
-    hydro = new Atom();
-    ethyl = new Ethyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
-    ch3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL);
+    hydro = new Atom(new Point3D(), 0.3, 0.3);
+    ethyl = new Ethyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, 0, 0);
+    ch3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, -0.3, 0.5);
     setHydrogenLocations();
     
     chlor = new SP3Atom(new Point3D(Atom.SP3_SP3_BOND_LENGTH + getT() * MAX_WITHDRAWAL, 0, 0)); 
@@ -86,12 +86,15 @@ public class SN1Model extends Model {
   public ArrayList<Drawable> createDrawList(boolean twoD) {
     ArrayList<Drawable> result = new ArrayList<Drawable>();
     if (twoD) { // Add the bonds as well
-      result.add(new BondView(carb_water));
-      result.add(new BondView(carb_hydro));
-      result.add(new BondView(carb_ethyl));
-      result.add(new BondView(carb_methyl));
-      result.add(new BondView(carb_chlor));
+        result.add(new BondView(carb_methyl));
+        result.add(new BondView(carb_chlor));
+        result.add(new BondView(carb_water));
+        result.add(new BondView(carb_ethyl));
+        result.add(new BondView(carb_hydro));
     }
+
+    result.add(ch3.createView());
+    result.add(chlor.createView("Cl", AtomView.CL_GREEN));
     if (zSign < 0) {
       result.add(water.createView(WaterView.TEXT_H2O));
     }
@@ -99,10 +102,8 @@ public class SN1Model extends Model {
       result.add(water.createView(WaterView.TEXT_OH2));
     }
     result.add(carb.createView("C", AtomView.C_BLACK));
-    result.add(hydro.createView());
-    result.add(ch3.createView());
-    result.add(chlor.createView("Cl", AtomView.CL_GREEN));
     result.add(ethyl.createView());
+    result.add(hydro.createView());
     return result;
   }
   
