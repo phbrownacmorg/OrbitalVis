@@ -36,8 +36,8 @@ public class View implements GLEventListener, ConstantMgr
   //private int canvasHeight = 1;
   
   protected ArrayList<Drawable> drawList;
-  protected GL2              gl;
-  private GLDrawable      glDrawable;
+  //protected GL2              gl;
+  private GLAutoDrawable      glDrawable;
   
   /**
    * Create a View.  The Properties object allows one to override the defaults
@@ -114,12 +114,8 @@ public class View implements GLEventListener, ConstantMgr
    * Initialize the View.  This should be called from the event-handling thread.
    */
   public void init(GLAutoDrawable drawable)
-  {
-	GLCapabilitiesImmutable glCapsActual = drawable.getChosenGLCapabilities();
-//	System.out.println("Actual glCaps: " + glCapsActual);
-//	System.out.println("Alpha bits: " + glCapsActual.getAccumAlphaBits());
-	
-    this.gl = (GL2)(drawable.getGL());
+  {	
+    GL2 gl = (GL2)(drawable.getGL());
     this.glDrawable = drawable;
     
     //gl.glEnable(GL.GL_DEPTH_TEST);
@@ -142,6 +138,7 @@ public class View implements GLEventListener, ConstantMgr
     drawable.setGL( new DebugGL2((GL2)(drawable.getGL()) ));
     
     System.out.println("Init GL is " + gl.getClass().getName());
+    //System.out.println(drawable.getAnimator().isAnimating());
   }
   
   /**
@@ -149,7 +146,6 @@ public class View implements GLEventListener, ConstantMgr
    */
   public void dispose(GLAutoDrawable drawable) {
 	  if (drawable == this.glDrawable) {
-		  this.gl = null;
 		  this.glDrawable = null;
 		  this.drawList = null;
 	  }
@@ -178,9 +174,10 @@ public class View implements GLEventListener, ConstantMgr
   
 
   protected void startDisplay() {
-	    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-	    gl.glMatrixMode(GL2.GL_MODELVIEW);
-	    gl.glLoadIdentity();
+	  GL2 gl = (GL2)(glDrawable.getGL());
+	  gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
+	  gl.glMatrixMode(GL2.GL_MODELVIEW);
+	  gl.glLoadIdentity();
 	    
 	    // Set up the projection
 	    GLU glu = new GLU();
@@ -198,17 +195,17 @@ public class View implements GLEventListener, ConstantMgr
   public void display(GLAutoDrawable drawable)
   {
 	  this.startDisplay();
-    // Draw stuff.
-    gl.glPushMatrix();
-    gl.glRotated(H_ROTATE_BASE + hAngle, UP[0], UP[1], UP[2]);
-    
-//    ShapeBuilder.axes(gl);
-    for (Drawable d:drawList) {
-      d.draw(gl);
-    }
-    gl.glPopMatrix();
-    
-  
+	  GL2 gl = (GL2)(drawable.getGL());
+	  // Draw stuff.
+	  gl.glPushMatrix();
+	  gl.glRotated(H_ROTATE_BASE + hAngle, UP[0], UP[1], UP[2]);
+	    
+//	    ShapeBuilder.axes(gl);
+	  for (Drawable d:drawList) {
+		  //System.out.println("Drawing...");
+		  d.draw(gl);
+	  }
+	  gl.glPopMatrix();
   }
   
   /**
@@ -218,27 +215,27 @@ public class View implements GLEventListener, ConstantMgr
   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
   {
 //	System.out.println("Reshaping");
+	  GL2 gl = (GL2)(drawable.getGL());
+	  canvasWidth = width;
+	  double aspectRatio = this.aspect;
+	  if (aspectRatio < 0) {
+		  aspectRatio = (double)width/(double)height;
+	  }
 
-	canvasWidth = width;
-    double aspectRatio = this.aspect;
-    if (aspectRatio < 0) {
-      aspectRatio = (double)width/(double)height;
-    }
+	  //canvasHeight = height;
+	  gl.glViewport(x, y, width, height);
 
-    //canvasHeight = height;
-    gl.glViewport(x, y, width, height);
-
-    gl.glMatrixMode(GL2.GL_PROJECTION);
-    gl.glLoadIdentity();
-    if (perspective) {
-      GLU glu = new GLU();
-      glu.gluPerspective(fovy, aspectRatio, near, far);
-    }
-    else {
-    	double top = 5; 
-    	double left = -top * aspectRatio;
-    	gl.glOrtho(left, -left, -top, top, near, far);
-    }
+	  gl.glMatrixMode(GL2.GL_PROJECTION);
+	  gl.glLoadIdentity();
+	  if (perspective) {
+		  GLU glu = new GLU();
+		  glu.gluPerspective(fovy, aspectRatio, near, far);
+	  }
+	  else {
+		  double top = 5; 
+		  double left = -top * aspectRatio;
+		  gl.glOrtho(left, -left, -top, top, near, far);
+	  }
   }
   
   /**

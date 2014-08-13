@@ -32,8 +32,9 @@ import java.awt.event.WindowEvent;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class Controller extends Animator implements ActionListener, ChangeListener
+public class Controller implements ActionListener, ChangeListener
 {
+	public Animator anim;
   private int reactionSteps;
   private View view;
   private View2D view2d;
@@ -61,7 +62,8 @@ public class Controller extends Animator implements ActionListener, ChangeListen
    * Create a Controller.
    */
   private Controller(Properties props) {
-    super();
+    anim = new Animator();
+    anim.setRunAsFastAsPossible(true);
     
     // Must be parsed before the models are created
     try {
@@ -158,15 +160,16 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       canvas.addGLEventListener(view);
       canvas.addMouseMotionListener(makeMouseListener());
       canvas.addKeyListener(makeKeyListener());
-      this.add(canvas);
+      //this.add(canvas);
+      anim.add(canvas);
 
       testFrame.addWindowListener(makeWindowListener());
 
-      view2d = new View2D(model, props);
+      view2d = new View2D(model, props, this);
       //canvas2d = new Canvas2D(view2d);
       GLCanvas canvas2D = new GLCanvas(glCaps);
       canvas2D.addGLEventListener(view2d);
-      this.add(canvas2D);
+      anim.add(canvas2D);
       
       // add the canvases
       if (props.getProperty("canvasLayout", "horizontal").equals("vertical")) {
@@ -259,13 +262,14 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   /**
    * Start drawing.
    */
-  public boolean start() {
+  public void start() {
     testFrame.setVisible(true);
-    return super.start();
+    anim.start();
+    System.out.println("anim.isAnimating(): "+anim.isAnimating());
   }
   
   private void quit() {
-    this.stop();
+    anim.stop();
     System.exit(0);
   }
   
@@ -307,7 +311,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       }
       public void windowIconified(WindowEvent e) {
         //System.out.println("Stopping...");
-        stop();
+        anim.stop();
       }
       public void windowDeiconified(WindowEvent e) {
         start();
@@ -377,6 +381,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
   private MouseAdapter makeButtonListener() {
     return (new MouseAdapter() {
       public void mousePressed(MouseEvent e) {
+//    	  System.out.println("Mouse pressed");
         if (e.getSource() == fwdButton) {
           cineStep = 1;
         }
@@ -399,6 +404,7 @@ public class Controller extends Animator implements ActionListener, ChangeListen
    * Increase the value of t by the constant DT.
    */
   public void incrT() {
+//	  System.out.println("t");
     if (rocking && (rockingAngle > 0)) {
       animT += 1.0/animSteps;
       if (animT > 1.0) {
@@ -406,19 +412,9 @@ public class Controller extends Animator implements ActionListener, ChangeListen
       }
     }
     slider.setValue(slider.getValue() + cineStep);
-  }
-  
-  /**
-   * Draw the canvas, changing t as you go.
-   */
-  protected void display() {
-    this.incrT();
-    
+
     // Set the view rotation
     view.setRotH(userAngle + rockingAngle * Math.sin(2 * Math.PI * animT));
-        
-    // display
-    super.display();
   }
     
   /**

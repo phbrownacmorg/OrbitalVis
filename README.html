@@ -31,16 +31,13 @@
 
     <p>OrbitalVis requires the a Java Runtime Environment (JRE) to be
       installed on your computer.  This release of OrbitalVis was
-      developed with the Sun/Oracle JRE 1.6.0, update 18.  Later
-      Sun/Oracle JRE's will probably work fine.  Earlier JRE's, or
-      non-Sun JRE's, might also work but haven't been
+      developed with Java 1.7.0, update 55.  Later JRE's will probably
+      work fine.  Earlier JRE's might also work but haven't been
       tested.  <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle's
       latest JRE</a> is a free download, so this shouldn't pose a real
       problem.</p>
  
-    <p>As of right now (15 Nov 2011), only Windows computers are
-      supported.  This restriction should be something we can relax
-      in the future.</p>
+    <p>This code runs on Windows, Macinstosh, and Linux computers.</p>
 
     <h3>Installing OrbitalVis on your computer</h3>
 
@@ -53,31 +50,31 @@
     <h3>Selecting a reaction mechanism</h3>
 
     <p>You can select a reaction mechanism by editing the
-      file <samp>generic-props.txt</samp> with a text editor (Notepad,
+      file <code>generic-props.txt</code> with a text editor (Notepad,
       for example).  In the part of that file marked "Which model?",
-      you can remove the <samp>#</samp> character at the beginning of
+      you can remove the <code>#</code> character at the beginning of
       the line that indicates the model you want.  So, for example, if
       you want to see an E1 reaction, you change the line that looks
       like this:<br /><code>#model: E1</code><br />to 
       this:<br /><code>model: E1</code><br />Make sure that the lines
-      for all the other models start with a <samp>#</samp>, and you're
+      for all the other models start with a <code>#</code>, and you're
       ready to run.
     </p>
     <p>If you want to see an S<sub><small>N</small></sub>2 reaction,
       just make sure that lines for all the other models start with
-      a <samp>#</samp> character, and you're ready to go.
+      a <code>#</code> character, and you're ready to go.
       (S<sub><small>N</small></sub>2 is the default, which is why
       there's no specific line for it.)</p>
     
     <p>Many other properties of the animation can also be changed by
-      editing either the <samp>generic-props.txt</samp> file or the
+      editing either the <code>generic-props.txt</code> file or the
       several mechanism-specific files (for
-      example, <samp>E1-props.txt</samp> sets properties specific to the
+      example, <code>E1-props.txt</code> sets properties specific to the
       E1 animation).</p>
 
     <h3>Starting the program</h3>
  
-    <p>Just open <samp>OrbitalVis.jar</samp>.</p>
+    <p>Just open <code>OrbitalVis.jar</code>.</p>
 
     <h3>Controls</h3>
 
@@ -90,11 +87,11 @@
     
     <h4>Changing the viewpoint</h4>
     
-    <p>The <samp>Rock</samp> button makes the model rock back and
+    <p>The <code>Rock</code> button makes the model rock back and
       forth automatically.  This motion can be quite helpful in
       disambiguating the 3D structure, especially with more complex
       reactions.  Clicking the same button again (it will now be
-      marked <samp>Stop</samp>) makes the rocking stop.</p>
+      marked <code>Stop</code>) makes the rocking stop.</p>
 
     <p>The model can also be rotated about the vertical axis by
       clicking the mouse in the 3D window and dragging sideways.
@@ -106,8 +103,8 @@
     <h4>Attacking from the other side</h4>
 
     <p>If the reaction mechanism allows attack from the other side
-      (such as E1 or S<sub><small>N</small></sub>1), the <samp>Attack
-      other side</samp> button will restart the simulation with the
+      (such as E1 or S<sub><small>N</small></sub>1), the <code>Attack
+      other side</code> button will restart the simulation with the
       attacking group coming from the other side.</p>
 
     <h4>Exiting the program</h4>
@@ -119,5 +116,5 @@
     <hr />
     <address><a>Peter Brown</a> &lt;<a href="mailto:peter.brown@converse.edu">peter.brown@converse.edu</a>&gt;</address>
     <p style="margin: 0">
-      Last modified: <!-- hhmts start -->15 Nov 2011 21:51:51
+      Last modified: <!-- hhmts start -->12 Aug 2014 22:38:09
 </p></body></html>

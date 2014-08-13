@@ -1,13 +1,4 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.awt.Paint;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Path2D;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 //import java.awt.image.BufferedImage;
@@ -86,26 +77,16 @@ public class BondView extends Drawable {
   public static final double ONE_MINUS_LINE_SCALE_FACTOR = 1.0 - LINE_SCALE_FACTOR;
   public static final double LINE_OFFSET = 0;
   
-  /**
-   * Pattern to draw rear-facing wedges.
-   */
-  private static Paint pattern = new java.awt.GradientPaint(0, 0, BOND_COLOR, 0.05f, 0, Color.WHITE, true);
-
   private Bond bond;
-  private double tx, ty, endTx, endTy;
+  private double tx, ty;
   
-  /**
-   * This is the path used for drawing wedges.
-   */
-  private Path2D wedge;
-
   public BondView(Bond bond) {
     super(bond.getStart3D());
     this.bond = bond;
     this.tx = bond.getStart3D().getTx2D();
     this.ty = bond.getStart3D().getTy2D();
-    this.endTx = bond.getEnd3D().getTx2D();
-    this.endTy = bond.getEnd3D().getTy2D();
+    bond.getEnd3D().getTx2D();
+    bond.getEnd3D().getTy2D();
     
 //    wedge = new Path2D.Double();
 //    wedge.moveTo(0, 0);

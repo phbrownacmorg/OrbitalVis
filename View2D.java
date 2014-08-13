@@ -1,5 +1,6 @@
 import java.util.Properties;
 
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
@@ -22,10 +23,6 @@ public class View2D extends View {
 	public static double Y_SCALE = X_SCALE;
 	public static double Z_SCALE = X_SCALE;
 	public static double UNIT_TO_PIXEL_FUDGE = 0.015;
-	private static double EYE_DIST_FACTOR = 1.0;
-	private static int X_OFF = 365;
-	private static int Y_OFF = 170;
-  
 	public static int FONT_SIZE = 96; // 24.0f
 	public static double FONT_SCALE = 1.0/FONT_SIZE;
   
@@ -37,9 +34,11 @@ public class View2D extends View {
 
 //  private ArrayList<Drawable> drawList;
   private TextRenderer tr;
+  private Controller controller;
   
-  public View2D(Model m, Properties props) {
+  public View2D(Model m, Properties props, Controller control) {
 	  super(m, props);
+	  this.controller = control;
 	  // Properties cannot change the 2D eyepoint
 	  //this.eye[0] = 0; this.eye[1] = 0; this.eye[2] = VP;
 //	  System.out.println(String.format("eye = (%f, %f, %f)", eye[0], eye[1], eye[2]));
@@ -92,6 +91,7 @@ public class View2D extends View {
 
   public void init(GLAutoDrawable drawable) {
 	  super.init(drawable);
+	  GL2 gl = (GL2)(drawable.getGL());
 	  gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	  this.tr = new TextRenderer(new java.awt.Font("SansSerif", java.awt.Font.BOLD, FONT_SIZE), true, true);
   }
@@ -105,6 +105,11 @@ public class View2D extends View {
   
   public void display(GLAutoDrawable canvas2D) {
 	  //System.out.println("View2D.display called");
+	  
+	  // *Major* kludge here
+	  controller.incrT();
+	  
+	  GL2 gl = (GL2)(canvas2D.getGL()); 
 	  this.startDisplay();
 
 	  // Draw stuff.
@@ -126,9 +131,6 @@ public class View2D extends View {
   }
   
   public static void setOffsets(int offX, int offY) {
-    X_OFF = offX;
-    Y_OFF = offY;
-    //System.out.println("2D offsets set to " + X_OFF + " and " + Y_OFF);
   }
   
   public static void setScales(double sx, double sy, double sz) {
