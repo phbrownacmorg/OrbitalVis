@@ -3,6 +3,7 @@
 #---------- Which model? -----------------------------
 
 # default is SN2
+model: SAPA
 #model: EA2A
 #model: Acyl
 #model: SN1
