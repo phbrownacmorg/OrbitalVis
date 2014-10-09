@@ -2,7 +2,7 @@ import java.util.ArrayList;
 //import javax.media.opengl.*;
 
 /**
- * The Model class for adding a carboxylic acid to an alkene
+ * The Model class for syn-addition of a peroxyacid to an alkene 
  *
  * Copyright 2011 Peter Brown <phbrown@acm.org>, Megan Dobbins<megan.dobbins@converse.edu>, 
  * and Ashleigh Geldenhuys<ashleigh.geldenhuys@converse.edu>
@@ -87,25 +87,24 @@ public class SAPAModel extends Model {
   }
   
   private void setHydrogenLocations() {
-//    // Figure out the proper rotation for the hydrogens.  This depends on the inside-outness of the carbon.
-    double rotation = -top_carb.getZRotation();
+    double rotation = -top_carb.getZRotation(1);
     
     top_carb.setRot(0, 0, rotation - 90.0);
 
     // Bottom carbon on top carbon's orbital 1 
     //Point3D orb1Vec = top_carb.getOrbitalVector(1).scale(Atom.SP3_SP3_BOND_LENGTH);
     //bottom_carb.setLoc(orb1Vec.x(), orb1Vec.y(), orb1Vec.z());
-    bottom_carb.setRot(0, 0, 90 - bottom_carb.getZRotation());
+    bottom_carb.setRot(0, 0, 90 - bottom_carb.getZRotation(1));
     
     // Methyl on top carbon's orbital 2
     Point3D orb2Vec = top_carb.getOrbitalVector(2).scale(Atom.SP3_SP3_BOND_LENGTH);
     ch3a.setLoc(orb2Vec.x(), orb2Vec.y(), orb2Vec.z());
-    ch3a.setRot(120, 0, 180 - rotation);
+    ch3a.setRot(120, 0, 180 + top_carb.getZRotation(2));
     
     // Methyl on bottom carbon's orbital 3
     Point3D orb3Vec = bottom_carb.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
     ch3b.setLoc(orb3Vec.x(), orb3Vec.y(), orb3Vec.z());
-    ch3b.setRot(-120, 0, 180 + bottom_carb.getZRotation());
+    ch3b.setRot(-120, 0, 180 + bottom_carb.getZRotation(3));
     
     // Hydrogen on orbital 2 (orbital 3 on the top carbon)
     orb2Vec = bottom_carb.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
@@ -146,9 +145,13 @@ public class SAPAModel extends Model {
     double insideOutness = 0.5 + insideOutnessOffset;
     //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
     double divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));
+    // Really simple-minded approach; fix later
+    double zeroOneAngle = SP3Atom.RELAXED_ANGLE * (1.0 - getT()) + 60.0 * getT();
+    bottom_carb.setZeroOneAngle(zeroOneAngle);
     bottom_carb.setInsideOutness(0.5 - insideOutnessOffset);
     bottom_carb.setP0Divergence(divergence);
     top_carb.setInsideOutness(insideOutness);
+    top_carb.setZeroOneAngle(zeroOneAngle);
     top_carb.setP0Divergence(divergence);
 
     // Set the corresponding locations of the hydrogens
