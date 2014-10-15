@@ -239,6 +239,10 @@ public class Controller implements ActionListener, ChangeListener
       result.add(new EA2AModel(Model.LEFT_SIDE_ATTACK));
       result.add(new EA2AModel(Model.RIGHT_SIDE_ATTACK));
     }
+    else if (modelName.equals("SAPA")) {
+        result.add(new SAPAModel(Model.LEFT_SIDE_ATTACK));
+        result.add(new SAPAModel(Model.RIGHT_SIDE_ATTACK));
+      }
     else if (modelName.equals("SN1")) {
       result.add(new SN1Model(Model.LEFT_SIDE_ATTACK));
       result.add(new SN1Model(Model.RIGHT_SIDE_ATTACK));

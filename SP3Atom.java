@@ -19,7 +19,9 @@
 
 public class SP3Atom extends Atom {
   private POrbital porb[] = new POrbital[4];
-  public double insideOutness; // In range [0, 1]
+  private double insideOutness; // In range [0, 1]
+  private double zeroOneAngle; // Angle between orbitals 0 and 1.  In range [60, 180]; relaxed value is 109.5
+  public static final double RELAXED_ANGLE = Math.toDegrees(Math.acos(-1/3.0)); 
   
   /**
    * Holds the atom's own rotation matrix.  Logically, this should live in RefFrame.  For reasons of efficiency, 
@@ -29,10 +31,11 @@ public class SP3Atom extends Atom {
   public SP3Atom(Point3D pt, RefFrame parent) {
     super(pt, parent);
     insideOutness = 0;
+    zeroOneAngle = RELAXED_ANGLE;
     porb[0] = new POrbital(0, 0, 0);
-    porb[1] = new POrbital(0, 0, -109.5);
-    porb[2] = new POrbital(120, 0, -109.5);
-    porb[3] = new POrbital(-120, 0, -109.5);
+    porb[1] = new POrbital(0, 0, -zeroOneAngle);
+    porb[2] = new POrbital(120, 0, -zeroOneAngle);
+    porb[3] = new POrbital(-120, 0, -zeroOneAngle);
   }
 
   public SP3Atom(Point3D pt) {
@@ -43,13 +46,28 @@ public class SP3Atom extends Atom {
     this(new Point3D());
   }
   
+  protected void setOrbitalRotations() {
+	  // Orbital 0 is assumed not to rotate
+	  for (int i = 1; i <= 3; i++) {
+		  porb[i].setRot(120 * (i-1), 0, this.getZRotation(i));
+	  }
+  }
+  
   public void setInsideOutness(double d) {
+	  // assert 0 <= d <= 1
     insideOutness = d;
     porb[0].setProportion(POrbital.SP3_PROP * (1.0 - d) + (1.0 - POrbital.SP3_PROP) * d);
-    double rotation = this.getZRotation(); //109.5*(1.0 - insideOutness) + ((180.0 - 109.5) * insideOutness);
-    porb[1].setRot(0, 0, rotation);
-    porb[2].setRot(120, 0, rotation);
-    porb[3].setRot(-120, 0, rotation);
+    //double rotation = this.getZRotation(); //RELAXED_ANGLE*(1.0 - insideOutness) + ((180.0 - RELAXED_ANGLE) * insideOutness);
+    this.setOrbitalRotations();
+//    porb[1].setRot(0, 0, this.getZRotation(1));
+//    porb[2].setRot(120, 0, this.getZRotation(2));
+//    porb[3].setRot(-120, 0, this.getZRotation(3));
+  }
+  
+  public void setZeroOneAngle(double theta) {
+	  // assert 60 <= theta <= 180
+	  zeroOneAngle = theta;
+	  this.setOrbitalRotations();
   }
   
   public double getInsideOutness() {
@@ -57,7 +75,17 @@ public class SP3Atom extends Atom {
   }
   
   public double getZRotation() {
-    return -(109.5*(1.0 - insideOutness) + ((180.0 - 109.5) * insideOutness));
+	  return getZRotation(1);
+  }
+  
+  public double getZRotation(int orbitalNum) {
+	  // assert 1 <= orbitalNum <= 3 
+	  double angle = zeroOneAngle;
+	  if ((orbitalNum > 1) && (zeroOneAngle != RELAXED_ANGLE)) {
+		  double zeroOneProp = zeroOneAngle / RELAXED_ANGLE;
+		  angle = zeroOneProp * RELAXED_ANGLE + (1.0 - zeroOneProp) * 120.0;
+	  }
+	  return -(angle*(1.0 - insideOutness) + ((180.0 - angle) * insideOutness)); 
   }
   
   /**
@@ -81,19 +109,19 @@ public class SP3Atom extends Atom {
       result = result.transform(rotMatrix);
     }
     else if (i == 1) {
-      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(1), Matrix.Axis.Z);
       Matrix m = rotMatrix.mult(rotZ);
       result = result.transform(m);
     }
     else if (i == 2) {
-      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(2), Matrix.Axis.Z);
       Matrix rotX = Matrix.makeRotationMatrix(120, Matrix.Axis.X);
       Matrix rotXZ = rotX.mult(rotZ);
       Matrix m = rotMatrix.mult(rotXZ);
       result = result.transform(m);
     }
     else if (i == 3) {
-      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(3), Matrix.Axis.Z);
       Matrix rotX = Matrix.makeRotationMatrix(-120, Matrix.Axis.X);
       Matrix rotXZ = rotZ.mult(rotX);
       Matrix m = rotMatrix.mult(rotXZ);
@@ -133,19 +161,19 @@ public class SP3Atom extends Atom {
       //result = result.transform(rotMatrix);
     }
     else if (i == 1) {
-      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(1), Matrix.Axis.Z);
       //Matrix m = rotMatrix.mult(rotX);
       result = result.transform(rotZ);
     }
     else if (i == 2) {
-      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(2), Matrix.Axis.Z);
       Matrix rotX = Matrix.makeRotationMatrix(120, Matrix.Axis.X);
       Matrix rotXZ = rotX.mult(rotZ);
       //Matrix m = rotMatrix.mult(rotZX);
       result = result.transform(rotXZ);
     }
     else if (i == 3) {
-      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(), Matrix.Axis.Z);
+      Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(3), Matrix.Axis.Z);
       Matrix rotX = Matrix.makeRotationMatrix(-120, Matrix.Axis.X);
       Matrix rotXZ = rotX.mult(rotZ);
       //Matrix m = rotMatrix.mult(rotZX);
