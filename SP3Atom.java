@@ -8,6 +8,7 @@
  * Orbital 3 points on the +Z side of the XY plane.  When insideOutness == 0.5, it lies in the YZ plane.
  *
  * Copyright 2010 Peter Brown <phbrown@acm.org> and Madonna King
+ * Copyright 2014 Peter Brown and Ashish Nicodemus
  *
  * This code is distributed under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of the
@@ -18,16 +19,36 @@
  */
 
 public class SP3Atom extends Atom {
+	/**
+	 * The four electron orbitals of the SP3Atom. 
+	 */
   private POrbital porb[] = new POrbital[4];
+  
+  /**
+   * Controls the degree to which orbital 0 lies along the +X axis as opposed to the -X axis.
+   * The value is in the range from 0 (orbital 0 has POrbital.SP3_PROP of its volume along the +X axis)
+   * to 1 (orbital 0 has POrbital.SP3_PROP of its volume along the -X axis).  A value of 0.5 means that
+   * orbital 0 is fully a p-orbital (not hybridized), evenly split between the +X and -X axes. 
+   */
   private double insideOutness; // In range [0, 1]
-  private double zeroOneAngle; // Angle between orbitals 0 and 1.  In range [60, 180]; relaxed value is 109.5
+  
+  /**
+   * Angle in degrees between orbitals 0 and 1.  This value is in the range [60, 180].  The relaxed value
+   * (the value if the atom isn't strained) is the arccos(-1/3) ~= 109.5 degees.
+   */
+  private double zeroOneAngle;
+  
+  /**
+   * Relaxed value of zeroOneAngle
+   */
   public static final double RELAXED_ANGLE = Math.toDegrees(Math.acos(-1/3.0)); 
   
   /**
-   * Holds the atom's own rotation matrix.  Logically, this should live in RefFrame.  For reasons of efficiency, 
-   * however, it doesn't.
+   * Create an SP3Atom at a given point, nested within a given frame of reference.
+   * 
+   * @param Point3D at which to create the SP3Atom
+   * @param RefFrame within which the Point3D is nested
    */
-  
   public SP3Atom(Point3D pt, RefFrame parent) {
     super(pt, parent);
     insideOutness = 0;
@@ -82,6 +103,8 @@ public class SP3Atom extends Atom {
 	  // assert 1 <= orbitalNum <= 3 
 	  double angle = zeroOneAngle;
 	  if ((orbitalNum > 1) && (zeroOneAngle != RELAXED_ANGLE)) {
+		  // Filthy hack.  Chemists (and mathematicians), please avert your eyes.  
+		  // But it seems to look OK, which is good enough for graphics.
 		  double zeroOneProp = zeroOneAngle / RELAXED_ANGLE;
 		  angle = zeroOneProp * RELAXED_ANGLE + (1.0 - zeroOneProp) * 120.0;
 	  }
