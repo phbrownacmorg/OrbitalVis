@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class SAPAModel extends Model {
   // Peroxyacid attacks from the left or the right?
-  private int zSign;
+  private int xSign;
   
   // Atoms/groups
   private SP3Atom bottom_carb;  // Bottom carbon in double bond
@@ -36,15 +36,14 @@ public class SAPAModel extends Model {
   private SP3Atom reactive_O; // Oxygen that ends up in the C-O-C ring
   private Atom end_H; // Hydrogen at the end of the COOH chain
   
-  
   // bonds
   /**
    * Remember to add the new bonds here please!!!!
    */
   private Bond bottom_carb_H, top_carb_H, bottom_carb_ch3, carb_carb, top_carb_ch3;
 
-  public SAPAModel(int zSign) {
-    this.zSign = zSign;
+  public SAPAModel(int xSign) {
+    this.xSign = xSign;
     
     // Alkene to start
     
@@ -63,9 +62,13 @@ public class SAPAModel extends Model {
     ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, bottom_carb, 0.4, -0.8);
     
     // Peroxyacid parts
-    reactive_O = new SP3Atom(new Point3D(zSign * 2 * Atom.SP3_SP3_BOND_LENGTH, 0, 0));
-    reactive_O.setRot(0, 0, SP3Atom.RELAXED_ANGLE/2.0 + (90 + (zSign * 90)));
+    Point3D reactive_O_start = new Point3D(xSign * 2 * Atom.SP3_SP3_BOND_LENGTH, 0, 0);
+    reactive_O = new SP3Atom(reactive_O_start);
+    reactive_O.setRot(0, 0, SP3Atom.RELAXED_ANGLE/2.0 + (90 + (xSign * 90)));
     
+    end_H = new Atom(reactive_O.getAbsOrbitalLoc(3, Atom.S_TO_SP3_BOND_LENGTH));
+    resonance_O = new SP3Atom(reactive_O.getAbsOrbitalLoc(2, Atom.SP3_SP3_BOND_LENGTH));
+    resonance_O.setRot(xSign * 90, 0, 90 + (xSign * 90) - (SP3Atom.RELAXED_ANGLE/2.0));  // FIX THIS!!!
         
     setHydrogenLocations();
     
@@ -126,9 +129,10 @@ public class SAPAModel extends Model {
     result.add(top_carb.createView("C", AtomView.C_BLACK));
     result.add(top_H.createView());
     
+    result.add(end_H.createView());
     result.add(reactive_O.createView("O", AtomView.O_RED));
+    result.add(resonance_O.createView("O", AtomView.O_RED));
     
-    //result.add(cl.createView("Cl", AtomView.CL_GREEN)); // added but not in correct position
     return result;
   }
   
@@ -136,7 +140,7 @@ public class SAPAModel extends Model {
     super.setT(newT);
     
     // Set the angles betwen the carbon's orbitals, and the proportion of its center orbital
-    double insideOutnessOffset = -zSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
+    double insideOutnessOffset = -xSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
     double insideOutness = 0.5 + insideOutnessOffset;
     //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
     double divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));
@@ -154,11 +158,11 @@ public class SAPAModel extends Model {
 
     // The reactive oxygen moves in along the X axis
     double t_O = Math.min(1.0, Math.max(0, (getT() - 0.1)/0.8));
-    double startX = zSign * Atom.SP3_SP3_BOND_LENGTH * 2;
-    double endX = zSign * Atom.SP3_SP3_BOND_LENGTH * (Math.sqrt(3.0) / 2);
+    double startX = xSign * Atom.SP3_SP3_BOND_LENGTH * 2;
+    double endX = xSign * Atom.SP3_SP3_BOND_LENGTH * (Math.sqrt(3.0) / 2);
     reactive_O.setLoc(t_O * endX + (1.0 - t_O) * startX, 0, 0);
     reactive_O.setZeroOneAngle(zeroOneAngle);  // Same angle as the carbons from the alkene
-    reactive_O.setRot(0, 0, zeroOneAngle/2.0 + (90 + (zSign * 90)));
+    reactive_O.setRot(0, 0, zeroOneAngle/2.0 + (90 + (xSign * 90)));
     
     // Update the Bonds
     if (getT() < 0.23) {

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class AcylModel extends Model {
   // OH attacks from the left or the right?
-  private int zSign;
+  private int xSign;
   
   // Atoms/groups
   private Atom nucleophile;
@@ -29,10 +29,10 @@ public class AcylModel extends Model {
   private Bond nucleophile_carb;
   private Bond carb_ethyl, carb_ch3, carb_oxy;
 
-  public AcylModel(int zSign) {
-    this.zSign = -zSign;
+  public AcylModel(int xSign) {
+    this.xSign = -xSign;
     
-    nucleophile = new Atom(new Point3D(zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 
+    nucleophile = new Atom(new Point3D(xSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 
     									0, 0),
                            AtomOrGroup.Charge.MINUS);
     
@@ -98,7 +98,7 @@ public class AcylModel extends Model {
     super.setT(newT);
     
     // Set the angles betwen the carbon's orbitals, and the proportion of its center orbital
-    double insideOutnessOffset = -zSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
+    double insideOutnessOffset = -xSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
     double insideOutness = 0.5 + insideOutnessOffset;
     //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
     double divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));
@@ -111,7 +111,7 @@ public class AcylModel extends Model {
     setHydrogenLocations();
     
     // The nucleophile moves in
-    nucleophile.setLoc(-zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 0, 0);
+    nucleophile.setLoc(-xSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 0, 0);
     
     // Update the Bonds
     if (getT() < 0.3) {

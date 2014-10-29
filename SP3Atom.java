@@ -146,7 +146,7 @@ public class SP3Atom extends Atom {
     else if (i == 3) {
       Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(3), Matrix.Axis.Z);
       Matrix rotX = Matrix.makeRotationMatrix(-120, Matrix.Axis.X);
-      Matrix rotXZ = rotZ.mult(rotX);
+      Matrix rotXZ = rotX.mult(rotZ);
       Matrix m = rotMatrix.mult(rotXZ);
       result = result.transform(m);
     }

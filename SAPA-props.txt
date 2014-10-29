@@ -2,7 +2,7 @@
 title: Syn-addition of Peroxyacid to Alkene
 
 # default is horizontal
-canvasLayout: vertical
+#canvasLayout: vertical
 
 # default is 350 170
 #2DOffsets: 370 170
@@ -14,4 +14,4 @@ canvasLayout: vertical
 2DFontSize: 48
 
 #fov: 26 Previous, for horizontal layout pre-ethyl group
-fov: 50
+fov: 30

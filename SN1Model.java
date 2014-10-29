@@ -22,7 +22,7 @@ public class SN1Model extends Model {
   public static final double MAX_WITHDRAWAL = 10.0 * Atom.SP3_SP3_BOND_LENGTH;
   
   // OH attacks from the left or the right?
-  private int zSign;
+  private int xSign;
 
   // Atoms/groups
   private Water water;
@@ -37,12 +37,12 @@ public class SN1Model extends Model {
   private Bond carb_hydro, carb_ethyl, carb_methyl;
   private Bond carb_chlor;
 
-  public SN1Model(int zSign) {
-    this.zSign = zSign;
-    water = new Water(new Point3D(zSign * (Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL), 0, 0), 
+  public SN1Model(int xSign) {
+    this.xSign = xSign;
+    water = new Water(new Point3D(xSign * (Atom.SP3_SP3_BOND_LENGTH + (1.0 - getT()) * MAX_WITHDRAWAL), 0, 0), 
                        AtomOrGroup.Charge.NEUTRAL);
-                       // zSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
-    if (zSign > 0) {
+                       // xSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT())))),
+    if (xSign > 0) {
       water.setRot(0, 180, 0);
     }
     
@@ -95,7 +95,7 @@ public class SN1Model extends Model {
 
     result.add(ch3.createView());
     result.add(chlor.createView("Cl", AtomView.CL_GREEN));
-    if (zSign < 0) {
+    if (xSign < 0) {
       result.add(water.createView(WaterView.TEXT_H2O));
     }
     else {
@@ -121,7 +121,7 @@ public class SN1Model extends Model {
       carb.setInsideOutness(0.5);
     }
     else {
-      carb.setInsideOutness(Math.max(0, Math.min(1.0, -zSign * (0.5/0.3) * (getT() - 0.65) + 0.5)));
+      carb.setInsideOutness(Math.max(0, Math.min(1.0, -xSign * (0.5/0.3) * (getT() - 0.65) + 0.5)));
     }
     
     // Set the corresponding locations of the hydrogens
@@ -136,12 +136,12 @@ public class SN1Model extends Model {
     }
     
     // The hydroxyl moves in, forming its bond at t=0.65 //t=0.6
-    //water.setLoc(0, 0, zSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT()))));
+    //water.setLoc(0, 0, xSign * (2 * Atom.BOND_LENGTH + Math.max(0, (0.5 - getT()))));
     if (getT() > 0.65) {
-      water.setLoc(zSign * (Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.95 - getT())) * (0.1/0.3)), 0, 0);
+      water.setLoc(xSign * (Atom.SP3_SP3_BOND_LENGTH + Math.max(0, (0.95 - getT())) * (0.1/0.3)), 0, 0);
     }
     else {
-      water.setLoc(zSign * (Atom.SP3_SP3_BOND_LENGTH + 0.1 + Math.pow(Math.max(0, (0.65 - getT())) * (MAX_WITHDRAWAL/0.65), 2)), 0, 0);
+      water.setLoc(xSign * (Atom.SP3_SP3_BOND_LENGTH + 0.1 + Math.pow(Math.max(0, (0.65 - getT())) * (MAX_WITHDRAWAL/0.65), 2)), 0, 0);
     }
     
     // Update the Bonds

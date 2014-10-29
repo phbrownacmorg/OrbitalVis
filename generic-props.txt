@@ -3,12 +3,8 @@
 #---------- Which model? -----------------------------
 
 # default is SN2
-<<<<<<< HEAD
-model: EA2A
-=======
 model: SAPA
 #model: EA2A
->>>>>>> origin/master
 #model: Acyl
 #model: SN1
 #model: E1

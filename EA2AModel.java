@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class EA2AModel extends Model {
   // HCl attacks from the left or the right?
-  private int zSign;
+  private int xSign;
   
   // Atoms/groups
   private SP3Atom bottom_carb;  // Bottom carbon in double bond
@@ -37,8 +37,8 @@ public class EA2AModel extends Model {
    */
   private Bond bottom_carb_H, top_carb_H, bottom_carb_ch3, carb_carb, top_carb_ch3;
 
-  public EA2AModel(int zSign) {
-    this.zSign = zSign;
+  public EA2AModel(int xSign) {
+    this.xSign = xSign;
     
     top_carb = new SP3Atom();
     top_carb.setInsideOutness(0.5);
@@ -53,10 +53,10 @@ public class EA2AModel extends Model {
     ch3a = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, -0.3, 0.55);
     top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, null, 0.3, 0.3);
     ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, bottom_carb, 0.4, -0.8);
-    new_H = new Atom(new Point3D(zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 0, 0),
+    new_H = new Atom(new Point3D(xSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 0, 0),
                      AtomOrGroup.Charge.MINUS);
-    cl = new SP3Atom(new Point3D(new_H.getX() + zSign * Atom.S_TO_SP3_BOND_LENGTH, 0, 0));
-    cl.setRot(0, 0, 90 + 90 * zSign);
+    cl = new SP3Atom(new Point3D(new_H.getX() + xSign * Atom.S_TO_SP3_BOND_LENGTH, 0, 0));
+    cl.setRot(0, 0, 90 + 90 * xSign);
     
     setHydrogenLocations();
     
@@ -124,7 +124,7 @@ public class EA2AModel extends Model {
     super.setT(newT);
     
     // Set the angles betwen the carbon's orbitals, and the proportion of its center orbital
-    double insideOutnessOffset = -zSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
+    double insideOutnessOffset = -xSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
     double insideOutness = 0.5 + insideOutnessOffset;
     //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
     double divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));
@@ -137,7 +137,7 @@ public class EA2AModel extends Model {
     setHydrogenLocations();
     
     // The new_H moves in
-    new_H.setLoc(zSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 0, 0);
+    new_H.setLoc(xSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 0, 0);
    // cl.setLoc(0, 0, );
     
     // Update the Bonds
