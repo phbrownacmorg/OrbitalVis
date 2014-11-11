@@ -39,7 +39,7 @@ public class SP3Atom extends Atom {
   private double zeroOneAngle;
   
   /**
-   * Relaxed value of zeroOneAngle
+   * Relaxed value of zeroOneAngle 109.5 degrees
    */
   public static final double RELAXED_ANGLE = Math.toDegrees(Math.acos(-1/3.0)); 
   
@@ -52,11 +52,14 @@ public class SP3Atom extends Atom {
   public SP3Atom(Point3D pt, RefFrame parent) {
     super(pt, parent);
     insideOutness = 0;
+    // adjusts the position of the atom
     zeroOneAngle = RELAXED_ANGLE;
+    // 109.5 degrees
     porb[0] = new POrbital(0, 0, 0);
     porb[1] = new POrbital(0, 0, -zeroOneAngle);
     porb[2] = new POrbital(120, 0, -zeroOneAngle);
     porb[3] = new POrbital(-120, 0, -zeroOneAngle);
+    
   }
 
   public SP3Atom(Point3D pt) {
@@ -68,7 +71,7 @@ public class SP3Atom extends Atom {
   }
   
   protected void setOrbitalRotations() {
-	  // Orbital 0 is assumed not to rotate
+	  // Orbital 0 is assumed to not rotate
 	  for (int i = 1; i <= 3; i++) {
 		  porb[i].setRot(120 * (i-1), 0, this.getZRotation(i));
 	  }
@@ -86,7 +89,7 @@ public class SP3Atom extends Atom {
   }
   
   public void setZeroOneAngle(double theta) {
-	  // assert 60 <= theta <= 180
+	  // assert 60 <= theta <= 180 (degrees)
 	  zeroOneAngle = theta;
 	  this.setOrbitalRotations();
   }
@@ -97,6 +100,7 @@ public class SP3Atom extends Atom {
   
   public double getZRotation() {
 	  return getZRotation(1);
+	  // of orbital 1
   }
   
   public double getZRotation(int orbitalNum) {
@@ -130,6 +134,7 @@ public class SP3Atom extends Atom {
     // Then associate it with the appropriate orbital
     if (i == 0) { // Orbital 0 lies along the x-axis
       result = result.transform(rotMatrix);
+      // .transform is used to manipulate the position, rotation, or scale of an object
     }
     else if (i == 1) {
       Matrix rotZ = Matrix.makeRotationMatrix(getZRotation(1), Matrix.Axis.Z);

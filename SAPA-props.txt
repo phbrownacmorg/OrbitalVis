@@ -15,3 +15,4 @@ title: Syn-addition of Peroxyacid to Alkene
 
 #fov: 26 Previous, for horizontal layout pre-ethyl group
 fov: 30
+//the field of view had to be increased to include the whole molecule
