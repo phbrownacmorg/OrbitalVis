@@ -36,7 +36,8 @@ public class SAPAModel extends Model {
   private SP3Atom reactive_O; // Oxygen that ends up in the C-O-C ring
   private Atom end_H; // Hydrogen at the end of the COOH chain
   
-  private static double RESONANCE_O_Z_FUDGE = -6.022362;  // Found experimentally
+  private static final double RESONANCE_O_Z_FUDGE = -6.022362;  // Found empirically
+  private static final double CARBONYL_C_Y_TWEAK = 7;           // Found empirically by eye
   
   // bonds
   /**
@@ -75,15 +76,19 @@ public class SAPAModel extends Model {
     		           90 + xSign * 90 - xSign * (120 - SP3Atom.RELAXED_ANGLE), 
     				   180 - resonance_O.getZRotation() + RESONANCE_O_Z_FUDGE);
     
+    //System.out.println("Resonance O: " + resonance_O_pt);
     carbonyl_C = new SP3Atom(resonance_O.getAbsOrbitalLoc(1, Atom.SP3_SP3_BOND_LENGTH));
+    //Point3D carbonyl_C_pt = carbonyl_C.getPt3D(); 
+    //System.out.println("Carbonyl C: " + carbonyl_C_pt);
+    //System.out.println("Z diff: " + (carbonyl_C_pt.z() - resonance_O_pt.z()));
     carbonyl_C.setInsideOutness(0.5);
     carbonyl_C.setP0Divergence(1);
-    carbonyl_C.setRot(0, -xSign * (90 - (120 - SP3Atom.RELAXED_ANGLE)), xSign * 90);
+    carbonyl_C.setRot(0, -xSign * (90 - (120 - SP3Atom.RELAXED_ANGLE)) + xSign * CARBONYL_C_Y_TWEAK, xSign * 90);
     
     double_bond_O = new SP3Atom(carbonyl_C.getAbsOrbitalLoc(1, Atom.SP3_SP3_BOND_LENGTH));
     double_bond_O.setInsideOutness(0.5);
     double_bond_O.setP0Divergence(1);
-    double_bond_O.setRot(0, 90 + xSign * (120 - SP3Atom.RELAXED_ANGLE), 
+    double_bond_O.setRot(0, 90 + xSign * (120 - SP3Atom.RELAXED_ANGLE) + xSign * CARBONYL_C_Y_TWEAK, 
     		-double_bond_O.getZRotation());
     
     r_H = new Atom(carbonyl_C.getAbsOrbitalLoc(2, Atom.S_TO_SP3_BOND_LENGTH));
@@ -184,7 +189,8 @@ public class SAPAModel extends Model {
     // The double-bond oxygen loses its double bond with the carbonyl C
     double_bond_O.setInsideOutness((1.0 - t_O)/2);
     double_bond_O.setP0Divergence(1.0 - t_O);
-    double_bond_O.setRot(0, 90 + xSign * (120 - SP3Atom.RELAXED_ANGLE), -double_bond_O.getZRotation());
+    double_bond_O.setRot(0, 90 + xSign * (120 - SP3Atom.RELAXED_ANGLE) + xSign * CARBONYL_C_Y_TWEAK, 
+    		-double_bond_O.getZRotation());
     
     // The resonance oxygen forms a double bond with the carbonyl C
     resonance_O.setInsideOutness(t_O/2);
