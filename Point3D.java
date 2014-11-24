@@ -60,6 +60,13 @@ public class Point3D {
 	  return result;
   }
   
+  public Point3D interpolate(Point3D p, double prop) {
+	  double newX = (1.0 - prop) * this.x() + prop * p.x();
+	  double newY = (1.0 - prop) * this.y() + prop * p.y();
+	  double newZ = (1.0 - prop) * this.z() + prop * p.z();
+	  return new Point3D(newX, newY, newZ);
+  }
+  
   /*
    * Return the normalized right-hand cross product of the current point (considered
    * as a vector) with the +Z basis vector.  If the current point is in fact on the

@@ -46,8 +46,8 @@ public class SP3Atom extends Atom {
   /**
    * Create an SP3Atom at a given point, nested within a given frame of reference.
    * 
-   * @param Point3D at which to create the SP3Atom
-   * @param RefFrame within which the Point3D is nested
+   * @param pt Point3D at which to create the SP3Atom
+   * @param parent RefFrame within which the Point3D is nested
    */
   public SP3Atom(Point3D pt, RefFrame parent) {
     super(pt, parent);
@@ -62,14 +62,30 @@ public class SP3Atom extends Atom {
     
   }
 
+  /**
+   * Create an SP3Atom at a given point, with no containing frame of reference.
+   * 
+   * @param pt Point3D at which to create the SP3Atom
+   */
   public SP3Atom(Point3D pt) {
     this(pt, null);
   }
   
+  
+  /**
+   * Create an SP3Atom at the origin with no containing frame of reference. 
+   */
   public SP3Atom() {
     this(new Point3D());
   }
   
+  public void setOrbital0XRotation(double d) {
+	  porb[0].setRot(d, 0, 0);
+  }
+  
+  /**
+   * Takes the Z rotation from orbital 1 and maps it through to the rest of the orbitals.
+   */
   protected void setOrbitalRotations() {
 	  // Orbital 0 is assumed to not rotate
 	  for (int i = 1; i <= 3; i++) {
@@ -77,6 +93,12 @@ public class SP3Atom extends Atom {
 	  }
   }
   
+  /**
+   * Sets the insideOutness member to the given value.  Update the proportion member of orbital 0 and the rotations
+   * of the other orbitals accordingly.
+   * 
+   * @param d New value for insideOutness. 0 <= d <= 1.
+   */
   public void setInsideOutness(double d) {
 	  // assert 0 <= d <= 1
     insideOutness = d;
@@ -106,9 +128,9 @@ public class SP3Atom extends Atom {
   public double getZRotation(int orbitalNum) {
 	  // assert 1 <= orbitalNum <= 3 
 	  double angle = zeroOneAngle;
-	  if ((orbitalNum > 1) && (zeroOneAngle != RELAXED_ANGLE)) {
+	  if ((orbitalNum > 1) && ((zeroOneAngle > 110) || zeroOneAngle < 109)) { // RELAXED_ANGLE)) {
 		  // Filthy hack.  Chemists (and mathematicians), please avert your eyes.  
-		  // But it seems to look OK, which is good enough for graphics.
+		  // But it seems to *look* OK, which is good enough for graphics.
 		  double zeroOneProp = zeroOneAngle / RELAXED_ANGLE;
 		  angle = zeroOneProp * RELAXED_ANGLE + (1.0 - zeroOneProp) * 120.0;
 	  }
@@ -128,7 +150,7 @@ public class SP3Atom extends Atom {
    * @return Unit vector as a Point3D
    */
   public Point3D getAbsOrbitalLoc(int i, double scalingFactor) {
-    Point3D result = new Point3D(scalingFactor, 0, 0);  // Unit vector along the x-axis
+    Point3D result = new Point3D(scalingFactor, 0, 0);  // Unit vector along the +x-axis
     
     // Transform it by the atom's own rotations
     // Then associate it with the appropriate orbital

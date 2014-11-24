@@ -30,11 +30,13 @@ public class SAPAModel extends Model {
   
   // Pieces of the peroxyacid
   private Atom r_H; // Hydrogen that takes the R position--not involved in the reaction
-  private SP3Atom carboxyl_C; // Carbon in the COOH chain
+  private SP3Atom carbonyl_C; // Carbon in the COOH chain
   private SP3Atom double_bond_O; // Oxygen that starts out double-bonded to the carboxyl's C
   private SP3Atom resonance_O; // Oxygen that ends up double-bonded to the carboxyl's C
   private SP3Atom reactive_O; // Oxygen that ends up in the C-O-C ring
   private Atom end_H; // Hydrogen at the end of the COOH chain
+  
+  private static double RESONANCE_O_Z_FUDGE = -6.022362;  // Found experimentally
   
   // bonds
   /**
@@ -67,9 +69,25 @@ public class SAPAModel extends Model {
     reactive_O.setRot(0, 0, SP3Atom.RELAXED_ANGLE/2.0 + (90 + (xSign * 90)));
     
     end_H = new Atom(reactive_O.getAbsOrbitalLoc(3, Atom.S_TO_SP3_BOND_LENGTH));
-    resonance_O = new SP3Atom(reactive_O.getAbsOrbitalLoc(2, Atom.SP3_SP3_BOND_LENGTH));
-    resonance_O.setRot(xSign * 90, 0, 90 + (xSign * 90) - (SP3Atom.RELAXED_ANGLE/2.0));  // FIX THIS!!!
-        
+    Point3D resonance_O_pt = reactive_O.getAbsOrbitalLoc(2, Atom.SP3_SP3_BOND_LENGTH);
+    resonance_O = new SP3Atom(resonance_O_pt);
+    resonance_O.setRot(30, 
+    		           90 + xSign * 90 - xSign * (120 - SP3Atom.RELAXED_ANGLE), 
+    				   180 - resonance_O.getZRotation() + RESONANCE_O_Z_FUDGE);
+    
+    carbonyl_C = new SP3Atom(resonance_O.getAbsOrbitalLoc(1, Atom.SP3_SP3_BOND_LENGTH));
+    carbonyl_C.setInsideOutness(0.5);
+    carbonyl_C.setP0Divergence(1);
+    carbonyl_C.setRot(0, -xSign * (90 - (120 - SP3Atom.RELAXED_ANGLE)), xSign * 90);
+    
+    double_bond_O = new SP3Atom(carbonyl_C.getAbsOrbitalLoc(1, Atom.SP3_SP3_BOND_LENGTH));
+    double_bond_O.setInsideOutness(0.5);
+    double_bond_O.setP0Divergence(1);
+    double_bond_O.setRot(0, 90 + xSign * (120 - SP3Atom.RELAXED_ANGLE), 
+    		-double_bond_O.getZRotation());
+    
+    r_H = new Atom(carbonyl_C.getAbsOrbitalLoc(2, Atom.S_TO_SP3_BOND_LENGTH));
+    
     setHydrogenLocations();
     
     // Create the Bonds
@@ -104,7 +122,7 @@ public class SAPAModel extends Model {
     orb2Vec = bottom_carb.getOrbitalVector(2).scale(Atom.S_TO_SP3_BOND_LENGTH);
     bottom_H.setLoc(orb2Vec.x(), orb2Vec.y(), orb2Vec.z());
     orb3Vec = top_carb.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    top_H.setLoc(orb3Vec.x(), orb3Vec.y(), orb3Vec.z());    
+    top_H.setLoc(orb3Vec.x(), orb3Vec.y(), orb3Vec.z());
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
@@ -124,14 +142,16 @@ public class SAPAModel extends Model {
     result.add(bottom_H.createView());
     result.add(ch3a.createView());
     result.add(ch3b.createView());
-    //result.add(new_H.createView());
     result.add(bottom_carb.createView("C", AtomView.C_BLACK));
     result.add(top_carb.createView("C", AtomView.C_BLACK));
     result.add(top_H.createView());
     
-    result.add(end_H.createView());
-    result.add(reactive_O.createView("O", AtomView.O_RED));
+    result.add(r_H.createView());
     result.add(resonance_O.createView("O", AtomView.O_RED));
+    result.add(carbonyl_C.createView("C", AtomView.C_BLACK));
+    result.add(reactive_O.createView("O", AtomView.O_RED));
+    result.add(double_bond_O.createView("O", AtomView.O_RED));
+    result.add(end_H.createView());
     
     return result;
   }
@@ -139,31 +159,50 @@ public class SAPAModel extends Model {
   public void setT(double newT) {
     super.setT(newT);
     
-    // Set the angles betwen the carbon's orbitals, and the proportion of its center orbital
+    // The reactive oxygen moves in along the X axis
+    double t_O = Math.min(1.0, Math.max(0, (getT() - 0.1)/0.8));
+    double startX = xSign * Atom.SP3_SP3_BOND_LENGTH * 2;
+    double endX = xSign * Atom.SP3_SP3_BOND_LENGTH * (Math.sqrt(3.0) / 2);
+    reactive_O.setLoc(t_O * endX + (1.0 - t_O) * startX, 0, 0);
+
+    // Really simple-minded approach; fix later
+    double zeroOneAngle = SP3Atom.RELAXED_ANGLE * (1.0 - t_O) + 60.0 * t_O;
+    reactive_O.setZeroOneAngle(zeroOneAngle);  // Same angle as the carbons from the alkene
+    reactive_O.setRot(0, 0, zeroOneAngle/2.0 + (90 + (xSign * 90)));
+
+    // Set the angles between the carbon's orbitals, and the proportion of its center orbital
     double insideOutnessOffset = -xSign * Math.max(0, Math.min(0.5, ((0.5/0.6) * (getT() - 0.3))));
     double insideOutness = 0.5 + insideOutnessOffset;
-    //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
     double divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));
-    // Really simple-minded approach; fix later
-    double zeroOneAngle = SP3Atom.RELAXED_ANGLE * (1.0 - getT()) + 60.0 * getT();
     bottom_carb.setZeroOneAngle(zeroOneAngle);
     bottom_carb.setInsideOutness(0.5 - insideOutnessOffset);
     bottom_carb.setP0Divergence(divergence);
     top_carb.setInsideOutness(insideOutness);
     top_carb.setZeroOneAngle(zeroOneAngle);
     top_carb.setP0Divergence(divergence);
-
+    
+    // The double-bond oxygen loses its double bond with the carbonyl C
+    double_bond_O.setInsideOutness((1.0 - t_O)/2);
+    double_bond_O.setP0Divergence(1.0 - t_O);
+    double_bond_O.setRot(0, 90 + xSign * (120 - SP3Atom.RELAXED_ANGLE), -double_bond_O.getZRotation());
+    
+    // The resonance oxygen forms a double bond with the carbonyl C
+    resonance_O.setInsideOutness(t_O/2);
+    resonance_O.setP0Divergence(t_O);
+    resonance_O.setRot((1.0 - t_O) * 30, 
+    			        90 + xSign * 90 - xSign * ((120 - SP3Atom.RELAXED_ANGLE)),
+    					180 - resonance_O.getZRotation() + (1.0 - t_O) * RESONANCE_O_Z_FUDGE);
+    
+    // The double bond (i.e., orbital 0) of the corbonyl C turns from the double-bond O to the resonance O
+    carbonyl_C.setOrbital0XRotation(t_O * 60);
+    
+    // Move the end_H from the peroxyacid
+    end_H.setLoc(reactive_O.getAbsOrbitalLoc(3, Atom.S_TO_SP3_BOND_LENGTH).interpolate(
+    		double_bond_O.getAbsOrbitalLoc((int)(2.5-xSign*0.5), Atom.S_TO_SP3_BOND_LENGTH), t_O));
+    
     // Set the corresponding locations of the hydrogens
     setHydrogenLocations();
 
-    // The reactive oxygen moves in along the X axis
-    double t_O = Math.min(1.0, Math.max(0, (getT() - 0.1)/0.8));
-    double startX = xSign * Atom.SP3_SP3_BOND_LENGTH * 2;
-    double endX = xSign * Atom.SP3_SP3_BOND_LENGTH * (Math.sqrt(3.0) / 2);
-    reactive_O.setLoc(t_O * endX + (1.0 - t_O) * startX, 0, 0);
-    reactive_O.setZeroOneAngle(zeroOneAngle);  // Same angle as the carbons from the alkene
-    reactive_O.setRot(0, 0, zeroOneAngle/2.0 + (90 + (xSign * 90)));
-    
     // Update the Bonds
     if (getT() < 0.23) {
       top_carb.setCharge(AtomOrGroup.Charge.NEUTRAL);

@@ -23,7 +23,7 @@ public class SP3AtomView extends AtomView {
 
   public void draw (GL2 gl) {
     initDraw(gl);
-    //ShapeBuilder.axes(gl);
+    ShapeBuilder.axes(gl);
     for (int i = 0; i < 4; i++) {
       porb[i].draw(gl);
     }
