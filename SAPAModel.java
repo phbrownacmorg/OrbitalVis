@@ -28,6 +28,13 @@ public class SAPAModel extends Model {
   private Methyl ch3a;
   private Methyl ch3b;
   
+//bonds
+ /**
+  * Remember to add the new bonds here please!!!!
+  */
+ private Bond bottom_carb_H, top_carb_H, bottom_carb_ch3, carb_carb, top_carb_ch3;
+
+ 
   // Pieces of the peroxyacid
   private Atom r_H; // Hydrogen that takes the R position--not involved in the reaction
   private SP3Atom carbonyl_C; // Carbon in the COOH chain
@@ -35,16 +42,14 @@ public class SAPAModel extends Model {
   private SP3Atom resonance_O; // Oxygen that ends up double-bonded to the carboxyl's C
   private SP3Atom reactive_O; // Oxygen that ends up in the C-O-C ring
   private Atom end_H; // Hydrogen at the end of the COOH chain
+  private Bond bottom_carb_O, top_carb_O, reactive_O_H, double_bond_O_H, resonance_O_reactive_O, resonance_O_carbonyl_C, carbonyl_C_R, carbonyl_C_double_bond_O;
+  
+  
   
   private static final double RESONANCE_O_Z_FUDGE = -6.022362;  // Found empirically
   private static final double CARBONYL_C_Y_TWEAK = 7;           // Found empirically by eye
   
-  // bonds
-  /**
-   * Remember to add the new bonds here please!!!!
-   */
-  private Bond bottom_carb_H, top_carb_H, bottom_carb_ch3, carb_carb, top_carb_ch3;
-
+  
   public SAPAModel(int xSign) {
     this.xSign = xSign;
     
@@ -69,15 +74,15 @@ public class SAPAModel extends Model {
     reactive_O = new SP3Atom(reactive_O_start);
     reactive_O.setRot(0, 0, SP3Atom.RELAXED_ANGLE/2.0 + (90 + (xSign * 90)));
     
-    end_H = new Atom(reactive_O.getAbsOrbitalLoc(3, Atom.S_TO_SP3_BOND_LENGTH));
+    end_H = new Atom(reactive_O.getAbsOrbitalLoc(3, Atom.S_TO_SP3_BOND_LENGTH), 0, -0.6);
     Point3D resonance_O_pt = reactive_O.getAbsOrbitalLoc(2, Atom.SP3_SP3_BOND_LENGTH);
-    resonance_O = new SP3Atom(resonance_O_pt);
+    resonance_O = new SP3Atom(resonance_O_pt, null, 0.2, 0.6);
     resonance_O.setRot(30, 
     		           90 + xSign * 90 - xSign * (120 - SP3Atom.RELAXED_ANGLE), 
     				   180 - resonance_O.getZRotation() + RESONANCE_O_Z_FUDGE);
     
     //System.out.println("Resonance O: " + resonance_O_pt);
-    carbonyl_C = new SP3Atom(resonance_O.getAbsOrbitalLoc(1, Atom.SP3_SP3_BOND_LENGTH));
+    carbonyl_C = new SP3Atom(resonance_O.getAbsOrbitalLoc(1, Atom.SP3_SP3_BOND_LENGTH), null, 0.2, 0.6);
     //Point3D carbonyl_C_pt = carbonyl_C.getPt3D(); 
     //System.out.println("Carbonyl C: " + carbonyl_C_pt);
     //System.out.println("Z diff: " + (carbonyl_C_pt.z() - resonance_O_pt.z()));
@@ -85,13 +90,13 @@ public class SAPAModel extends Model {
     carbonyl_C.setP0Divergence(1);
     carbonyl_C.setRot(0, -xSign * (90 - (120 - SP3Atom.RELAXED_ANGLE)) + xSign * CARBONYL_C_Y_TWEAK, xSign * 90);
     
-    double_bond_O = new SP3Atom(carbonyl_C.getAbsOrbitalLoc(1, Atom.SP3_SP3_BOND_LENGTH));
+    double_bond_O = new SP3Atom(carbonyl_C.getAbsOrbitalLoc(1, Atom.SP3_SP3_BOND_LENGTH), null, 0, -0.3);
     double_bond_O.setInsideOutness(0.5);
     double_bond_O.setP0Divergence(1);
     double_bond_O.setRot(0, 90 + xSign * (120 - SP3Atom.RELAXED_ANGLE) + xSign * CARBONYL_C_Y_TWEAK, 
     		-double_bond_O.getZRotation());
     
-    r_H = new Atom(carbonyl_C.getAbsOrbitalLoc(2, Atom.S_TO_SP3_BOND_LENGTH));
+    r_H = new Atom(carbonyl_C.getAbsOrbitalLoc(2, Atom.S_TO_SP3_BOND_LENGTH), 0, 0.8);
     
     setHydrogenLocations();
     
@@ -101,6 +106,15 @@ public class SAPAModel extends Model {
     bottom_carb_ch3 = new Bond(bottom_carb, ch3b, Bond.State.FULL);
     top_carb_ch3 = new Bond(top_carb, ch3a, Bond.State.FULL);            // creating the top methyl group
     carb_carb = new Bond(top_carb, bottom_carb, Bond.State.DOUBLE);
+    bottom_carb_O = new Bond( bottom_carb, reactive_O, Bond.State.BROKEN); 
+    top_carb_O = new Bond( top_carb, reactive_O, Bond.State.BROKEN);
+    reactive_O_H = new Bond( reactive_O, end_H, Bond.State.FULL);
+    double_bond_O_H = new Bond(double_bond_O, end_H, Bond.State.BROKEN);
+    resonance_O_reactive_O = new Bond(resonance_O, reactive_O, Bond.State.FULL);
+    resonance_O_carbonyl_C = new Bond(resonance_O, carbonyl_C, Bond.State.FULL);
+    carbonyl_C_R = new Bond(carbonyl_C, r_H, Bond.State.FULL);
+    carbonyl_C_double_bond_O = new Bond(carbonyl_C, double_bond_O, Bond.State.DOUBLE);
+    
   }
   
   private void setHydrogenLocations() {
@@ -139,6 +153,14 @@ public class SAPAModel extends Model {
       result.add(new BondView(bottom_carb_ch3));
       result.add(new BondView(top_carb_ch3));
       result.add(new BondView(carb_carb));
+      result.add(new BondView(bottom_carb_O));
+      result.add(new BondView(top_carb_O));
+      result.add(new BondView(reactive_O_H));
+      result.add(new BondView(double_bond_O_H));
+      result.add(new BondView(resonance_O_reactive_O));
+      result.add(new BondView(resonance_O_carbonyl_C));
+      result.add(new BondView(carbonyl_C_R));
+      result.add(new BondView(carbonyl_C_double_bond_O));
       
       //result.add(new BondView(new_H_cl));
     }

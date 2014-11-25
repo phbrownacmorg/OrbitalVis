@@ -49,8 +49,8 @@ public class SP3Atom extends Atom {
    * @param pt Point3D at which to create the SP3Atom
    * @param parent RefFrame within which the Point3D is nested
    */
-  public SP3Atom(Point3D pt, RefFrame parent) {
-    super(pt, parent);
+  public SP3Atom(Point3D pt, RefFrame parent, double tx, double ty) {
+    super(pt, AtomOrGroup.Charge.NEUTRAL, parent, tx, ty);
     insideOutness = 0;
     // adjusts the position of the atom
     zeroOneAngle = RELAXED_ANGLE;
@@ -61,7 +61,15 @@ public class SP3Atom extends Atom {
     porb[3] = new POrbital(-120, 0, -zeroOneAngle);
     
   }
-
+  /**
+   * Create an SP3Atom at a given point, nested within a given frame of reference.
+   * 
+   * @param pt Point3D at which to create the SP3Atom
+   * @param parent RefFrame within which the Point3D is nested
+   */
+  public SP3Atom(Point3D pt, RefFrame parent) {
+	  this(pt, parent, 0, 0);
+  }
   /**
    * Create an SP3Atom at a given point, with no containing frame of reference.
    * 
