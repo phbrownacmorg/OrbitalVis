@@ -28,6 +28,11 @@ public class Drawable {
     initXfmForFrame(gl, frame);
   }
   
+  public void initXfm2D(GL2 gl) {
+	  initXfm(gl);
+	  // Unfortunately, doing the 2D transformations here fouls up bonds where the end is nested in the beginning.
+  }
+  
   protected void negateRotationsForFrame(GL2 gl, RefFrame thisFrame) {
 	  gl.glRotated(-thisFrame.getRotZ(), 0.0, 0.0, 1.0);
 	  gl.glRotated(-thisFrame.getRotY(), 0.0, 1.0, 0.0);
@@ -59,11 +64,11 @@ public class Drawable {
     endXfm(gl);
   }
   
-  public void initDraw2D(GL2 gl, TextRenderer tr) {
-	  initXfm(gl);
+  public void initDraw2D(GL2 gl) {
+	  initXfm2D(gl);
   }
   
-  public void endDraw2D(GL2 gl, TextRenderer tr) {
+  public void endDraw2D(GL2 gl) {
 	  endXfm(gl);
   }
   

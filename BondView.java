@@ -96,12 +96,14 @@ public class BondView extends Drawable {
   }
     
   private void drawSingleBondLine(GL2 gl, short stipple, double offX, double offY) {
-	  Point3D vector = bond.getVectorFor2D().translate(offX+this.tx, offY+this.ty, 0);
+	  //Point3D vector = bond.getVectorFor2D().translate(offX+this.tx, offY+this.ty, 0);
+	  Point3D vector = bond.getVectorFor2D().translate(offX, offY, 0);
 	  gl.glLineWidth(LINE_WIDTH);
 	  gl.glLineStipple(1, stipple);
 	  gl.glEnable(GL2.GL_LINE_STIPPLE);
 	  //ShapeBuilder.line(gl, vectorStart, vectorEnd);
-	  ShapeBuilder.line(gl, new Point3D(offX+this.tx, offY+this.ty, 0), vector);
+	  //ShapeBuilder.line(gl, new Point3D(offX+this.tx, offY+this.ty, 0), vector);
+	  ShapeBuilder.line(gl, new Point3D(offX, offY, 0), vector);
 	  gl.glDisable(GL2.GL_LINE_STIPPLE);
   }
 
@@ -113,7 +115,7 @@ public class BondView extends Drawable {
   }
   
   private void drawWedge(GL2 gl, byte[] stipple) {
-	  Point3D vector = bond.getVectorFor2D();
+	  Point3D vector = bond.getVectorFor2D(); //.translate(this.tx, this.ty, 0);
 	  Point3D offset = vector.crossWithZ().scale(View2D.UNIT_TO_PIXEL_FUDGE);
 //	  double startTx = WEDGE_SCALE_FACTOR * tx + (1.0 - WEDGE_SCALE_FACTOR) * endTx; 
 //	  double startTy = WEDGE_SCALE_FACTOR * ty + (1.0 - WEDGE_SCALE_FACTOR) * endTy; 
@@ -154,12 +156,13 @@ public class BondView extends Drawable {
 //  }
   
   public void draw2D(GL2 gl, TextRenderer tr) {
-	  this.initDraw(gl);
+	  this.initDraw2D(gl);
 	  
 	  AtomOrGroup start = bond.getStart3D();
 	  AtomOrGroup end = bond.getEnd3D();
 	  if (end.getParent() != start) {
 		  this.negateRotationsForFrame(gl, start);
+		  gl.glTranslated(tx, ty, 0);
 	  }
 	  gl.glColor4fv(BOND_COLOR_4V, 0);
 	  if (bond.getState() == Bond.State.FULL) {
@@ -193,7 +196,7 @@ public class BondView extends Drawable {
 	  }
 	  // Otherwise, do nothing
 	  
-	  this.endDraw(gl);
+	  this.endDraw2D(gl);
   }
   
 //  public void draw2D(Graphics2D g) {

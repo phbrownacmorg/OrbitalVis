@@ -40,8 +40,12 @@ public class Bond {
 		  // another frame, but (b) the end isn't nested in the beginning.
 //	  System.out.println("start: " + frame1);
 //	  System.out.println("end: " + frame2);
-		  result = new Point3D(frame2.getX2D() - frame1.getX2D(),
-				  frame2.getY2D() - frame1.getY2D(), frame2.getZ() - frame1.getZ());
+		  Point3D p1 = frame1.getPtFor2D();
+		  Point3D p2 = frame2.getPtFor2D();
+		  result = new Point3D(p2.x() - p1.x(), p2.y() - p1.y(), p2.z() - p1.z());
+		  
+//		  result = new Point3D(frame2.getX2D() - frame1.getX2D(),
+//				  frame2.getY2D() - frame1.getY2D(), frame2.getZ() - frame1.getZ());
 	  }
 //	  System.out.println("diff: " + result);
 	  return result;

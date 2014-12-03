@@ -108,9 +108,9 @@ public class SAPAModel extends Model {
     carb_carb = new Bond(top_carb, bottom_carb, Bond.State.DOUBLE);
     bottom_carb_O = new Bond( bottom_carb, reactive_O, Bond.State.BROKEN); 
     top_carb_O = new Bond( top_carb, reactive_O, Bond.State.BROKEN);
-    reactive_O_H = new Bond( reactive_O, end_H, Bond.State.FULL);
+    reactive_O_H = new Bond(reactive_O, end_H, Bond.State.FULL);
     double_bond_O_H = new Bond(double_bond_O, end_H, Bond.State.BROKEN);
-    resonance_O_reactive_O = new Bond(resonance_O, reactive_O, Bond.State.FULL);
+    resonance_O_reactive_O = new Bond(reactive_O, resonance_O, Bond.State.FULL);
     resonance_O_carbonyl_C = new Bond(resonance_O, carbonyl_C, Bond.State.FULL);
     carbonyl_C_R = new Bond(carbonyl_C, r_H, Bond.State.FULL);
     carbonyl_C_double_bond_O = new Bond(carbonyl_C, double_bond_O, Bond.State.DOUBLE);

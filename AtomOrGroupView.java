@@ -124,7 +124,7 @@ public abstract class AtomOrGroupView extends Drawable {
   }
   
   public void draw2D(GL2 gl, TextRenderer tr) {
-	  this.initDraw(gl);
+	  this.initDraw2D(gl);
 //	  ShapeBuilder.axes(gl);
 	  
 	  String textToDraw = text + this.getChargeString();
@@ -147,7 +147,7 @@ public abstract class AtomOrGroupView extends Drawable {
 			  (float)(-box.getCenterX()), (float)(box.getCenterY()), 0.0f, 1.0f);
 	  tr.end3DRendering();
 
-	  this.endDraw(gl);
+	  this.endDraw2D(gl);
   }
   
   private void drawBackingRectangle(GL2 gl, Rectangle2D box) {
