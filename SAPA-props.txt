@@ -10,8 +10,8 @@ title: Syn-addition of Peroxyacid to Alkene
 
 # default is 25 100 100
 #2DScales: -35 100 100
-2DScales: 1 1 1
-2DFontSize: 48
+2DScales: 2 2 2
+2DFontSize: 72
 
 #fov: 26 Previous, for horizontal layout pre-ethyl group
 fov: 30

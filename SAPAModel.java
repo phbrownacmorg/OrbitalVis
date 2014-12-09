@@ -44,6 +44,7 @@ public class SAPAModel extends Model {
   private Atom end_H; // Hydrogen at the end of the COOH chain
   private Bond bottom_carb_O, top_carb_O, reactive_O_H, double_bond_O_H, resonance_O_reactive_O, resonance_O_carbonyl_C, carbonyl_C_R, carbonyl_C_double_bond_O;
   
+
   
   
   private static final double RESONANCE_O_Z_FUDGE = -6.022362;  // Found empirically
@@ -114,6 +115,7 @@ public class SAPAModel extends Model {
     resonance_O_carbonyl_C = new Bond(resonance_O, carbonyl_C, Bond.State.FULL);
     carbonyl_C_R = new Bond(carbonyl_C, r_H, Bond.State.FULL);
     carbonyl_C_double_bond_O = new Bond(carbonyl_C, double_bond_O, Bond.State.DOUBLE);
+    
     
   }
   
@@ -232,23 +234,76 @@ public class SAPAModel extends Model {
     setHydrogenLocations();
 
     // Update the Bonds
-    if (getT() < 0.23) {
-      top_carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
-      carb_carb.setState(Bond.State.DOUBLE);
-      bottom_carb_ch3.setState(Bond.State.FULL);
-      top_carb_ch3.setState(Bond.State.FULL);
+    if (getT() < 0.23) { // Beginning state
+    	end_H.setCharge(AtomOrGroup.Charge.NEUTRAL);
+    	reactive_O_H.setState(Bond.State.FULL);
+    	resonance_O_reactive_O.setState(Bond.State.FULL);
+    	resonance_O_carbonyl_C.setState(Bond.State.FULL);
+    	carbonyl_C_double_bond_O.setState(Bond.State.DOUBLE);
+    	bottom_carb_O.setState(Bond.State.BROKEN);
+    	top_carb_O.setState(Bond.State.BROKEN);
+    	double_bond_O_H.setState(Bond.State.BROKEN);
+
+    	top_carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
+    	carb_carb.setState(Bond.State.DOUBLE);
+    	bottom_carb_ch3.setState(Bond.State.FULL);
+    	top_carb_ch3.setState(Bond.State.FULL);
     }
-    else if (getT() > 0.5) {
-      top_carb.setCharge(AtomOrGroup.Charge.MINUS);
-      carb_carb.setState(Bond.State.FULL);
-      bottom_carb_ch3.setState(Bond.State.FULL);
-      top_carb_ch3.setState(Bond.State.FULL);
+    else if (getT() < 0.45) { // .23 < t < .45
+        reactive_O_H.setState(Bond.State.BROKEN);
+        resonance_O_reactive_O.setState(Bond.State.BROKEN);
+        resonance_O_carbonyl_C.setState(Bond.State.FULL);
+        carbonyl_C_double_bond_O.setState(Bond.State.FULL_PARTIAL);
+        bottom_carb_O.setState(Bond.State.BROKEN);
+        top_carb_O.setState(Bond.State.BROKEN);
+        double_bond_O_H.setState(Bond.State.BROKEN);
+
+    	top_carb.setCharge(AtomOrGroup.Charge.MINUS);
+    	carb_carb.setState(Bond.State.DOUBLE);
+    	bottom_carb_ch3.setState(Bond.State.FULL);
+    	top_carb_ch3.setState(Bond.State.FULL);    	
     }
-    else {
-      top_carb.setCharge(AtomOrGroup.Charge.PART_MINUS);
-      carb_carb.setState(Bond.State.FULL_PARTIAL);
-      bottom_carb_ch3.setState(Bond.State.FULL);
-      top_carb_ch3.setState(Bond.State.FULL);
+    else if (getT() < 0.7) { // .45 < t < .7
+        reactive_O_H.setState(Bond.State.BROKEN);
+        resonance_O_reactive_O.setState(Bond.State.BROKEN);
+        resonance_O_carbonyl_C.setState(Bond.State.FULL);
+        carbonyl_C_double_bond_O.setState(Bond.State.FULL);
+        bottom_carb_O.setState(Bond.State.BROKEN);
+        top_carb_O.setState(Bond.State.BROKEN);
+        double_bond_O_H.setState(Bond.State.BROKEN);
+    	
+    	top_carb.setCharge(AtomOrGroup.Charge.PART_MINUS);
+    	carb_carb.setState(Bond.State.FULL_PARTIAL);
+    	bottom_carb_ch3.setState(Bond.State.FULL);
+    	top_carb_ch3.setState(Bond.State.FULL);
+    }
+    else if (getT() < 0.8) { // .7 < t < .8
+        reactive_O_H.setState(Bond.State.BROKEN);
+        resonance_O_reactive_O.setState(Bond.State.BROKEN);
+        resonance_O_carbonyl_C.setState(Bond.State.FULL_PARTIAL);
+        carbonyl_C_double_bond_O.setState(Bond.State.FULL);
+        bottom_carb_O.setState(Bond.State.PARTIAL);
+        top_carb_O.setState(Bond.State.PARTIAL);
+        double_bond_O_H.setState(Bond.State.BROKEN);
+    	
+    	top_carb.setCharge(AtomOrGroup.Charge.MINUS);
+    	carb_carb.setState(Bond.State.FULL);
+    	bottom_carb_ch3.setState(Bond.State.FULL);
+    	top_carb_ch3.setState(Bond.State.FULL);
+    }
+    else { // Final state; t > .8
+        reactive_O_H.setState(Bond.State.BROKEN);
+        resonance_O_reactive_O.setState(Bond.State.BROKEN);
+        resonance_O_carbonyl_C.setState(Bond.State.DOUBLE);
+        carbonyl_C_double_bond_O.setState(Bond.State.FULL);
+        bottom_carb_O.setState(Bond.State.FULL);
+        top_carb_O.setState(Bond.State.FULL);
+        double_bond_O_H.setState(Bond.State.FULL);
+    	
+    	top_carb.setCharge(AtomOrGroup.Charge.MINUS);
+    	carb_carb.setState(Bond.State.FULL);
+    	bottom_carb_ch3.setState(Bond.State.FULL);
+    	top_carb_ch3.setState(Bond.State.FULL);
     }
   }
 }
