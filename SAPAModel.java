@@ -250,15 +250,15 @@ public class SAPAModel extends Model {
     	top_carb_ch3.setState(Bond.State.FULL);
     }
     else if (getT() < 0.45) { // .23 < t < .45
-        reactive_O_H.setState(Bond.State.BROKEN);
-        resonance_O_reactive_O.setState(Bond.State.BROKEN);
+        reactive_O_H.setState(Bond.State.PARTIAL);
+        resonance_O_reactive_O.setState(Bond.State.PARTIAL);
         resonance_O_carbonyl_C.setState(Bond.State.FULL);
         carbonyl_C_double_bond_O.setState(Bond.State.FULL_PARTIAL);
         bottom_carb_O.setState(Bond.State.BROKEN);
         top_carb_O.setState(Bond.State.BROKEN);
         double_bond_O_H.setState(Bond.State.BROKEN);
 
-    	top_carb.setCharge(AtomOrGroup.Charge.MINUS);
+    	//top_carb.setCharge(AtomOrGroup.Charge.MINUS);
     	carb_carb.setState(Bond.State.DOUBLE);
     	bottom_carb_ch3.setState(Bond.State.FULL);
     	top_carb_ch3.setState(Bond.State.FULL);    	
@@ -268,11 +268,11 @@ public class SAPAModel extends Model {
         resonance_O_reactive_O.setState(Bond.State.BROKEN);
         resonance_O_carbonyl_C.setState(Bond.State.FULL);
         carbonyl_C_double_bond_O.setState(Bond.State.FULL);
-        bottom_carb_O.setState(Bond.State.BROKEN);
-        top_carb_O.setState(Bond.State.BROKEN);
-        double_bond_O_H.setState(Bond.State.BROKEN);
+        bottom_carb_O.setState(Bond.State.PARTIAL);
+        top_carb_O.setState(Bond.State.PARTIAL);
+        double_bond_O_H.setState(Bond.State.PARTIAL);
     	
-    	top_carb.setCharge(AtomOrGroup.Charge.PART_MINUS);
+    	//top_carb.setCharge(AtomOrGroup.Charge.PART_MINUS);
     	carb_carb.setState(Bond.State.FULL_PARTIAL);
     	bottom_carb_ch3.setState(Bond.State.FULL);
     	top_carb_ch3.setState(Bond.State.FULL);
@@ -284,9 +284,9 @@ public class SAPAModel extends Model {
         carbonyl_C_double_bond_O.setState(Bond.State.FULL);
         bottom_carb_O.setState(Bond.State.PARTIAL);
         top_carb_O.setState(Bond.State.PARTIAL);
-        double_bond_O_H.setState(Bond.State.BROKEN);
+        double_bond_O_H.setState(Bond.State.PARTIAL);
     	
-    	top_carb.setCharge(AtomOrGroup.Charge.MINUS);
+    	//top_carb.setCharge(AtomOrGroup.Charge.MINUS);
     	carb_carb.setState(Bond.State.FULL);
     	bottom_carb_ch3.setState(Bond.State.FULL);
     	top_carb_ch3.setState(Bond.State.FULL);
@@ -300,7 +300,7 @@ public class SAPAModel extends Model {
         top_carb_O.setState(Bond.State.FULL);
         double_bond_O_H.setState(Bond.State.FULL);
     	
-    	top_carb.setCharge(AtomOrGroup.Charge.MINUS);
+    	//top_carb.setCharge(AtomOrGroup.Charge.MINUS);
     	carb_carb.setState(Bond.State.FULL);
     	bottom_carb_ch3.setState(Bond.State.FULL);
     	top_carb_ch3.setState(Bond.State.FULL);

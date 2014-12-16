@@ -25,13 +25,13 @@ public class E1Model extends Model {
   private Hydroxide oh;
   private SP3Atom carb1, carb2;
   private SP3Atom chlor;
-  private Methyl meth1, meth2;
-  private Atom hydro1, hydro2, hydro3;
+  private Methyl meth1, meth2, meth3;
+  private Atom hydro1, hydro2;
     
   // bonds
   private Bond hydro2_oh;
   private Bond carb1_carb2;
-  private Bond carb1_meth1, carb1_hydro1, carb2_chlor, carb2_hydro3, carb2_meth2;
+  private Bond carb1_meth1, carb1_hydro1, carb2_chlor, carb2_meth3, carb2_meth2;
   private Bond hydro2_carb1;
 
   public E1Model() {
@@ -46,7 +46,7 @@ public class E1Model extends Model {
     hydro2 = new Atom(new Point3D(orb0Vec.x(), orb0Vec.y(), orb0Vec.z()));
 
     hydro1 = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb1, -0.5, 0.3);
-    hydro3 = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb2, 0.5, -0.3);
+    meth3 = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, carb2, 0.5, -0.3);
     
     chlor = new SP3Atom(new Point3D(), carb2);
     
@@ -66,7 +66,7 @@ public class E1Model extends Model {
     carb1_hydro1 = new Bond(carb1, hydro1, Bond.State.FULL);
     hydro2_carb1 = new Bond(hydro2, carb1, Bond.State.FULL);
     carb2_chlor = new Bond(carb2, chlor, Bond.State.FULL);
-    carb2_hydro3 = new Bond(carb2, hydro3, Bond.State.FULL);
+    carb2_meth3 = new Bond(carb2, meth3, Bond.State.FULL);
     carb2_meth2 = new Bond(carb2, meth2, Bond.State.FULL);
   }
   
@@ -100,8 +100,9 @@ public class E1Model extends Model {
     meth2.setRot(-60, 0, 180 + rotation); //(rotX, 180 + rotY, 0);
     
     // Set the H that's on carb2's orbital 3
-    Point3D carb2orb3Vec = carb2.getOrbitalVector(3).scale(Atom.S_TO_SP3_BOND_LENGTH);
-    hydro3.setLoc(carb2orb3Vec.x(), carb2orb3Vec.y(), carb2orb3Vec.z());
+    Point3D carb2orb3Vec = carb2.getOrbitalVector(3).scale(Atom.SP3_SP3_BOND_LENGTH);
+    meth3.setLoc(carb2orb3Vec.x(), carb2orb3Vec.y(), carb2orb3Vec.z());
+    meth3.setRot(60, 0, 180 + rotation);
   }
 
   public ArrayList<Drawable> createDrawList(boolean twoD) {
@@ -113,7 +114,7 @@ public class E1Model extends Model {
       result.add(new BondView(carb1_hydro1));
       result.add(new BondView(hydro2_carb1));
       result.add(new BondView(carb2_chlor));
-      result.add(new BondView(carb2_hydro3));
+      result.add(new BondView(carb2_meth3));
       result.add(new BondView(carb2_meth2));
     }
     result.add(hydro1.createView());
@@ -123,7 +124,7 @@ public class E1Model extends Model {
     result.add(carb1.createView("C", AtomView.C_BLACK));
     result.add(hydro2.createView());
     result.add(oh.createView(HydroxideView.TEXT_HO));
-    result.add(hydro3.createView());
+    result.add(meth3.createView());
     result.add(meth1.createView());
     return result;
   }

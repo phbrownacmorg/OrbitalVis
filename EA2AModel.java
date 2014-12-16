@@ -54,7 +54,7 @@ public class EA2AModel extends Model {
     top_H = new Atom(new Point3D(), AtomOrGroup.Charge.NEUTRAL, null, 0.3, 0.3);
     ch3b = new Methyl(new Point3D(), AtomOrGroup.Charge.NEUTRAL, bottom_carb, 0.4, -0.8);
     new_H = new Atom(new Point3D(xSign * (Atom.S_TO_SP3_BOND_LENGTH + Math.max(0, (0.8 - getT()))), 0, 0),
-                     AtomOrGroup.Charge.MINUS);
+                     AtomOrGroup.Charge.NEUTRAL);
     cl = new SP3Atom(new Point3D(new_H.getX() + xSign * Atom.S_TO_SP3_BOND_LENGTH, 0, 0));
     cl.setRot(0, 0, 90 + 90 * xSign);
     
@@ -128,7 +128,7 @@ public class EA2AModel extends Model {
     double insideOutness = 0.5 + insideOutnessOffset;
     //double insideOutness = Math.min(1.0, Math.max(0.5, ((0.5/0.6) * (getT() - 0.3)) + 0.5));
     double divergence = 1.0 - (4 * (insideOutness - 0.5) * (insideOutness - 0.5));
-    bottom_carb.setInsideOutness(0.5 - insideOutnessOffset);
+    bottom_carb.setInsideOutness(0.5); //- insideOutnessOffset);
     bottom_carb.setP0Divergence(divergence);
     top_carb.setInsideOutness(insideOutness);
     top_carb.setP0Divergence(divergence);
@@ -143,9 +143,10 @@ public class EA2AModel extends Model {
     // Update the Bonds
     if (getT() < 0.23) {
       top_carb_new_H.setState(Bond.State.BROKEN);
-      new_H.setCharge(AtomOrGroup.Charge.MINUS);
+      new_H.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      cl.setCharge(AtomOrGroup.Charge.NEUTRAL);
       new_H_cl.setState(Bond.State.FULL);
-      top_carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      bottom_carb.setCharge(AtomOrGroup.Charge.NEUTRAL);
       carb_carb.setState(Bond.State.DOUBLE);
       bottom_carb_ch3.setState(Bond.State.FULL);
       top_carb_ch3.setState(Bond.State.FULL);
@@ -153,17 +154,19 @@ public class EA2AModel extends Model {
     else if (getT() > 0.5) {
       top_carb_new_H.setState(Bond.State.FULL);
       new_H.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      cl.setCharge(AtomOrGroup.Charge.MINUS);
       new_H_cl.setState(Bond.State.BROKEN);
-      top_carb.setCharge(AtomOrGroup.Charge.MINUS);
+      bottom_carb.setCharge(AtomOrGroup.Charge.PLUS);
       carb_carb.setState(Bond.State.FULL);
       bottom_carb_ch3.setState(Bond.State.FULL);
       top_carb_ch3.setState(Bond.State.FULL);
     }
     else {
       top_carb_new_H.setState(Bond.State.PARTIAL);
-      new_H.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      new_H.setCharge(AtomOrGroup.Charge.NEUTRAL);
+      cl.setCharge(AtomOrGroup.Charge.PART_MINUS);
       new_H_cl.setState(Bond.State.PARTIAL);
-      top_carb.setCharge(AtomOrGroup.Charge.PART_MINUS);
+      bottom_carb.setCharge(AtomOrGroup.Charge.PART_PLUS);
       carb_carb.setState(Bond.State.FULL_PARTIAL);
       bottom_carb_ch3.setState(Bond.State.FULL);
       top_carb_ch3.setState(Bond.State.FULL);
