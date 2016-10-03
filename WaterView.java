@@ -1,4 +1,4 @@
-import javax.media.opengl.*;
+import com.jogamp.opengl.*;
  
 /** 
  * A class to view a hydroxide group.  The oxygen is 

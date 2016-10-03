@@ -1,5 +1,5 @@
-import javax.media.opengl.*;
-import javax.media.opengl.glu.GLU;
+import com.jogamp.opengl.*;
+import com.jogamp.opengl.glu.GLU;
 //import com.jogamp.opengl.util.*;
 
 import java.util.ArrayList;

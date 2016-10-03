@@ -1,4 +1,4 @@
-import javax.media.opengl.*;
+import com.jogamp.opengl.*;
 
 /**
  * View of a P-orbital or hybridized orbital along the X-axis.  The proportion

@@ -1,6 +1,6 @@
-import javax.media.opengl.*;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
+import com.jogamp.opengl.*;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
 //import com.jogamp.opengl.util.gl2.GLUT;
 
 /**

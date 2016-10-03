@@ -1,4 +1,4 @@
-import javax.media.opengl.*;
+import com.jogamp.opengl.*;
 
 /** 
  * A class to draw an ethyl group.  The carbon with only two hydrogens is 

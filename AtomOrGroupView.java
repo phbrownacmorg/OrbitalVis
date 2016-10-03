@@ -4,7 +4,7 @@ import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
 import java.util.Hashtable;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 
 import com.jogamp.opengl.util.awt.TextRenderer; 
 

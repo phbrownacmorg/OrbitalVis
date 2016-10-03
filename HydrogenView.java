@@ -1,4 +1,4 @@
-import javax.media.opengl.*;
+import com.jogamp.opengl.*;
 
 /**
  * A class to represent a white Hydrogen atom

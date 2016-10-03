@@ -1,4 +1,4 @@
-import javax.media.opengl.*;
+import com.jogamp.opengl.*;
  
 /** 
  * A class to view a methyl group.  The carbon is treated as the origin
